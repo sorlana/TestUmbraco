@@ -1,0 +1,67 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem<DivBlock, SectionSettingsBlock>>
+
+@{
+    var backgroundColor = Model.Settings.BackgroundColor;
+    var width = Model.Content.Width;
+    var image = Model.Settings.BackgroundImage;
+    var checkbox = Model.Settings.PhotoDisplay;
+    var value = Model.Settings.ImageRepeat;
+    var posX = Model.Content.GorizontalAlign;
+    var posY = Model.Content.VerticalAlign;
+    var imposX = Model.Settings.ImagePositionX;
+    var imposY = Model.Settings.ImagePositionY;
+    var size = Model.Settings.ImageTransform;
+    var sizeback = Model.Settings.SizeBackground;
+
+if (checkbox is not false)
+{    
+if (width is not 0){
+    <div class="@(Model.Content.GorizontalAlign == "По левому краю" ? "g-l" : null) @(Model.Content.GorizontalAlign == "По правому краю" ? "g-r" : null) @(Model.Content.GorizontalAlign == "По центру" ? "g-c" : null) flex-div @Model.Content.Class @(Model.Content.VerticalAlign == "По верхнему краю" ? "v-l" : null) @(Model.Content.VerticalAlign == "По нижнему краю" ? "v-r" : null) @(Model.Content.VerticalAlign == "По центру" ? "v-c" : null) @(Model.Content.VerticalAlign == "По высоте" ? "v-str" : null)" style="width: @Model.Content.Width%!important; background-image: url('@image?.Url()'); background-repeat: @(value == "не повторять" ? "no-repeat" : null)@(value == "повторять по оси Х" ? "repeat-x" : null)@(value == "повторять по оси Y" ? "repeat-y" : null)@(value == "повторять по Х и Y" ? "repeat" : null); background-position-x: @(posX == "По левому краю" ? "left" : null)@(posX == "По правому краю" ? "right" : null)@(posX == "По центру" ? "center" : null); background-position-y: @(posY == "По верхнему краю" ? "top" : null)@(posY == "По центру" ? "v-center" : null)@(posY == "По нижнему краю" ? "bottom" : null); background-size: @(size == "Обрезать" ? "cover" : null) @(size == "Вписать в контейнер" ? "contain" : null)@(size == "Оставить как есть" ? "auto" : null);">
+        @if (Model.Areas.Any(a => a.Any())) {
+            @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+        }
+    </div>
+} 
+else{
+  <div class="@(Model.Content.GorizontalAlign == "По левому краю" ? "g-l" : null) @(Model.Content.GorizontalAlign == "По правому краю" ? "g-r" : null) @(Model.Content.GorizontalAlign == "По центру" ? "g-c" : null) flex-div @Model.Content.Class @(Model.Content.VerticalAlign == "По верхнему краю" ? "v-l" : null) @(Model.Content.VerticalAlign == "По нижнему краю" ? "v-r" : null) @(Model.Content.VerticalAlign == "По центру" ? "v-c" : null) @(Model.Content.VerticalAlign == "По высоте" ? "v-str" : null)" style="background-image: url('@image?.Url()'); background-repeat: @(value == "не повторять" ? "no-repeat" : null)@(value == "повторять по оси Х" ? "repeat-x" : null)@(value == "повторять по оси Y" ? "repeat-y" : null)@(value == "повторять по Х и Y" ? "repeat" : null); background-position-x: @(posX == "По левому краю" ? "left" : null)@(posX == "По правому краю" ? "right" : null)@(posX == "По центру" ? "center" : null); background-position-y: @(posY == "По верхнему краю" ? "top" : null)@(posY == "По центру" ? "v-center" : null)@(posY == "По нижнему краю" ? "bottom" : null); background-size: @(size == "Обрезать" ? "cover" : null) @(size == "Вписать в контейнер" ? "contain" : null)@(size == "Оставить как есть" ? "auto" : null);">
+    @if (Model.Areas.Any(a => a.Any())) {
+        @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+    }
+</div>
+} 
+}else{
+  if (width is not 0){
+
+    if (backgroundColor is not null){
+      <div class="@(Model.Content.GorizontalAlign == "По левому краю" ? "g-l" : null) @(Model.Content.GorizontalAlign == "По правому краю" ? "g-r" : null) @(Model.Content.GorizontalAlign == "По центру" ? "g-c" : null) flex-div @Model.Content.Class @(Model.Content.VerticalAlign == "По верхнему краю" ? "v-l" : null) @(Model.Content.VerticalAlign == "По нижнему краю" ? "v-r" : null) @(Model.Content.VerticalAlign == "По центру" ? "v-c" : null) @(Model.Content.VerticalAlign == "По высоте" ? "v-str" : null)" style="width: @Model.Content.Width%!important; background-color: #@Model.Settings.BackgroundColor;">
+          @if (Model.Areas.Any(a => a.Any())) {
+              @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+          }
+      </div>
+    }
+    else{
+      <div class="@(Model.Content.GorizontalAlign == "По левому краю" ? "g-l" : null) @(Model.Content.GorizontalAlign == "По правому краю" ? "g-r" : null) @(Model.Content.GorizontalAlign == "По центру" ? "g-c" : null) flex-div @Model.Content.Class @(Model.Content.VerticalAlign == "По верхнему краю" ? "v-l" : null) @(Model.Content.VerticalAlign == "По нижнему краю" ? "v-r" : null) @(Model.Content.VerticalAlign == "По центру" ? "v-c" : null) @(Model.Content.VerticalAlign == "По высоте" ? "v-str" : null)" style="width: @Model.Content.Width%!important; background-color: transparent!important;">
+          @if (Model.Areas.Any(a => a.Any())) {
+              @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+          }
+      </div>
+    }
+  } 
+  else{
+    if (backgroundColor is not null){
+      <div class="@(Model.Content.GorizontalAlign == "По левому краю" ? "g-l" : null) @(Model.Content.GorizontalAlign == "По правому краю" ? "g-r" : null) @(Model.Content.GorizontalAlign == "По центру" ? "g-c" : null) flex-div @Model.Content.Class @(Model.Content.VerticalAlign == "По верхнему краю" ? "v-l" : null) @(Model.Content.VerticalAlign == "По нижнему краю" ? "v-r" : null) @(Model.Content.VerticalAlign == "По центру" ? "v-c" : null) @(Model.Content.VerticalAlign == "По высоте" ? "v-str" : null)" style="background-color: #@Model.Settings.BackgroundColor;">
+        @if (Model.Areas.Any(a => a.Any())) {
+            @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+        }
+    </div>
+    }
+    else{
+      <div class="@(Model.Content.GorizontalAlign == "По левому краю" ? "g-l" : null) @(Model.Content.GorizontalAlign == "По правому краю" ? "g-r" : null) @(Model.Content.GorizontalAlign == "По центру" ? "g-c" : null) flex-div @Model.Content.Class @(Model.Content.VerticalAlign == "По верхнему краю" ? "v-l" : null) @(Model.Content.VerticalAlign == "По нижнему краю" ? "v-r" : null) @(Model.Content.VerticalAlign == "По центру" ? "v-c" : null) @(Model.Content.VerticalAlign == "По высоте" ? "v-str" : null)" style="background-color: transparent!important;">
+        @if (Model.Areas.Any(a => a.Any())) {
+            @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+        }
+    </div>
+    }
+  } 
+  }  
+}

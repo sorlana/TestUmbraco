@@ -1,0 +1,27 @@
+﻿@using Umbraco.Cms.Core
+@using Emax.Controllers
+@using Umbraco.Cms.Web.Common
+@model Emax.Domain.Models.CallRequestItem
+
+<div class="frmm">
+   
+    @using (Html.BeginUmbracoForm<EmailController>(nameof(EmailController.SendCallRequest)))
+        {
+        <div class="fm-mgbot">
+            <input asp-for="Phone" id="wmob" placeholder="Телефон*" class="fm">
+            <span id="redwmob" class="red"><img src="~/img/icon-warning.svg" class="warn" />Необходимо ввести телефон</span>
+        </div>
+        <div class="fm-mgbot">
+            <input id="wtime" asp-for="TimeCall" placeholder="Когда позвонить?*" class="fm">
+            <span id="redwtime" class="red"><img src="~/img/icon-warning.svg" class="warn" />Некорректный адрес почты!</span>
+        </div>
+        <div>
+            <div class="btn">
+                @(Html.Recaptcha<RecaptchaV3HiddenInput>(RecaptchaSettings?.Value, new RecaptchaV3HiddenInput()))
+                <button type="submit" data-badge="inline" id="button4" class="primary-button" style="width: 100%;" ><span class="icon-ico-send"></span>Отправить сообщение</button>
+                <p class="smalltext dark">*Нажимая на кнопку, вы даете свое согласие на обработку персональных данных</p>
+
+            </div>
+        </div>
+    }
+</div>

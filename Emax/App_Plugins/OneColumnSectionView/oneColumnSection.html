@@ -1,0 +1,11 @@
+<div ng-app="umbraco" ng-controller="oneColumnSectionController">
+   
+    {{mediaItem = (block.settingsData.backgroundImage[0].mediaKey | mediaItemResolver); ""}}
+    
+<section
+    
+style="background-color: '{{backgroundColor}}'; background-size: '{{backgroundSizeStyle}}'; background-image: url({{mediaItem.mediaLink}})"
+    class="{{block.data.class}}">
+    <umb-block-grid-render-area-slots></umb-block-grid-render-area-slots>
+</section>
+</div>

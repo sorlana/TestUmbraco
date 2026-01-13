@@ -1,0 +1,60 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.BlockGrid>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+
+
+<div class="contnew">
+@{
+    var selection = Umbraco.Content(Guid.Parse("9b4aafe7-22d3-412d-a7be-d49d2f29eca5"))
+        .ChildrenOfType("workItem")
+        .Where(x => x.IsVisible());
+}
+
+@foreach (var item in selection)
+{
+    var image = item.Value<IPublishedContent>("image");
+    var bgim = item.Value<IPublishedContent>("bgImg");
+    var imlogo = item.Value<IPublishedContent>("logo");
+    var workImage = image.Url().GetCropUrl(width: 450);
+    var bgImage = bgim?.Url();
+    var logo = imlogo?.Url();
+    var bgColor = @item.Value("bgColor").ToString();
+
+    if (bgImage != null) {
+        <div class="work-grid-item wow fadeIn" style="background-image: url('@bgImage');">
+            <div class="txt-work">
+                @if (imlogo != null) {
+                   <div class="work-mask">
+                      <img src="@logo" class="im-work" />
+                   </div>
+                }
+                <h2 class="white">@item.Name()</h2>
+                @if (workImage != null) {
+                <div class="dot">
+                    <img src="@workImage" />
+                </div>
+                }
+                <a href="@item.Url()" class="primary-button bt2"><span class="icon-ico-eye"></span>Показать больше</a>
+            </div>
+        </div>
+   }else
+   if (bgColor != null) {
+    <div class="work-grid-item wow fadeIn" style="background-color: @bgColor;">
+        <div class="txt-work">
+            @if (imlogo != null) {
+               <div class="work-mask">
+                  <img src="@logo" class="im-work" />
+               </div>
+            }
+            <h2>@item.Name()</h2>
+            @if (workImage != null) {
+            <div class="dot">
+                <img src="@workImage" />
+            </div>
+            }
+            <a href="@item.Url()" class="primary-button bt2"><span class="icon-ico-eye"></span>Показать больше</a>
+        </div>
+    </div>
+}
+}
+</div>

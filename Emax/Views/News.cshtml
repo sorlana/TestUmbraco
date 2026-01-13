@@ -1,0 +1,60 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.News>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+
+@{
+	Layout = "Layout.cshtml";
+}
+
+
+<!-- Content -->
+<div class="container">
+
+    <!-- Title -->
+    <div class="titlewrap">
+        <h1 class="title">
+            НОВОСТИ
+        </h1>
+    </div>
+    <!-- Title end -->
+
+    <div class="contnew">
+        @{
+            var selection = Umbraco.Content(Guid.Parse("474a275c-e506-4b0e-a57e-87b07ce22f44"))
+                .ChildrenOfType("newsItem")
+                .Where(x => x.IsVisible())
+                .OrderByDescending(x => x.Value("newsDate"));
+        }
+
+        @foreach (var item in selection)
+        {
+            var image = item.Value<IPublishedContent>("newsImg");
+            var articleDate = item.Value<DateTime>("newsDate");
+            var newsLogo = image?.Url();
+            
+            <div class="flexnew wow fadeIn">
+                @if (newsLogo != null) {
+                    <div class="imgnew">
+                        <img src="@newsLogo" class="imnew">
+                    </div>
+                }
+                <div class="textnew bg-white">
+                    <div>
+                      <p style="display: flex; align-items: center;margin-bottom: 1rem; font-weight: 600;">
+                        <span class="material-symbols-outlined" style="margin-right:0.2em;">calendar_today</span>
+                        @articleDate.ToString("dd.MM.yyyy")
+                      </p>
+                      <div class="flex" style="display: flex; align-items: flex-start;">
+                        <span class="icon-ico-cuote" style="margin-right: 0.8rem;margin-top: 1.5rem;"></span>
+                        <h2>@item.Name()</h2>
+                      </div>
+                      <div>@Html.Truncate(item.Value("newsText").ToString(), 200, true)</div>
+                    </div>
+                    <a href="@item.Url()" class="primary-button bnew">Подробнее</a>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<!-- Content -->

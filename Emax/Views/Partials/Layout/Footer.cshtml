@@ -1,0 +1,23 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+
+@{
+    var layoutBlock = Umbraco.Content(Guid.Parse("8297ea76-e03e-400e-a740-1aceee2ce2be"))
+            .GetProperty("footerContent");
+
+    @await Html.GetBlockGridHtmlAsync(layoutBlock)
+
+    <div class="footer-bottom">
+        <div class="foot-content">
+            <p>© Copyright «E-MAX», 2022-@DateTime.Now.Year</p>
+            <p class="small-text">
+                Наш сайт защищен с помощью reCAPTCHA и соответствует
+            <a class="link" rel="nofollow" href="https://policies.google.com/privacy" target="_blank">Политике конфиденциальности</a>
+
+            и <a class="link" rel="nofollow" href="https://policies.google.com/terms&quot; target="_blank">Условиям использования</a> Google.
+            </p>
+        </div>
+    </div>
+}
+
+

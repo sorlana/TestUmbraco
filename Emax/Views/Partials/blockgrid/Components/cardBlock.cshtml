@@ -1,0 +1,83 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem<CardBlock, SectionSettingsBlock>>
+@{
+    var backgroundColor = Model.Settings.BackgroundColor;
+    var imColor = Model.Settings.BackgroundImage;
+    var noBackgroundColor = string.IsNullOrEmpty(backgroundColor);
+    var hasBrightContrast = Model.Settings.Contrast == "ffffff";
+    var value = Model.Settings.ImageRepeat;
+    var posX = Model.Settings.ImagePositionX;
+    var posY = Model.Settings.ImagePositionY;
+    var size = Model.Settings.ImageTransform;
+    var sizeback = Model.Settings.SizeBackground;
+    var checkbox = Model.Settings.PhotoDisplay;
+    var image = Model.Content.Image;
+    var logo = Model.Content.Logo;
+    var link = Model.Content.LinkUrl;
+    var divClass = Model.Content.Class;
+
+    if (checkbox is not false)
+    {    
+    <div class="work-grid-item wow fadeInLeft @divClass" 
+    style="background-image: url('@imColor?.Url()'); 
+    @(backgroundColor == ""? null : "background-color: #" + @backgroundColor + ";") 
+    @(value == "не повторять" ? "background-repeat: no-repeat;" : null)
+    @(value == "повторять по оси Х" ? "background-repeat: repeat-x;" : null)
+    @(value == "повторять по оси Y" ? "background-repeat: repeat-y;" : null)
+    @(value == "повторять по Х и Y" ? "background-repeat: repeat;" : null) 
+    @(posX == "По левому краю" ? "background-position-x: left;" : null)
+    @(posX == "По правому краю" ? "background-position-x: right;" : null)
+    @(posX == "По центру" ? "background-position-x: center;" : null) 
+    @(posY == "По верхнему краю" ? "background-position-y: top;" : null)
+    @(posY == "По центру" ? "background-position-y: center;" : null)
+    @(posY == "По нижнему краю" ? "background-position-y: bottom;" : null)
+    @(size == "Обрезать" ? "background-size: cover;" : null)
+    @(size == "Вписать в контейнер" ? "background-size: contain;" : null)
+    @(size == "Оставить как есть" ? "background-size: auto;" : null) 
+    @(sizeback == 0? null : "background-size:" + @sizeback + "% auto;")">
+        <div class="txt-work">
+            <div class="work-mask">
+                    @if (logo is not null)
+                    {
+                        <img src="@logo.GetCropUrl(width:Model.ColumnSpan == 6 ? 720 : 360)" class="im-logo"/>
+                    }
+            </div>
+            <h3>@Model.Content.RichText</h3>
+            <div class="dot">
+                @if (image is not null)
+                {
+                    <img src="@image.GetCropUrl(width:Model.ColumnSpan == 6 ? 720 : 360)" class="im-work"/>
+                }
+            </div>
+
+                <a onclick ="openPreview(@Model.Content.Parametr)" id="button2" class="primary-button bt2">
+                <span class="icon-ico-eye"></span>Показать больше
+            </a>
+        </div>
+    </div>
+}else{
+        <div class="work-grid-item wow fadeInLeft  @divClass" 
+        style="@(backgroundColor == ""? null : "background-color: #" + @backgroundColor + ";")
+    @(hasBrightContrast ? "bright-contrast" : null)"> 
+      <div class="txt-work">
+          <div class="work-mask">
+                @if (logo is not null)
+                {
+                    <img src="@logo.GetCropUrl(width:Model.ColumnSpan == 6 ? 720 : 360)" class="im-logo"/>
+                }
+        </div>
+        <h3>@Model.Content.RichText</h3>
+        <div class="dot">
+            @if (image is not null)
+            {
+                <img src="@image.GetCropUrl(width:Model.ColumnSpan == 6 ? 720 : 360)" class="im-work"/>
+            }
+        </div>
+    
+                <a onclick="openPreview(@Model.Content.Parametr)" href="@link?.Url" target="@link?.Target" id="button7" class="primary-button bt2">
+            <span class="icon-ico-eye"></span>Показать больше
+        </a>
+    </div>
+</div> 
+    }
+}
+

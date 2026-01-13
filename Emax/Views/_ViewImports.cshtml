@@ -1,0 +1,15 @@
+@using Umbraco.Extensions
+@using Emax
+@using Umbraco.Cms.Web.Common.PublishedModels
+@using Umbraco.Cms.Web.Common.Views
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Microsoft.AspNetCore.Html
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Smidge
+@inject Smidge.SmidgeHelper SmidgeHelper
+@using Microsoft.Extensions.Options;
+@using reCAPTCHA.AspNetCore;
+@using reCAPTCHA.AspNetCore.Versions;
+@inject IOptions<RecaptchaSettings> RecaptchaSettings
+@addTagHelper *, SeoToolkit.Umbraco.ScriptManager.Core
+@addTagHelper *, SeoToolkit.Umbraco.MetaFields.Core

@@ -1,0 +1,40 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.NewsItem>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+    Layout = "Layout.cshtml";
+}
+@{
+    var image = Model.Value<IPublishedContent>("newsImg");
+    var newsIm = image?.Url();
+    var newsDate = Model.Value<DateTime>("newsDate").ToShortDateString();
+}
+
+
+<div class="container">
+    
+    <div class="contnew2">
+        <div>
+          <div class="hdnews">
+            <a href="/novosti" class="primarynew cl2" style="display: flex; justify-content: center;align-items: center;position: fixed; top: 4rem; right: 0.5rem;z-index: 100;"><span class="material-icons">close</span></a>
+              <div style="display:flex; align-items: center;">
+                <span class="material-symbols-outlined  wow fadeInLeft" style="margin-right:0.2em;">calendar_today</span> <b>@newsDate</b>
+              </div>
+          </div>
+          <div  class="wow fadeInRight" style="display:flex; align-items: flex-start;">
+            <span class="icon-ico-cuote" style="margin-right: 0.8rem;margin-top: 1.5rem;"></span>
+             <h2 class="titleNew">@Model.Value("newsTitle")</h2>
+          </div>
+        </div>
+        <div class="newcont wow fadeInLeft"> 
+            @if (newsIm != null)
+            {
+                <div class="new50">
+                    <img src="@newsIm" class="imnew">
+                </div>    
+            }
+            @Html.Raw(@Model.Value("newsText"))
+            @Html.Raw(@Model.Value("newsText"))
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+﻿@inherits Umbraco.Cms.Web.Common.Macros.PartialViewMacroPage
+@using Emax.Domain.Models
+
+
+@{
+    await Html.RenderPartialAsync("~/Views/Partials/CallRequest.cshtml", new CallRequestItem());
+}

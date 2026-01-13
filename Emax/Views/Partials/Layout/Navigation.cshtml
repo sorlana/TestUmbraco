@@ -1,0 +1,49 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+
+
+@{
+    var Logo = Umbraco.Media(Guid.Parse("{20242231-ef79-46db-b929-998267ef4799}"));
+
+    <!--======MENU======-->
+    <div class="menu">
+        <div class="navbar">
+            <a href="/" class="brand">
+            </a>
+            <a id="touch-menu" class="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </a>
+            <nav class="nav">
+                <a href="/" class="brandnav">
+                </a>
+
+                @{
+                    var selection = Umbraco.ContentAtRoot().FirstOrDefault()
+                    .Children()
+                    .Where(x => x.IsVisible());
+
+                    var activeClassHome = (Model.Name == "Главная") ? "active" : string.Empty;
+                }
+                <ul class="navigation">
+                    <li>
+                        <a href="/" class=@activeClassHome>Главная</a>
+                    </li>
+                    @foreach (var item in selection)
+                    {
+                        var activeClass = (Model.Name == item.Name) || (Model.Parent?.Name == item.Name) ? "active" : string.Empty;
+
+                        <li>
+                            <a href="@item.Url()" class=@activeClass>@item.Name()</a>
+                        </li>
+                    }
+                </ul>
+
+            </nav>
+        </div>
+    </div>
+    <!--======END MENU======-->
+}

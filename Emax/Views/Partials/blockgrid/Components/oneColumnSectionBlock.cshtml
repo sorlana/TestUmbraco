@@ -1,0 +1,37 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem<OneColumnSectionBlock, SectionSettingsBlock>>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+    var backgroundColor = Model.Settings.BackgroundColor;
+    var image = Model.Settings.BackgroundImage;
+    var noBackgroundColor = string.IsNullOrEmpty(backgroundColor);
+    var hasBrightContrast = Model.Settings.Contrast == "ffffff";
+    var value = Model.Settings.ImageRepeat;
+    var posX = Model.Settings.ImagePositionX;
+    var posY = Model.Settings.ImagePositionY;
+    var size = Model.Settings.ImageTransform;
+    var sizeback = Model.Settings.SizeBackground;
+    var checkbox = Model.Settings.PhotoDisplay;
+    var lclass = Model.Content.Class;
+    var anhor = Model.Content.Anchor;
+
+if (checkbox is not false)
+   {
+<section
+    style="background-image: url('@image?.Url()'); @(backgroundColor == ""? null : "background-color: #" + @backgroundColor + ";") @(value == "не повторять" ? "background-repeat: no-repeat;" : null)@(value == "повторять по оси Х" ? "background-repeat: repeat-x;" : null)@(value == "повторять по оси Y" ? "background-repeat: repeat-y;" : null)@(value == "повторять по Х и Y" ? "background-repeat: repeat;" : null) @(posX == "По левому краю" ? "background-position-x: left;" : null)@(posX == "По правому краю" ? "background-position-x: right;" : null)@(posX == "По центру" ? "background-position-x: center;" : null) @(posY == "По верхнему краю" ? "background-position-y: top;" : null)@(posY == "По центру" ? "background-position-y: center;" : null)@(posY == "По нижнему краю" ? "background-position-y: bottom;" : null) @(size == "Обрезать" ? "background-size: cover;" : null)@(size == "Вписать в контейнер" ? "background-size: contain;" : null)@(size == "Оставить как есть" ? "background-size: auto;" : null) @(sizeback == 0? null : "background-size:" + @sizeback + "% auto;")"
+    @(lclass == ""? null : "class=" + @lclass)
+    @(anhor == ""? null : "id=" + @anhor)
+    @(noBackgroundColor ? "nobackgroundcolor" : null)
+    @(hasBrightContrast ? "bright-contrast" : null)>
+    @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+</section>
+    }
+    else{
+ <section
+     @(lclass == ""? null : "class=" + @lclass)
+     @(anhor == ""? null : "id=" + @anhor)
+     @(noBackgroundColor ? "nobackgroundcolor" : null)
+     @(hasBrightContrast ? "bright-contrast" : null)>
+     @await Html.GetBlockGridItemAreasHtmlAsync(Model)
+ </section>
+    }
+}

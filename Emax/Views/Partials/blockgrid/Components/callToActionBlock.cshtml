@@ -1,0 +1,24 @@
+﻿@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem<CallToActionBlock>>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@{
+    var link = Model.Content.Link;
+    var name = Model.Content.NameLink;
+    var lclass = Model.Content.Class;
+    var type = Model.Content.Parametr;
+    var idBtn = Model.Content.IsRequest ? "showmodal" : "more";
+}
+
+<a class="call-to-action @lclass" href="@link?.Url" target="@link?.Target" data-type="@type" id="@idBtn">
+ @{
+            var image = Model.Content.Img;
+            if (image is not null)
+            {
+                <img src="@image.Url()"/>
+            }
+            else
+            {
+                <p>Missing image</p>
+            }
+        }
+@name
+</a>

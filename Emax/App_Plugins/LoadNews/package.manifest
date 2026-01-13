@@ -1,0 +1,17 @@
+﻿{
+    "dashboards":  [
+        {
+            "alias": "LoadNews",
+            "view":  "/App_Plugins/LoadNews/loadnews.html",
+            "sections":  [ "content" ],
+            "weight": 30,
+            "access": [
+                { "deny": "translator" },
+                { "grant": "admin" }
+            ]
+        }
+    ],
+	"javascript": [
+        "~/App_Plugins/LoadNews/loadnews.controller.js"
+    ]
+}

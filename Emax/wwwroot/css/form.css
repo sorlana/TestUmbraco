@@ -1,0 +1,196 @@
+/*=====FORMS====*/
+.frm {
+  display: flex;
+  width: 100%;
+}
+
+.frmLeft, .frmRight {
+  width: 50%;
+}
+
+.frmLeft {
+  margin-right: 1em;
+}
+
+.frmRight {
+  margin-left: 1em;
+}
+
+@media (max-width: 1024px) {
+  .frm {
+    flex-direction: column;
+  }
+
+  .frmLeft, .frmRight {
+    width: 100%;
+    margin-left: 0;
+    margin-left: 0;
+  }
+}
+
+/*-----fm-----*/
+.fm {
+  width: 100%;
+  border: 1px solid #8c8f96;
+  margin-top: 0.25em;
+  margin-bottom: 1.5em;
+  font-size: 1em;
+  color: #575653;
+  padding: 0 1.25em;
+}
+
+.lab {
+  width: 100%;
+}
+
+@media (max-width: 450px) {
+  .fm {
+    margin-bottom: 10px;
+  }
+}
+
+/*-----End fm-----*/
+
+/*-----but-----*/
+.but {
+  font-size: 1em;
+  padding: 0 2em;
+  text-decoration: none;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+}
+
+@media (max-width: 450px) {
+  .but {
+    margin: 0 auto;
+    width: 100% !important;
+  }
+}
+
+/*-----End fm-----*/
+
+.bt {
+  font-size: 1em;
+  padding: 0 2em;
+  text-decoration: none;
+  margin-top: calc(var(--size)*20);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+}
+
+/*-----input-----*/
+input, textarea, select {
+  outline: none;
+  font-size: 1em !important;
+  font-weight: 400 !important;
+  padding: 0.5em 1em;
+  margin-top: 0.2em;
+  /*убрать черную рамку в хроме*/
+}
+
+input, select {
+  height: 2.8125em !important;
+}
+
+.bttn {
+  outline: none;
+  font-family: "Montserrat", "Verdana" !important;
+  font-size: 1em !important;
+  font-weight: 400 !important;
+  /*убрать черную рамку в хроме*/
+}
+
+.bttn {
+  height: 2.8125em !important;
+}
+
+.bttn {
+  padding: 0 2em;
+}
+
+
+
+/*-----End input-----*/
+
+/*-----button-primary-----*/
+.button-primary {
+  background-color: #1C7FBE;
+  color: #ffffff;
+  border: 1px solid #1C7FBE;
+  cursor: pointer;
+  height: 2.8125em !important;
+}
+
+.button-primary:hover {
+  background-color: #00A3FF !important;
+  border: 1px solid #00A3FF !important;
+}
+
+@media (max-width:450px) {
+  .button-primary {
+    margin: 0 auto;
+  }
+}
+
+/*-----End button-primary-----*/
+
+/*-----button-secondary-----*/
+.button-secondary {
+  background-color: white;
+  color: #1C7FBE;
+  border: 1px solid #1C7FBE;
+  cursor: pointer;
+  height: 2.8125em !important;
+  text-decoration: none !important;
+}
+
+.button-secondary:hover {
+  background-color: #00A3FF !important;
+  border: 1px solid #00A3FF !important;
+  color: #ffffff !important;
+}
+
+.button-secondary-nav {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+  margin-right: calc(var(--size)*10);
+  height: 2.8125em !important;
+}
+
+.button-secondary-navs {
+  background-color: transparent;
+  color: #FF9900;
+  border: 1px solid #FF9900;
+  cursor: pointer;
+  margin-right: calc(var(--size)*10);
+  height: 2.8125em !important;
+}
+
+.button-secondary-nav:hover, .button-secondary-navs:hover {
+  background-color: #FFC700 !important;
+  border: 1px solid #FFC700 !important;
+  color: #ffffff !important;
+}
+
+@media (max-width: 1340px) {
+  .button-secondary-nav {
+    color: #FF9900;
+    border: 1px solid #FF9900;
+  }
+}
+
+@media (max-width:450px) {
+  .button-secondary-nav {
+    margin-right: 0.3em;
+  }
+}
+
+/*-----End button-secondary-----*/
+/*=====END FORMS====*/
