@@ -1,0 +1,423 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels;
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
+@{
+	Layout = null;
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="~/img/favicon.ico" type="image/x-icon">
+    <title>TestUmbraco</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="~/preview/maxexmob/css/style2.css">
+</head>
+<body id="maxmob">
+
+<div class="mmhead">
+    <img src="~/preview/maxexmob/img/map.svg" style="width: 90%;" class="map">
+    <div class="left mmheadleft">
+	   <div class="six">
+	      <img src="~/preview/maxexmob/img/logo.svg" style="width: 100%;">
+          <h1 style="text-align: center;">Мобильное приложение</h1>
+       </div>
+    </div>
+    <div class="right mmheadright">
+    </div>
+</div>
+
+<div class="mmsection1">
+  <div class="container conttd">
+    <div class="left">
+	   <h1>Концепция</h1>
+	   <p>Данное приложение разработано для диспетчеров логистической компании, занимающейся логистическими перевозками в России.</p>
+	   <p>Оно помогает отслеживать статус и местонахождение заказов, находящихся в работе и обмен данными между диспетчерами и водителями.</p>
+	</div>
+	<div class="right rs1">
+	<img src="~/preview/maxexmob/img/mob1.png" class="immob">
+	</div>
+  </div> 
+</div>
+
+<div>
+    <div class="container brd"></div>
+</div>
+
+<div class="mmsection2">
+  <div class="container cl">
+	<h1>Используемые цвета и стили заголовков</h1>
+    <div class="mmflex dtr">
+	  <div class="pol">
+	    <div class="mmflex alc">
+	       <div class="circle" style="background: #0971AB;"></div>
+		   <p><b>темно-лазурный</b><br>#0971AB, 100%  RGB (8, 113, 172)</p>
+		</div>
+		<div class="mmflex alc">
+	       <div class="circle" style="background: #00FEEF;"></div>
+		   <p><b>аква</b><br>#00FEEF, 100%  RGB (0, 254, 239)</p>
+		</div>
+		<div class="mmflex alc">
+	       <div class="circle" style="background: #7E8C99;"></div>
+		   <p><b>грифельный2</b><br>#7E8C99, 70%  RGB (126, 140, 153)</p>
+		</div>
+		<div class="mmflex alc">
+	       <div class="circle" style="background: #7E8C99;"></div>
+		   <p><b>перламутровый светло-серый</b><br>#000000, 32% RGB (0, 0, 0)</p>
+		</div>
+      </div>
+	  <div class="pol">
+	      <div class="mmflex alc">
+	       <div class="circle" style="background: #0F85C8;"></div>
+		   <p><b>персидский синий</b><br>#0F85C8, 100%  RGB (15, 133, 200)</p>
+		</div>
+		<div class="mmflex alc">
+	       <div class="circle" style="background: #7E8C99;"></div>
+		   <p><b>грифельный1</b><br>#7E8C99, 100%  RGB (126, 140, 153)</p>
+		</div>
+		<div class="mmflex alc">
+	       <div class="circle" style="background: #EEEFF0;"></div>
+		   <p><b>гейнсборо</b><br>#EEEFF0, 100%  RGB (238, 239, 240)</p>
+		</div>
+		<div class="mmflex alc">
+	       <div class="circle" style="background: #BB0101;"></div>
+		   <p><b>бордо</b><br>#BB0101, 100%  RGB (187, 1, 1)</p>
+		</div>
+	  </div>
+	</div>
+  </div> 
+</div>
+
+<div>
+    <div class="container brd"></div>
+</div>
+
+<div class="mmsection3">
+  <div class="container cl typ">
+	   <h1>Типографика</h1>
+	   <p>В приложении используется шрифт Roboto и следующие стили:</p>
+	   <div class="grid gr1">
+	     <span class="zag1">Заголовок 1</span>
+		 <div class="mmflex alc">
+		   <p>Roboto, Medium, 20, #ffffff, opacity  100%
+		   <span class="text-span" style="background: white; border: 1px solid gray; margin-left: 1em;">&nbsp;</span>
+		   </p>
+		 </div>
+		 <span class="zag2">Заголовок 2</span>
+		 <div class="mmflex alc">
+		   <p>Roboto, Medium, 16, #000000, opacity  87%
+           <span class="text-span" style="background:  rgba(0, 0, 0, 0.87); margin-left: 1em;">&nbsp;</span>
+		   </p>
+		 </div>
+		 <span class="zag3">Заголовок 3</span>
+		 <div class="mmflex alc">
+		   <p>Roboto, Medium, 14, #000000, opacity  66%
+		   <span class="text-span" style="background:  rgba(0, 0, 0, 0.66); margin-left: 1em;">&nbsp;</span>
+		   </p>
+		 </div>
+		 <span class="zag4">Заголовок 4</span>
+		 <div class="mmflex alc">
+		   <p>Roboto, Medium, 14, uppercase, opacity 100%,  #ffffff
+		   <span class="text-span" style="background: white;  border: 1px solid gray; margin-left: 1em;">&nbsp;</span>
+		   , #BB0101
+		   <span class="text-span" style="background: #BB0101; margin-left: 1em;">&nbsp;</span>
+		   , #0971AB
+		   <span class="text-span" style="background: #0971AB; margin-left: 1em;">&nbsp;</span>
+		   </p>
+		 </div>
+		 <span class="osntxt">Основной текст </span>
+		 <div class="mmflex alc">
+		   <p>Roboto, Regular, 12, #000000, opacity  54%
+		   <span class="text-span" style="background: rgba(0, 0, 0, 0.54); margin-left: 1em;">&nbsp;</span>
+		   </p>
+		 </div>
+	   </div>
+  </div> 
+</div>
+
+<div>
+    <div class="container brd"></div>
+</div>
+
+<div class="mmsection4">
+  <div class="container cl">
+	   <h1>Элементы интерфейса</h1>
+	   <div class="grid gr2">
+	   
+	     <div class="griditem">
+		   <h2>МЕНЮ</h2>
+		   <div class="mmflex dtr" style="align-items: start;">
+		     <img src="~/preview/maxexmob/img/nav.svg" class="w45">
+			 <div>
+		         <p class="it">Цвет фона - #0971AB<span class="text-span" style="background: #0971AB;">&nbsp;</span></p>
+		         <p class="it">Цвет фона активного пункта меню - #0F85C8<span class="text-span" style="background: #0F85C8;">&nbsp;</span></p>
+		         <p class="it">Текст - Заголовок 4, цвет - #FFFFFF<span class="text-span" style="background: #FFFFFF; border: 1px solid gray;">&nbsp;</span></p>
+		         <p class="it">Иконки размер 20х20px, цвет - #FFFFFF, 80%<span class="text-span" style="background: rgba(255, 255, 255, 0.80); border: 1px solid gray;">&nbsp;</span>
+			 </div>
+			</div>
+		 </div>
+		 
+	     <div class="griditem">
+		 <h2>КНОПКИ</h2>
+		   <div class="mmflex dtr" style="align-items: start; padding-bottom: 2em;">
+		     <img src="~/preview/maxexmob/img/bt1.svg" class="w35">
+			 <div>
+		       <p class="it" style="margin: 0!important;">Цвет фона - #0F85C8<span class="text-span" style="background: #0F85C8;">&nbsp;</span></p>
+		       <p class="it" style="margin: 0!important;">Текст - Заголовок 4,<br>цвет - #FFFFFF<span class="text-span" style="background: #FFFFFF; border: 1px solid gray;">&nbsp;</span></p>
+			 </div>
+			</div>
+			<div class="mmflex dtr" style="align-items: start; padding-bottom: 2em;">
+		     <img src="~/preview/maxexmob/img/bt2.svg" class="w35">
+		     <div>
+		       <p class="it" style="margin: 0!important;">Цвет фона - #FFFFFF<span class="text-span" style="background: #FFFFFF; border: 1px solid gray;">&nbsp;</span></p>
+		       <p class="it" style="margin: 0!important;">Текст - Заголовок 4,<br>цвет - #BB0101<span class="text-span" style="background: #BB0101;">&nbsp;</span></p>
+			   <p class="it" style="margin: 0!important;">обводка - 1px, #BB0101<span class="text-span" style="background: #FFFFFF; border: 1px solid #BB0101;">&nbsp;</span></p>
+			 </div>
+			</div>
+			<div class="mmflex dtr" style="align-items: start;">
+		     <img src="~/preview/maxexmob/img/bt3.svg" class="w35">
+		     <div>
+		       <p class="it" style="margin: 0!important;">Цвет фона - #FFFFFF<span class="text-span" style="background: #FFFFFF; border: 1px solid gray;">&nbsp;</span></p>
+		       <p class="it" style="margin: 0!important;">Текст - Заголовок 4,<br>цвет - #0971AB<span class="text-span" style="background: #0971AB;">&nbsp;</span></p>
+			 </div>
+			</div>
+		 </div>
+		 
+		 <div class="griditem">
+		   <h2>ВКЛАДКИ</h2>
+		     <img src="~/preview/maxexmob/img/vkl.svg" class="w80">
+			 <div style="padding-bottom: 2em;">
+			   <p class="it" style="margin: 0!important;"><b>Активная вкладка</b></p>
+		       <p class="it" style="margin: 0!important;">Цвет фона - #7E8C99, 100%<span class="text-span" style="background: #7E8C99;">&nbsp;</span></p>
+		       <p class="it" style="margin: 0!important;">Текст - Заголовок 4, цвет - #FFFFFF, 100%<span class="text-span" style="background: #FFFFFF; border: 1px solid gray;">&nbsp;</span></p>
+			   <p class="it" style="margin: 0!important;">Белая стрелка внизу</p>
+			 </div>
+			 <div style="padding-bottom: 2em;">
+			   <p class="it" style="margin: 0!important;"><b>Неактивная вкладка</b></p>
+		       <p class="it" style="margin: 0!important;">Цвет фона -  #7E8C99, 70%<span class="text-span" style="background: rgba(126, 140, 153, 0.70);">&nbsp;</span></p>
+		       <p class="it" style="margin: 0!important;">Текст - Заголовок 4, цвет - #FFFFFF, 70%<span class="text-span" style="background: rgba(255, 255, 255, 0.70); border: 1px solid gray;">&nbsp;</span></p>
+			 </div>
+		 </div>
+		 
+	     <div class="griditem">
+		 <h2>ИКОНКИ</h2>
+		   <div class="mmflex" style="align-items: start; padding-bottom: 2em;">
+		     <img src="~/preview/maxexmob/img/ico-1.svg" class="w7">
+			 <div>
+		       <p class="it" style="margin: 0!important;">Цвет фона - #FFFFFF<span class="text-span" style="background: #FFFFFF; border: 1px solid gray;">&nbsp;</span>, обводка - #BB0101<span class="text-span" style="background: #FFFFFF; border: 1px solid #BB0101;">&nbsp;</span></p>
+			 </div>
+			</div>
+			<div class="mmflex" style="align-items: start; padding-bottom: 2em;">
+		     <img src="~/preview/maxexmob/img/ico-2.svg" class="w7">
+		     <div>
+		       <p class="it" style="margin: 0!important;">Цвет фона - #FFFFFF<span class="text-span" style="background: #FFFFFF; border: 1px solid gray;">&nbsp;</span>, обводка - #BB0101<span class="text-span" style="background: #FFFFFF; border: 1px solid #BB0101;">&nbsp;</span></p>
+			 </div>
+			</div>
+			<div class="mmflex" style="align-items: start; padding-bottom: 2em;">
+		     <img src="~/preview/maxexmob/img/ico-3.svg" class="w7">
+		     <div>
+		       <p class="it" style="margin: 0!important;">Цвет фона - #FFFFFF<span class="text-span" style="background: #FFFFFF; border: 1px solid gray;">&nbsp;</span>, обводка - #BB0101<span class="text-span" style="background: #FFFFFF; border: 1px solid #BB0101;">&nbsp;</span></p>
+			 </div>
+			</div>
+			<div class="mmflex" style="align-items: start; padding-bottom: 2em;">
+		     <img src="~/preview/maxexmob/img/ico-4.svg" class="w7">
+		     <div>
+		       <p class="it" style="margin: 0!important;">Цвет фона - #0F85C8<span class="text-span" style="background: #0F85C8;">&nbsp;</span></p>
+			 </div>
+			</div>
+		 </div>
+		 
+		 <div class="griditem">
+		   <h2>ГРУППИРОВКА</h2>
+		     <img src="~/preview/maxexmob/img/gr.svg" class="w60">
+			 <div style="padding-bottom: 2em;">
+			   <p class="it" style="margin: 0!important;"><b>Группировка текста</b></p>
+		       <p class="it" style="margin: 0!important;">Эффект тень - #000000,  35%, blur - 4,  х - 0, y - 1<span class="text-span" style="background: #FFFFFF; -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.35); -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.35); box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.35);">&nbsp;</span></p>
+		       <p class="it" style="margin: 0!important;">Скругление углов - 2</p>
+			 </div>
+		 </div>
+		 
+		 <div class="griditem">
+		   <h2>ВСПЛЫВАЮЩИЕ ОКНА</h2>
+		     <img src="~/preview/maxexmob/img/window.svg" class="w60">
+			 <div style="padding-bottom: 2em;">
+			   <p class="it" style="margin: 0!important;"><b>Всплывающее окно</b></p>
+		       <p class="it" style="margin: 0!important;">Цвет подложки - #000000, 32%<span class="text-span" style="background: rgba(0, 0, 0, 0.32);">&nbsp;</span></p>
+			 </div>
+		 </div>
+		 
+	   </div>
+  </div> 
+</div>
+
+<div class="mmsection5">
+  <div class="container sheme">
+	   <h1>Схема взаимодействия страниц</h1>
+       <img src="~/preview/maxexmob/img/Scheme.svg" style="width: 100%;">
+  </div> 
+</div>
+
+<div class="mmsection6">
+  <div class="container cl">
+    <div class="mmflex-bt">
+	   <h1>Иконка приложения</h1>
+	   <img src="~/preview/maxexmob/img/icon.svg" style="width: 7%;">
+	</div>
+	<div class="mmflex-bt">
+	   <img src="~/preview/maxexmob/img/im12.jpg" class="imt">
+	   <img src="~/preview/maxexmob/img/im13.jpg" class="imd">
+	</div>
+  </div> 
+</div>
+
+<div class="mmsection6-1">
+  <div class="container">
+	   <h1 style="color: white;">Описание действия<br>разделов приложения</h1>
+	   <img src="~/preview/maxexmob/img/anim.gif" class="imab">
+  </div> 
+</div>
+
+<div class="mmsection7">
+  <div class="wrapper">
+    <div class="lt">
+	   <h1>Для зарегистрированных пользователей</h1>
+	   <ul>
+	     <li>Зарегистрированные пользователи могут заходить в приложение по пин-коду, который они сами устанавливают во вкладке «Мой профиль», либо по отпечатку пальца.</li>
+	   </ul>
+	</div>
+	<img src="~/preview/maxexmob/img/im1.jpg" class="im">
+  </div> 
+</div>
+
+<div class="mmsection8">
+  <div class="wrapper wpp">
+    <img src="~/preview/maxexmob/img/im2.jpg" class="im">
+    <div class="rt">
+	   <h1>Для незарегистрированных пользователей</h1>
+	   <ul>
+	     <li>При первом входе в приложение клиенту необходимо зарегистрироваться, введя номер договора с компанией и телефон.</li>
+		 <li>Далее на телефон приходит СМС код, по которому производится первичный вход в приложение на страницу «Мой профиль».</li>
+		 <li>При переходе на эту страницу, пользователю предлагается ввести постоянный код из четырех цифр для дальнейшего пользования приложением, либо заходить по отпечатку пальца.</li>
+	   </ul>
+	</div>
+  </div> 
+</div>
+
+<div class="mmsection9">
+  <div class="wrapper">
+    <div class="lt">
+	   <h1>Новый заказ</h1>
+	   <ul>
+	     <li>На первом экране пользователю открываются 2 вкладки - одна «Новый заказ», где соответственно отображается список всех предлагаемых новых заказов, и вкладка «Мои заказы», где отображаются заказы, взятые в обработку этим пользователем.</li>
+		 <li>При нажатии на иконку просмотра в заказе пользователь переходит на следующий уровень - детали выбранного заказа.</li>
+	   </ul>
+	</div>
+	<img src="~/preview/maxexmob/img/im3.jpg" class="im">
+  </div> 
+</div>
+
+<div class="mmsection10">
+  <div class="wrapper wpp">
+    <img src="~/preview/maxexmob/img/im4.jpg" class="im">
+    <div class="rt">
+	   <h1>Прием груза</h1>
+	   <ul>
+	     <li>На это странице пользователь может просмотреть детали заказа и выбрать два действия - либо взять его в обработку, либо вернуться на предыдущую страницу к списку всех заказов</li>
+	   </ul>
+	</div>
+  </div> 
+</div>
+
+<div class="mmsection11">
+  <div class="wrapper">
+    <div class="lt">
+	   <h1>Текущий заказ</h1>
+	   <ul>
+	     <li>Здесь в первой вкладке доступна информация о заказе, во второй вкладке карта с отмеченными точками. Также имеется кнопка вызова (в правом нижнем углу экрана), надав на которую водитель может связаться с диспетчером и уточнить интересующие детали.
+ Кнопка с камерой выше делает фото и отсылает его в веб-версию приложения диспетчера (в случае. например, если у контейнера есть повреждения и необходимо сообщить об этом диспетчеру)</li>
+		 <li>Пользователь, нажав кнопку «Отмена», возвращается на страницу заказа, нажав «Выехал», переходит на модальное окно с подтверждением.</li>
+	   </ul>
+	</div>
+	<img src="~/preview/maxexmob/img/im5.jpg" class="im">
+  </div> 
+</div>
+
+<div class="mmsection12">
+  <div class="wrapper wpp">
+    <img src="~/preview/maxexmob/img/im6.jpg" class="im">
+    <div class="rt mmim1">
+	   <h1>Подтверждение</h1>
+	   <ul>
+	     <li>В модальном окне, нажав на кнопку «Ок», пользователь подтверждает заказ и выезжает по данному адресу.</li>
+		 <li>При нажатии на кнопку «Отмена» модальное окно закрывается.</li>
+		 <li>Если пользователь подтвердил свой выезд, иконка напротив нужного адреса переходит в активный статус.</li>
+	   </ul>
+	</div>
+  </div> 
+</div>
+
+<div class="mmsection13">
+  <div class="wrapper">
+    <div class="lt mmim2">
+	   <h1>Выполненый заказ</h1>
+	   <ul>
+	     <li>После того, как пользователь приехал по активному адресу, необходимо нажать кнопку «Прибыл», чтобы отметить, что данный заказ выполнен.</li>
+		 <li>После нажатия кнопки «Прибыл», иконка напротив заказа переходит в статус «Выполнено».</li>
+		 <li>Также кроме основной информации по текущему заказу пользователь может посмотреть маршрут по карте, для этого необходимо перейти<br>в соседнюю вкладку «Карта».</li>
+	   </ul>
+	</div>
+	<img src="~/preview/maxexmob/img/im7.jpg" class="im">
+  </div> 
+</div>
+
+<div class="mmsection14">
+  <div class="wrapper wpp">
+    <img src="~/preview/maxexmob/img/im8.jpg" class="im">
+    <div class="rt">
+	   <h1>Закрыть заявку</h1>
+	   <ul>
+	     <li>После того, как все заявки по адресам будут выполнены, внизу появляется кнопка «Закрыть», при нажатии на которую заявка закрывается и переходит во вкладку «Заказы» -> «История заказов».</li>
+	   </ul>
+	</div>
+  </div> 
+</div>
+
+<div class="mmsection15">
+  <div class="wrapper">
+    <div class="lt">
+	   <h1>История заказов</h1>
+	   <ul>
+	     <li>В разделе «История заказов» можно посмотреть детали выполненных заказов за разные промежутки времени в трех соответствующих вкладках.</li>
+		 <li>Вверху отображается количество заказов за выбранный период.</li>
+	   </ul>
+	</div>
+	<img src="~/preview/maxexmob/img/im9.jpg" class="im">
+  </div> 
+</div>
+
+<div class="mmsection16">
+  <div class="wrapper wpp">
+    <img src="~/preview/maxexmob/img/im10.jpg" class="im">
+    <div class="rt">
+	   <h1>Мой профиль</h1>
+	   <ul>
+	     <li>В разделе «Мой профиль» пользователь может сменить пин-код или редактировать личные данные.</li>
+	   </ul>
+	</div>
+  </div> 
+</div>
+
+<div class="mmsection17">
+  <div class="wrapper">
+    <div class="lt">
+	   <h1>Помощь и телефонная книга</h1>
+	   <ul>
+	     <li>В разделе «Помощь», который находится в главном меню, можно посмотреть информацию о том, как работают все другие разделы.</li>
+		 <li>Раздел «Телефонная книга» также находится в главном меню, в нем расположены все необходимые контакты, чтобы можно было быстро набрать нужного абонента.</li>
+	   </ul>
+	</div>
+	<img src="~/preview/maxexmob/img/im11.jpg" class="im">
+  </div> 
+</div>
+
+</body>

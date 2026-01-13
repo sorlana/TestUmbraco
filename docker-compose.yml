@@ -1,6 +1,6 @@
-version: "3"
+﻿version: "3"
 services:
-  emax:
+  TestUmbraco:
     restart: unless-stopped
     build: .
     tty: true
@@ -14,5 +14,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/EmaxData/media
+      device: /home/TestUmbracoData/media
       o: bind
