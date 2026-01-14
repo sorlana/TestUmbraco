@@ -1,20 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>TestUmbraco.Application</RootNamespace>
     <AssemblyName>TestUmbraco.Application</AssemblyName>
+    <NoWarn>$(NoWarn);NU1902;NU1603</NoWarn>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="4.3.0" />
-    <PackageReference Include="MimeKit" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <!-- Ссылка на проект Domain -->
     <ProjectReference Include="..\TestUmbraco.Domain\TestUmbraco.Domain.csproj" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <!-- Пакеты для работы с почтой -->
+    <PackageReference Include="MailKit" Version="4.7.1" />
+    <PackageReference Include="MimeKit" Version="4.7.1" />
+    
+    <!-- Пакеты для конфигурации -->
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.0" />
+    <!-- Добавьте этот пакет для метода GetValue -->
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.0" />
+    
+    <!-- Уже имеющиеся пакеты -->
+    <PackageReference Include="Azure.Identity" Version="1.14.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+  </ItemGroup>
 </Project>

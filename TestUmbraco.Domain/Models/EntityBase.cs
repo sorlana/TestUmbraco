@@ -1,18 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TestUmbraco.Domain.Models
+﻿namespace TestUmbraco.Domain.Models
 {
-    public class EntityBase
+    public abstract class EntityBase
     {
-        protected EntityBase() => DateAdded = DateTime.UtcNow;
-
-        [DataType(DataType.Time)]
-        public DateTime DateAdded { get; set; }
-
-
-        [Required]
-        [Key]
-        public Guid Id { get; set; }
-
+        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

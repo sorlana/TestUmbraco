@@ -1,0 +1,127 @@
+{
+  "actions": [
+    {
+      "change": "Import",
+      "details": [],
+      "handler": "TemplateHandler",
+      "itemType": "ITemplate",
+      "key": "5b3e3806-07ec-4c90-85ea-88dad154d224",
+      "message": "",
+      "name": "News",
+      "success": true
+    },
+    {
+      "change": "Import",
+      "details": [],
+      "handler": "TemplateHandler",
+      "itemType": "ITemplate",
+      "key": "6378b7c6-bcfd-4a0a-a67a-7f7fa94c6f2c",
+      "message": "",
+      "name": "NewsItem",
+      "success": true
+    },
+    {
+      "change": "Import",
+      "details": [],
+      "handler": "TemplateHandler",
+      "itemType": "ITemplate",
+      "key": "ae8e175b-a9b1-409d-98d9-ec7f7e5dcdd6",
+      "message": "",
+      "name": "Work",
+      "success": true
+    },
+    {
+      "change": "Import",
+      "details": [],
+      "handler": "TemplateHandler",
+      "itemType": "ITemplate",
+      "key": "dfb69cab-5b4c-49e9-83d0-b1df44b2b791",
+      "message": "",
+      "name": "WorkItem",
+      "success": true
+    },
+    {
+      "change": "Import",
+      "details": [
+        {
+          "change": "Update",
+          "name": "Key",
+          "newValue": "6d47ad98-4974-4b4c-8a22-4923441ec75c",
+          "oldValue": "53b18377-7b40-43a1-8c76-95e3bab1dd26",
+          "path": "",
+          "success": true
+        },
+        {
+          "change": "Update",
+          "name": "Name",
+          "newValue": "Ntemp",
+          "oldValue": "(None)",
+          "path": "",
+          "success": true
+        },
+        {
+          "change": "Update",
+          "name": "Icon",
+          "newValue": "icon-document-html",
+          "oldValue": "icon-folder",
+          "path": "",
+          "success": true
+        },
+        {
+          "change": "Update",
+          "name": "AllowAtRoot",
+          "newValue": "True",
+          "oldValue": "False",
+          "path": "",
+          "success": true
+        },
+        {
+          "change": "Update",
+          "name": "DefaultTemplate",
+          "newValue": "Cannot find Template",
+          "oldValue": "(Blank)",
+          "path": "DefaultTemplate",
+          "success": false
+        },
+        {
+          "change": "Update",
+          "name": "AllowedTemplates",
+          "newValue": "maxcont",
+          "oldValue": "(Blank)",
+          "path": "AllowedTemplates",
+          "success": true
+        },
+        {
+          "change": "Update",
+          "name": "Allowed",
+          "newValue": "news",
+          "oldValue": "(Blank)",
+          "path": "/Structure",
+          "success": true
+        }
+      ],
+      "handler": "ContentTypeHandler",
+      "itemType": "IContentType",
+      "key": "6d47ad98-4974-4b4c-8a22-4923441ec75c",
+      "message": "",
+      "name": "Ntemp",
+      "success": true
+    },
+    {
+      "change": "Fail",
+      "details": [],
+      "handler": "DomainHandler",
+      "itemType": "IDomain",
+      "key": "c0c3b2aa-0000-0000-0000-000000000000",
+      "message": "No content item could be found to attach domain to",
+      "name": "localhost:5000",
+      "success": false
+    }
+  ],
+  "changes": 6,
+  "date": "2026-01-14T14:45:44.7777144+03:00",
+  "filePath": "",
+  "method": "Import",
+  "total": 329,
+  "username": "test@admin"
+}

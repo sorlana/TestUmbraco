@@ -2,7 +2,7 @@
 {
     public class CallRequestDto
     {
-        public string Phone { get; set; }
-        public string TimeCall { get; set; }
+        public required string Phone { get; set; }
+        public required string TimeCall { get; set; }
     }
 }

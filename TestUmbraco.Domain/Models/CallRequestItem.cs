@@ -1,4 +1,6 @@
-﻿namespace TestUmbraco.Domain.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TestUmbraco.Domain.Models
 {
     /// <summary>
     /// База данных  
@@ -6,9 +8,11 @@
     /// </summary>
     public class CallRequestItem : EntityBase
     {
-        public string Phone { get; set; }
-        public string TimeCall { get; set; }
+        [Required(ErrorMessage = "Телефон обязателен для заполнения")]
+        [Phone(ErrorMessage = "Неверный формат телефона")]
+        public string Phone { get; set; } = string.Empty;
+        
+        [Required(ErrorMessage = "Время звонка обязательно для заполнения")]
+        public string TimeCall { get; set; } = string.Empty;
     }
-
 }
-

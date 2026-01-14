@@ -1,22 +1,6 @@
 ﻿@using Umbraco.Cms.Web.Common.PublishedModels;
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<dynamic>
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.BlockGrid>
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
 @{
-    // Сначала используем текущую страницу, если её нет — ищем корневую
-    var currentPage = Model as IPublishedContent ?? Umbraco.AssignedContentItem;
-    Layout = null; // Уберите эту строку, если у вас есть макет (Layout)
+	Layout = null;
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <title>@currentPage?.Name</title>
-</head>
-<body>
-    <h1>@currentPage?.Name</h1>
-    <p>Шаблон BlockGrid загружен. ID страницы: @currentPage?.Id</p>
-    @if (currentPage?.Value("content") != null)
-    {
-        <p>Контент найден. Теперь можно настроить рендеринг блоков.</p>
-    }
-</body>
-</html>
-
