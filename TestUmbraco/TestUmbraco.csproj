@@ -14,7 +14,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- ДЛЯ SourceCodeAuto НЕ НУЖЕН DevelopmentMode.Backoffice -->
+    <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.11.0" />
+
+    <PackageReference Include="NETCore.Encrypt" Version="2.1.1" />
+    <PackageReference Include="reCAPTCHA.AspNetCore" Version="3.0.10" />
+
+    <PackageReference Include="SeoToolkit.Umbraco" Version="6.0.1" />
+    <PackageReference Include="SeoToolkit.Umbraco.Common" Version="6.0.1" />
+    <PackageReference Include="SeoToolkit.Umbraco.SiteAudit" Version="6.0.1" />
+    <PackageReference Include="SeoToolkit.Umbraco.Common.Core" Version="6.0.1" />
+    <PackageReference Include="SeoToolkit.Umbraco.MetaFields.Core" Version="6.0.1" />
+    <PackageReference Include="SeoToolkit.Umbraco.ScriptManager.Core" Version="6.0.1" />
+    <PackageReference Include="SeoToolkit.Umbraco.Sitemap.Core" Version="6.0.1" />
+    <PackageReference Include="SeoToolkit.Umbraco.SiteAudit.Core" Version="6.0.1" />
+
+    <PackageReference Include="Umbraco.Cms.Persistence.SqlServer" Version="17.1.0" />
+
+    <PackageReference Include="uSync" Version="17.0.2" />
+    <PackageReference Include="uSync.BackOffice" Version="17.0.2" />
+
+    <PackageReference Include="Azure.Identity" Version="1.14.2" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.1" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+
     <PackageReference Include="Umbraco.Cms" Version="17.1.0" />
   </ItemGroup>
 
@@ -22,6 +49,9 @@
     <!-- Opt-in to app-local ICU to ensure consistent globalization APIs across different platforms -->
     <PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="72.1.0.3" />
     <RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="72.1.0.3" Condition="$(RuntimeIdentifier.StartsWith('linux')) or $(RuntimeIdentifier.StartsWith('win')) or ('$(RuntimeIdentifier)' == '' and !$([MSBuild]::IsOSPlatform('osx')))" />
+
+    <ProjectReference Include="..\TestUmbraco.Application\TestUmbraco.Application.csproj" />
+    <ProjectReference Include="..\TestUmbraco.Domain\TestUmbraco.Domain.csproj" />
   </ItemGroup>
 
 </Project>
