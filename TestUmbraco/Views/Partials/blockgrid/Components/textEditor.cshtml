@@ -1,0 +1,6 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+
+@if (Model.Content.HasValue("content"))
+{
+    @Html.Raw(Model.Content.Value<string>("content"))
+}

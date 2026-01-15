@@ -1,0 +1,23 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    var content = Model.Content;
+    var grid = content.Value<BlockGridModel>("gridContent");
+}
+
+@if (grid != null && grid.Any())
+{
+    <section>
+        <div class="container">
+            <div class="row">
+                @foreach (var item in grid)
+                {
+                    <div class="col-@item.ColumnSpan">
+                        @await Html.PartialAsync($"blockgrid/Components/{item.Content.ContentType.Alias}", item)
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}

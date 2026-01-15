@@ -1,10 +1,20 @@
-﻿@using Umbraco.Extensions
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridModel>
-@{
-    if (Model?.Any() != true) { return; }
-    var gridColumns = Model.GridColumns?.ToString() ?? "12";
-}
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridModel>
 
-<div class="umb-block-grid" data-grid-columns="@(gridColumns)" style="--umb-block-grid--grid-columns: @(gridColumns);">
-    @await Html.GetBlockGridItemsHtmlAsync(Model)
-</div>
+@foreach (var item in Model)
+{
+    if (item.Content.ContentType.Alias == "gridSection")
+    {
+        // Просто рендерим gridSection, он сам добадит свою разметку
+        @await Html.PartialAsync("blockgrid/Components/gridSection", item)
+    }
+    else
+    {
+        // Для обычных блоков - только row с колонкой
+        <div class="row">
+            <div class="col-@item.ColumnSpan">
+                @await Html.PartialAsync($"blockgrid/Components/{item.Content.ContentType.Alias}", item)
+            </div>
+        </div>
+    }
+}
