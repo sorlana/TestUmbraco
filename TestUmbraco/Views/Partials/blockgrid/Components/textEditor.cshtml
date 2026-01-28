@@ -1,6 +1,32 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
 
-@if (Model.Content.HasValue("content"))
+@{
+    // Получаем значение тега из свойства
+    var tagValue = Model.Content.Value<string>("tag");
+    
+    // Если значение пустое или null - используем "div", иначе - выбранное значение
+    var wrapperTag = string.IsNullOrWhiteSpace(tagValue) ? "div" : tagValue;
+    
+    // Получаем значение свойства "Class" (проверьте, что алиас совпадает с вашим)
+    var customClass = Model.Content.Value<string>("Class");
+    
+    var content = Model.Content.Value<string>("content");
+}
+
+@if (!string.IsNullOrWhiteSpace(content))
 {
-    @Html.Raw(Model.Content.Value<string>("content"))
+    if (string.IsNullOrWhiteSpace(customClass))
+    {
+        // Если свойство Class пустое - выводим тег без атрибута class
+        @:<@wrapperTag>
+    }
+    else
+    {
+        // Если свойство Class не пустое - выводим тег с пользовательским классом
+        @:<@wrapperTag class="@customClass">
+    }
+    
+    @Html.Raw(content)
+    
+    @:</@wrapperTag>
 }

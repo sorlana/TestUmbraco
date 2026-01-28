@@ -5,12 +5,12 @@
 {
     if (item.Content.ContentType.Alias == "gridSection")
     {
-        // Просто рендерим gridSection, он сам добадит свою разметку
+        // Grid Section без дополнительных оберток
         @await Html.PartialAsync("blockgrid/Components/gridSection", item)
     }
     else
     {
-        // Для обычных блоков - только row с колонкой
+        // Обычные блоки в отдельном row
         <div class="row">
             <div class="col-@item.ColumnSpan">
                 @await Html.PartialAsync($"blockgrid/Components/{item.Content.ContentType.Alias}", item)

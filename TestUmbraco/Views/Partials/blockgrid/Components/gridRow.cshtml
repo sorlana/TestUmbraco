@@ -1,0 +1,36 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockListItem>
+
+@{
+    var content = Model.Content;
+    var columns = content.Value<BlockGridModel>("columns");
+    
+    var rowClass = content.Value<string>("rowClass");
+    var listType = content.Value<bool>("listType"); // true = список, false = контейнер
+}
+
+@if (columns != null && columns.Any())
+{
+    @if (listType)
+    {
+        <ul class="row @(string.IsNullOrWhiteSpace(rowClass) ? "" : rowClass.Trim())">
+            @foreach (var column in columns)
+            {
+                <li class="col-@column.ColumnSpan">
+                    @await Html.PartialAsync($"blockgrid/Components/{column.Content.ContentType.Alias}", column)
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <div class="row @(string.IsNullOrWhiteSpace(rowClass) ? "" : rowClass.Trim())">
+            @foreach (var column in columns)
+            {
+                <div class="col-@column.ColumnSpan">
+                    @await Html.PartialAsync($"blockgrid/Components/{column.Content.ContentType.Alias}", column)
+                </div>
+            }
+        </div>
+    }
+}

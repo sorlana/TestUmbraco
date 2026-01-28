@@ -1,9 +1,0 @@
-﻿@using Umbraco.Cms.Web.Common.PublishedModels;
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ContentModels.WorkItem>
-@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
-@{
-    Layout = "Layout.cshtml";
-}
-
-<a href="/nashi-raboty" class="primarynew cl2" style="display: flex; justify-content: center;align-items: center;position: fixed; top: 4rem; right: 0.5rem;z-index: 100;"><span class="material-icons">close</span></a>
-@await Html.GetBlockGridHtmlAsync(Model.Content)

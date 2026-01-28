@@ -13,6 +13,11 @@
     <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
   </PropertyGroup>
 
+  <!-- 🔥 ДОБАВЬТЕ ЭТОТ ITEMGROUP ДЛЯ КОПИРОВАНИЯ App_Plugins -->
+  <ItemGroup>
+    <Content Include="App_Plugins\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="AspNetCoreHero.ToastNotification" Version="1.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.11.0" />

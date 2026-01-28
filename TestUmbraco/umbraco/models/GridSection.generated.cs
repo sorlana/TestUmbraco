@@ -50,11 +50,27 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
-		/// Grid Content
+		/// Класс контейнера
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("gridContent")]
-		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel GridContent => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel>(_publishedValueFallback, "gridContent");
+		[ImplementPropertyType("containerClass")]
+		public virtual string ContainerClass => this.Value<string>(_publishedValueFallback, "containerClass");
+
+		///<summary>
+		/// Контент для секции
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("rows")]
+		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockListModel Rows => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockListModel>(_publishedValueFallback, "rows");
+
+		///<summary>
+		/// Класс секции
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("sectionClass")]
+		public virtual string SectionClass => this.Value<string>(_publishedValueFallback, "sectionClass");
 	}
 }

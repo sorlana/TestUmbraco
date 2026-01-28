@@ -1,0 +1,37 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
+@using Umbraco.Cms.Core.Models
+
+@{
+    // Получаем значение свойства "Class"
+    var customClass = Model.Content.Value<string>("Class");
+    
+    // Получаем изображение (предполагается, что свойство Img - это Media Picker)
+    var image = Model.Content.Value<IPublishedContent>("Img");
+    
+    var content = Model.Content.Value<string>("content");
+}
+
+@if (!string.IsNullOrWhiteSpace(content))
+{
+    // Определяем, выводить ли класс
+    if (string.IsNullOrWhiteSpace(customClass))
+    {
+        // Если свойство Class пустое - выводим тег без атрибута class
+        @:<blockquote>
+    }
+    else
+    {
+        // Если свойство Class не пустое - выводим тег с пользовательским классом
+        @:<blockquote class="@customClass">
+    }
+    
+    // Если есть изображение - выводим его
+    if (image != null)
+    {
+        <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
+    }
+    
+        @Html.Raw(content)
+    
+    @:</blockquote>
+}

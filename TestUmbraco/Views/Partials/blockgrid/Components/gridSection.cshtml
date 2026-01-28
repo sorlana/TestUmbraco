@@ -3,21 +3,61 @@
 
 @{
     var content = Model.Content;
-    var grid = content.Value<BlockGridModel>("gridContent");
+    var rows = content.Value<BlockListModel>("rows");
+    
+    var sectionClass = content.Value<string>("sectionClass");
+    var containerClass = content.Value<string>("containerClass");
+    
+    <!-- DEBUG gridSection: Checking for background -->
+    
+    // Определяем класс для фона
+    var bgClass = "";
+    if (content.HasProperty("backgroundImage") && content.HasValue("backgroundImage"))
+    {
+        <text><!-- DEBUG gridSection: Has backgroundImage property --></text>
+        var bgImage = content.Value<IPublishedContent>("backgroundImage");
+        if (bgImage != null)
+        {
+            bgClass = $"grid-bg-{content.Key}";
+            <text><!-- DEBUG gridSection: Using class: @bgClass --></text>
+        }
+        else
+        {
+            <text><!-- DEBUG gridSection: bgImage is NULL --></text>
+        }
+    }
+    else
+    {
+        <text><!-- DEBUG gridSection: NO backgroundImage property --></text>
+        // Добавляем тестовый класс для отладки
+        bgClass = "test-bg-debug";
+    }
 }
 
-@if (grid != null && grid.Any())
+@if (rows != null && rows.Any())
 {
-    <section>
-        <div class="container">
-            <div class="row">
-                @foreach (var item in grid)
-                {
-                    <div class="col-@item.ColumnSpan">
-                        @await Html.PartialAsync($"blockgrid/Components/{item.Content.ContentType.Alias}", item)
-                    </div>
-                }
-            </div>
+    <!-- DEBUG gridSection: Rendering section with class: @bgClass -->
+    
+    // Открываем section с классом или без
+    if (string.IsNullOrWhiteSpace(sectionClass))
+    {
+        @:<section class="@bgClass">
+    }
+    else
+    {
+        @:<section class="@sectionClass.Trim() @bgClass">
+    }
+    
+        <div class="container @(string.IsNullOrWhiteSpace(containerClass) ? "" : containerClass.Trim())">
+            @foreach (var row in rows)
+            {
+                @await Html.PartialAsync($"blockgrid/Components/{row.Content.ContentType.Alias}", row)
+            }
         </div>
-    </section>
+    
+    @:</section>
+}
+else
+{
+    <text><!-- DEBUG gridSection: No rows found --></text>
 }
