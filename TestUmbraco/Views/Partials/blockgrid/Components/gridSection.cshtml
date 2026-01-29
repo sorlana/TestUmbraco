@@ -6,9 +6,26 @@
 @{
     var content = Model.Content;
     var settings = Model.Settings;
+    
+    // Дополнительная отладка: выведем все свойства settings
+    <div style="display: none;">
+        <!-- Отладка свойств -->
+        @if (settings != null)
+        {
+            <text>Settings Properties:</text>
+            @foreach (var prop in settings.Properties)
+            {
+                <text><br/>@prop.Alias: @settings.Value(prop.Alias)</text>
+            }
+        }
+        else
+        {
+            <text>Settings is NULL</text>
+        }
+    </div>
+    
     var rows = content.Value<BlockListModel>("rows");
     
-    // Получаем классы из настроек или из контента
     var sectionClass = "";
     var containerClass = "";
     
@@ -28,43 +45,36 @@
         containerClass = content.Value<string>("containerClass") ?? "";
     }
     
-    // Используем сервис для обработки фона
+    // Получаем информацию о фоне
     var backgroundResult = BackgroundService.ProcessBackground(settings, content.Key, "grid-bg");
     var bgClass = backgroundResult.CssClass;
+    var videoHtml = backgroundResult.HtmlContent;
 }
 
 @if (rows != null && rows.Any())
 {
-    // Открываем section с классом или без
-    if (string.IsNullOrWhiteSpace(sectionClass))
+    <!-- ВРЕМЕННО: выводим стили прямо здесь, если они есть -->
+    @if (!string.IsNullOrEmpty(backgroundResult.CssContent))
     {
-        if (!string.IsNullOrWhiteSpace(bgClass))
-        {
-            @:<section class="@bgClass">
-        }
-        else
-        {
-            @:<section>
-        }
-    }
-    else
-    {
-        if (!string.IsNullOrWhiteSpace(bgClass))
-        {
-            @:<section class="@sectionClass.Trim() @bgClass">
-        }
-        else
-        {
-            @:<section class="@sectionClass.Trim()">
-        }
+        <style>
+            @Html.Raw(backgroundResult.CssContent)
+        </style>
     }
     
-        <div class="container @(string.IsNullOrWhiteSpace(containerClass) ? "" : containerClass.Trim())">
+    <!-- Открываем секцию с классом фона -->
+    <section class="@sectionClass.Trim() @bgClass">
+        <!-- Если есть видео, вставляем его как фон -->
+        @if (!string.IsNullOrEmpty(videoHtml))
+        {
+            @Html.Raw(videoHtml)
+        }
+        
+        <!-- Контент секции с z-index, чтобы был поверх видео -->
+        <div class="container @containerClass.Trim()" style="position: relative; z-index: 1;">
             @foreach (var row in rows)
             {
                 @await Html.PartialAsync($"blockgrid/Components/{row.Content.ContentType.Alias}", row)
             }
         </div>
-    
-    @:</section>
+    </section>
 }
