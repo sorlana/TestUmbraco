@@ -1,0 +1,105 @@
+{
+  "$schema": "../../umbraco-package-schema.json",
+  "name": "Vokseværk Color Selector",
+  "version": "6.0.0",
+  "extensions": [
+    {
+      "type": "propertyEditorUi",
+      "alias": "Vokseverk.ColorSelector",
+      "name": "Color Selector",
+      "element": "/App_Plugins/Vokseverk.ColorSelector/color-selector.js",
+      "elementName": "color-selector",
+      "meta": {
+        "label": "Color Selector",
+        "propertyEditorSchemaAlias": "Umbraco.Plain.String",
+        "group": "pickers",
+        "icon": "icon-colorpicker",
+        "settings": {
+          "properties": [
+            {
+              "label": "Preset 1",
+              "alias": "preset1",
+              "description": "You can add 5 preset colors",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+            },
+            {
+              "label": "Preset 2",
+              "alias": "preset2",
+              "description": "",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+            },
+            {
+              "label": "Preset 3",
+              "alias": "preset3",
+              "description": "",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+            },
+            {
+              "label": "Preset 4",
+              "alias": "preset4",
+              "description": "",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+            },
+            {
+              "label": "Preset 5",
+              "alias": "preset5",
+              "description": "",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+            },
+            {
+              "label": "Hide manual input",
+              "alias": "hideManualInput",
+              "description": "Check this to hide the manual input option",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.Toggle"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "localization",
+      "alias": "Vokseverk.ColorSelector.Localize.En",
+      "name": "English",
+      "meta": {
+        "culture": "en-us",
+        "localizations": {
+          "color": {
+            "inputColor": "Input a CSS color",
+            "orChoosePreset": "— or choose a preset:",
+            "choosePreset": "Choose a preset:"
+          }
+        }
+      }
+    },
+    {
+      "type": "localization",
+      "alias": "Vokseverk.ColorSelector.Localize.EnUk",
+      "name": "English (UK)",
+      "meta": {
+        "culture": "en",
+        "localizations": {
+          "color": {
+            "inputColor": "Input a CSS colour",
+            "orChoosePreset": "— or choose a preset:",
+            "choosePreset": "Choose a preset:"
+          }
+        }
+      }
+    },
+    {
+      "type": "localization",
+      "alias": "Vokseverk.ColorSelector.Localize.Da",
+      "name": "Danish",
+      "meta": {
+        "culture": "da",
+        "localizations": {
+          "color": {
+            "inputColor": "Indtast en CSS farve",
+            "orChoosePreset": "— eller vælg et preset:",
+            "choosePreset": "Vælg en farve:"
+          }
+        }
+      }
+    }
+  ]
+}

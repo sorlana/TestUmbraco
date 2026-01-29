@@ -13,9 +13,13 @@
     <CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
   </PropertyGroup>
 
-  <!-- 🔥 ДОБАВЬТЕ ЭТОТ ITEMGROUP ДЛЯ КОПИРОВАНИЯ App_Plugins -->
+  <!-- Гарантированное копирование App_Plugins в выходную директорию -->
   <ItemGroup>
-    <Content Include="App_Plugins\**" CopyToOutputDirectory="PreserveNewest" />
+    <Content Remove="wwwroot\App_Plugins\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\App_Plugins\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,6 +52,8 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
 
     <PackageReference Include="Umbraco.Cms" Version="17.1.0" />
+
+    <PackageReference Include="Vokseverk.ColorSelector" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

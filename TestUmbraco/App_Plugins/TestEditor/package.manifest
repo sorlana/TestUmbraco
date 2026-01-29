@@ -1,0 +1,11 @@
+{
+  "propertyEditors": [
+    {
+      "alias": "testEditor",
+      "name": "Test Editor",
+      "view": "~/App_Plugins/TestEditor/test-editor.html",
+      "icon": "icon-wand",
+      "group": "Common"
+    }
+  ]
+}

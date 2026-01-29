@@ -12,40 +12,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <!-- Собираем все фоны на странице -->
-    @if (Model != null)
-    {
-        @await Html.PartialAsync("Partials/_RegisterBackgrounds", Model)
-    }
-    else
-    {
-        <text><!-- DEBUG Layout: Model is NULL --></text>
-    }
-    
     <!-- Подключаем все фоновые стили через API -->
-    @{
-        var pageBackgrounds = ViewBag.PageBackgrounds as TestUmbraco.Models.PageBackgroundsModel;
-        <text><!-- DEBUG Layout: pageBackgrounds is @(pageBackgrounds != null ? "NOT null" : "NULL") --></text>
-        
-        if (pageBackgrounds != null)
-        {
-            <text><!-- DEBUG Layout: Backgrounds count: @pageBackgrounds.Backgrounds.Count --></text>
-            
-            if (pageBackgrounds.Backgrounds.Any())
-            {
-                var backgroundsParam = string.Join("|", pageBackgrounds.Backgrounds.Select(b => 
-                    $"{b.MediaGuid}:{b.CssClass}:{b.MinHeight}:{b.Size}:{b.Position}"));
-                
-                <text><!-- DEBUG Layout: Backgrounds param: @backgroundsParam --></text>
-                
-                <link rel="stylesheet" href="/api/background/multiple?backgrounds=@Uri.EscapeDataString(backgroundsParam)" />
-            }
-            else
-            {
-                <text><!-- DEBUG Layout: No backgrounds found --></text>
-            }
-        }
+@{
+    var backgroundParams = Context.Items["BackgroundParams"] as List<string>;
+    
+    if (backgroundParams != null && backgroundParams.Any())
+    {
+        var backgroundsParam = string.Join("|", backgroundParams);
+        <link rel="stylesheet" href="/api/background/multiple?backgrounds=@Uri.EscapeDataString(backgroundsParam)" />
     }
+}
+
     
     <!-- Остальные стили и скрипты -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -1,0 +1,12 @@
+{
+  "propertyEditors": [
+    {
+      "alias": "universalBackgroundSettings",
+      "name": "Universal Background Settings",
+      "elementName": "background-settings-element",
+      "js": "~/App_Plugins/UniversalBackground/components/background-settings.element.js",
+      "icon": "icon-color",
+      "group": "Common"
+    }
+  ]
+}

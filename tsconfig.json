@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "outDir": "./TestUmbraco/wwwroot/App_Plugins/UniversalBackground/components",
+    "rootDir": "./plugins-src/UniversalBackground/components", 
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true
+  },
+  "include": ["./plugins-src/UniversalBackground/components/**/*.ts"],
+  "exclude": ["node_modules"]
+}

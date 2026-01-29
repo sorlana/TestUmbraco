@@ -1,0 +1,29 @@
+{
+  "name": "umbraco-test-local",
+  "version": "1.0.0",
+  "description": "Umbraco project with custom Grid background settings",
+  "main": "index.js",
+  "scripts": {
+    "build:plugins": "tsc --project tsconfig.json",
+    "watch:plugins": "tsc --project tsconfig.json --watch",
+    "dev": "concurrently \"npm run watch:plugins\" \"dotnet run\"",
+    "start": "npm run dev"
+  },
+  "keywords": [
+    "umbraco",
+    "lit",
+    "typescript",
+    "grid-editor"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@umbraco-cms/backoffice": "^16.5.0",
+    "@umbraco-ui/uui": "^1.16.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "lit": "^3.3.2",
+    "typescript": "^5.9.3"
+  }
+}

@@ -3,41 +3,46 @@
 
 @{
     var content = Model.Content;
+    var settings = Model.Settings;
     var rows = content.Value<BlockListModel>("rows");
     
-    var sectionClass = content.Value<string>("sectionClass");
-    var containerClass = content.Value<string>("containerClass");
-    
-    <!-- DEBUG gridSection: Checking for background -->
+    var sectionClass = settings?.Value<string>("sectionClass") ?? content.Value<string>("sectionClass");
+    var containerClass = settings?.Value<string>("containerClass") ?? content.Value<string>("containerClass");
     
     // Определяем класс для фона
     var bgClass = "";
-    if (content.HasProperty("backgroundImage") && content.HasValue("backgroundImage"))
+    
+    // Проверяем наличие фонового изображения в Settings model
+    if (settings != null && settings.HasProperty("backgroundImage") && settings.HasValue("backgroundImage"))
     {
-        <text><!-- DEBUG gridSection: Has backgroundImage property --></text>
-        var bgImage = content.Value<IPublishedContent>("backgroundImage");
+        var bgImage = settings.Value<IPublishedContent>("backgroundImage");
         if (bgImage != null)
         {
-            bgClass = $"grid-bg-{content.Key}";
-            <text><!-- DEBUG gridSection: Using class: @bgClass --></text>
+            // Создаем уникальный класс для этой секции
+            bgClass = $"grid-bg-{content.Key.ToString().Replace("-", "").Substring(0, 8)}";
+            
+            // Получаем дополнительные настройки фона
+            var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+            var bgSize = settings.HasValue("backgroundSize") ? settings.Value<string>("backgroundSize") : "cover";
+            var bgPosition = settings.HasValue("backgroundPosition") ? settings.Value<string>("backgroundPosition") : "center";
+            
+            // Формируем параметр для API
+            var backgroundParam = $"{bgImage.Key}:{bgClass}:{minHeight}:{bgSize}:{bgPosition}";
+            
+            // Добавляем в Context.Items
+            var backgroundParams = Context.Items["BackgroundParams"] as List<string>;
+            if (backgroundParams == null)
+            {
+                backgroundParams = new List<string>();
+                Context.Items["BackgroundParams"] = backgroundParams;
+            }
+            backgroundParams.Add(backgroundParam);
         }
-        else
-        {
-            <text><!-- DEBUG gridSection: bgImage is NULL --></text>
-        }
-    }
-    else
-    {
-        <text><!-- DEBUG gridSection: NO backgroundImage property --></text>
-        // Добавляем тестовый класс для отладки
-        bgClass = "test-bg-debug";
     }
 }
 
 @if (rows != null && rows.Any())
 {
-    <!-- DEBUG gridSection: Rendering section with class: @bgClass -->
-    
     // Открываем section с классом или без
     if (string.IsNullOrWhiteSpace(sectionClass))
     {
@@ -56,8 +61,4 @@
         </div>
     
     @:</section>
-}
-else
-{
-    <text><!-- DEBUG gridSection: No rows found --></text>
 }
