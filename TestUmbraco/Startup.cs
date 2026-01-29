@@ -9,6 +9,7 @@ using Umbraco.Cms.Web.Common.ApplicationBuilder;
 using Umbraco.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http.Extensions;
+using TestUmbraco.Services; // Добавляем пространство имен сервисов
 
 namespace TestUmbraco
 {
@@ -42,6 +43,12 @@ namespace TestUmbraco
                 config.IsDismissable = true;
                 config.Position = NotyfPosition.BottomRight; 
             });
+
+            // Регистрация сервиса для работы с фонами
+            services.AddScoped<IUmbracoBackgroundService, UmbracoBackgroundService>();
+            
+            // Добавляем HttpContextAccessor (нужен для фонового сервиса)
+            services.AddHttpContextAccessor();
 
             // Добавляем контроллеры для диагностики
             services.AddControllers();

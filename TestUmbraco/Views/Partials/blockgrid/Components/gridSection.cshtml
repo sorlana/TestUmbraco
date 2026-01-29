@@ -1,31 +1,13 @@
 @using Umbraco.Cms.Core.Models.Blocks
-@using TestUmbraco.Services
+@using TestUmbraco.Models
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
-@inject IUmbracoBackgroundService BackgroundService
 
 @{
     var content = Model.Content;
     var settings = Model.Settings;
-    
-    // Дополнительная отладка: выведем все свойства settings
-    <div style="display: none;">
-        <!-- Отладка свойств -->
-        @if (settings != null)
-        {
-            <text>Settings Properties:</text>
-            @foreach (var prop in settings.Properties)
-            {
-                <text><br/>@prop.Alias: @settings.Value(prop.Alias)</text>
-            }
-        }
-        else
-        {
-            <text>Settings is NULL</text>
-        }
-    </div>
-    
     var rows = content.Value<BlockListModel>("rows");
     
+    // Получаем классы секции
     var sectionClass = "";
     var containerClass = "";
     
@@ -44,37 +26,30 @@
     {
         containerClass = content.Value<string>("containerClass") ?? "";
     }
-    
-    // Получаем информацию о фоне
-    var backgroundResult = BackgroundService.ProcessBackground(settings, content.Key, "grid-bg");
-    var bgClass = backgroundResult.CssClass;
-    var videoHtml = backgroundResult.HtmlContent;
 }
 
 @if (rows != null && rows.Any())
 {
-    <!-- ВРЕМЕННО: выводим стили прямо здесь, если они есть -->
-    @if (!string.IsNullOrEmpty(backgroundResult.CssContent))
-    {
-        <style>
-            @Html.Raw(backgroundResult.CssContent)
-        </style>
-    }
-    
-    <!-- Открываем секцию с классом фона -->
-    <section class="@sectionClass.Trim() @bgClass">
-        <!-- Если есть видео, вставляем его как фон -->
-        @if (!string.IsNullOrEmpty(videoHtml))
-        {
-            @Html.Raw(videoHtml)
-        }
-        
-        <!-- Контент секции с z-index, чтобы был поверх видео -->
-        <div class="container @containerClass.Trim()" style="position: relative; z-index: 1;">
+    // Создаем функцию для контента
+    Func<object, Microsoft.AspNetCore.Html.IHtmlContent> contentFunc = 
+        @<text>
             @foreach (var row in rows)
             {
                 @await Html.PartialAsync($"blockgrid/Components/{row.Content.ContentType.Alias}", row)
             }
-        </div>
-    </section>
+        </text>;
+
+    // Создаем модель для фона
+    var backgroundModel = new BackgroundSectionModel
+    {
+        Settings = settings,
+        ComponentId = content.Key,
+        Prefix = "grid-bg",
+        SectionClass = sectionClass.Trim(),
+        ContainerClass = containerClass.Trim(),
+        Content = contentFunc
+    };
+
+    // Рендерим частичное представление
+    <partial name="_BackgroundSection" model="backgroundModel" />
 }

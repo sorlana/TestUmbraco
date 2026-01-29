@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Text;
+using TestUmbraco.Services;
 
 namespace TestUmbraco.Services
 {
@@ -20,76 +21,96 @@ namespace TestUmbraco.Services
         {
             var result = new BackgroundResult();
             
-            AddToDebugInfo($"ProcessBackground START: settings={settings != null}, componentId={componentId}, prefix={prefix}");
-            
             if (settings == null)
-            {
-                AddToDebugInfo("ProcessBackground: settings is NULL, returning empty result");
                 return result;
-            }
 
-            // Проверяем, есть ли настройки и выбрано ли значение в bg (вкладка Main)
             if (settings.HasProperty("bg") && settings.HasValue("bg"))
             {
                 var bgValue = settings.Value<string>("bg");
-                AddToDebugInfo($"ProcessBackground: bg value = '{bgValue}'");
                 
-                switch (bgValue)
+                // Обрабатываем основной фон
+                result = ProcessBackgroundType(settings, componentId, prefix, bgValue);
+                
+                // Обрабатываем оверлей (ТОЛЬКО если выбрано значение)
+                if (settings.HasProperty("overlayBg") && settings.HasValue("overlayBg"))
                 {
-                    case "Изображение":
-                        AddToDebugInfo("ProcessBackground: processing Image background");
-                        result = ProcessImageBackground(settings, componentId, prefix);
-                        break;
-                    case "Цвет":
-                        AddToDebugInfo("ProcessBackground: processing Color background");
-                        result = ProcessColorBackground(settings, componentId, prefix);
-                        break;
-                    case "Градиент":
-                        AddToDebugInfo("ProcessBackground: processing Gradient background");
-                        result = ProcessGradientBackground(settings, componentId, prefix);
-                        break;
-                    case "Видео":
-                        AddToDebugInfo("ProcessBackground: processing Video background");
-                        result = ProcessVideoBackground(settings, componentId, prefix);
-                        break;
-                    default:
-                        AddToDebugInfo($"ProcessBackground: unknown bg value '{bgValue}'");
-                        break;
+                    var overlayBgValue = settings.Value<string>("overlayBg");
+                    
+                    if (!string.IsNullOrWhiteSpace(overlayBgValue) && overlayBgValue != "Не выбрано" && overlayBgValue != "None")
+                    {
+                        result = ProcessOverlay(settings, componentId, prefix, overlayBgValue, result);
+                    }
                 }
             }
-            else
-            {
-                AddToDebugInfo($"ProcessBackground: no bg property or value. HasProperty={settings.HasProperty("bg")}, HasValue={settings.HasValue("bg")}");
-            }
-            
-            AddToDebugInfo($"ProcessBackground END: Type={result.Type}, HasBackground={result.HasBackground}, CssClass='{result.CssClass}'");
             
             return result;
+        }
+
+        private BackgroundResult ProcessBackgroundType(IPublishedElement settings, Guid componentId, string prefix, string? bgValue)
+        {
+            var result = new BackgroundResult();
+            
+            if (string.IsNullOrWhiteSpace(bgValue))
+                return result;
+            
+            var trimmedValue = bgValue.Trim();
+            
+            switch (trimmedValue)
+            {
+                case "Изображение":
+                    result = ProcessImageBackground(settings, componentId, prefix);
+                    break;
+                case "Цвет":
+                    result = ProcessColorBackground(settings, componentId, prefix);
+                    break;
+                case "Градиент":
+                    result = ProcessGradientBackground(settings, componentId, prefix);
+                    break;
+                case "Видео":
+                    result = ProcessVideoBackground(settings, componentId, prefix);
+                    break;
+            }
+            
+            return result;
+        }
+
+        private BackgroundResult ProcessOverlay(IPublishedElement settings, Guid componentId, string prefix, string overlayBgValue, BackgroundResult existingResult)
+        {
+            if (!existingResult.HasBackground)
+                return existingResult;
+            
+            // Создаем CSS для оверлея
+            var overlayCss = GenerateOverlayCss(settings, overlayBgValue, existingResult.CssClass, existingResult.Type);
+            
+            if (!string.IsNullOrEmpty(overlayCss))
+            {
+                AddToCssStyles(overlayCss);
+            }
+            
+            // Устанавливаем флаг наличия оверлея
+            existingResult.HasOverlay = !string.IsNullOrEmpty(overlayBgValue) && 
+                                       overlayBgValue != "Не выбрано" && 
+                                       overlayBgValue != "None";
+            
+            return existingResult;
         }
 
         private BackgroundResult ProcessImageBackground(IPublishedElement settings, Guid componentId, string prefix)
         {
             var result = new BackgroundResult { Type = BackgroundType.Image };
-            AddToDebugInfo($"ProcessImageBackground START for component {componentId}");
             
-            // Проверяем наличие фонового изображения (свойство backgroundImage из вкладки BackgroundColor)
             if (settings.HasProperty("backgroundImage") && settings.HasValue("backgroundImage"))
             {
-                AddToDebugInfo("ProcessImageBackground: backgroundImage property exists and has value");
-                
                 var bgImage = settings.Value<IPublishedContent>("backgroundImage");
                 if (bgImage != null)
                 {
-                    AddToDebugInfo($"ProcessImageBackground: bgImage found, Key={bgImage.Key}");
-                    
-                    // Создаем уникальный класс для компонента
                     var bgClass = $"{prefix}-img-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
                     
-                    // Получаем минимальную высоту (если есть)
+                    // Получаем параметры
                     var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                    var bgSize = "auto";
+                    var bgPosition = "center";
                     
-                    // Получаем значение bgSize и преобразуем в CSS-значение (свойство bgSize из вкладки BackgroundColor)
-                    var bgSize = "auto"; // значение по умолчанию, если ничего не выбрано
                     if (settings.HasProperty("bgSize") && settings.HasValue("bgSize"))
                     {
                         var bgSizeValue = settings.Value<string>("bgSize");
@@ -99,256 +120,413 @@ namespace TestUmbraco.Services
                         }
                     }
                     
-                    // Позиция фона (если есть)
-                    var bgPosition = settings.HasValue("backgroundPosition") 
-                        ? settings.Value<string>("backgroundPosition") 
+                    bgPosition = settings.HasValue("backgroundPosition") 
+                        ? settings.Value<string>("backgroundPosition") ?? "center"
                         : "center";
-                    
-                    AddToDebugInfo($"ProcessImageBackground: settings - minHeight={minHeight}, bgSize={bgSize}, bgPosition={bgPosition}");
                     
                     // Формируем параметр для API
                     var backgroundParam = $"{bgImage.Key}:{bgClass}:{minHeight}:{bgSize}:{bgPosition}";
                     
-                    // Добавляем в Context.Items
                     AddToBackgroundParams(backgroundParam);
+                    
+                    // CSS для позиционирования
+                    var css = $@"
+.{bgClass} {{
+    position: relative;
+    min-height: {minHeight}px;
+}}";
+                    
+                    AddToCssStyles(css);
                     
                     result.CssClass = bgClass;
                     result.HasBackground = true;
-                    
-                    AddToDebugInfo($"ProcessImageBackground: created class '{bgClass}', added to BackgroundParams");
                 }
-                else
-                {
-                    AddToDebugInfo("ProcessImageBackground: bgImage is NULL after Value<IPublishedContent>");
-                }
-            }
-            else
-            {
-                AddToDebugInfo($"ProcessImageBackground: no backgroundImage property. HasProperty={settings.HasProperty("backgroundImage")}, HasValue={settings.HasValue("backgroundImage")}");
             }
             
-            AddToDebugInfo($"ProcessImageBackground END for component {componentId}");
             return result;
         }
 
         private BackgroundResult ProcessColorBackground(IPublishedElement settings, Guid componentId, string prefix)
         {
             var result = new BackgroundResult { Type = BackgroundType.Color };
-            AddToDebugInfo($"ProcessColorBackground START for component {componentId}");
-            
-            // Используем свойство color из вкладки BackgroundColor
-            string color = null;
             
             if (settings.HasProperty("color") && settings.HasValue("color"))
             {
-                color = settings.Value<string>("color");
-                AddToDebugInfo($"ProcessColorBackground: found color '{color}' in property 'color'");
-            }
-            else
-            {
-                AddToDebugInfo("ProcessColorBackground: no color property found");
-            }
-            
-            if (!string.IsNullOrWhiteSpace(color))
-            {
-                var bgClass = $"{prefix}-color-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
-                
-                // Получаем минимальную высоту
-                var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
-                
-                // Генерируем CSS для цвета
-                var css = $".{bgClass} {{ background-color: {color} !important; min-height: {minHeight}px !important; }}";
-                
-                result.CssClass = bgClass;
-                result.CssContent = css;
-                result.HasBackground = true;
-                
-                // Добавляем CSS в коллекцию
-                AddToCssStyles(css);
-                
-                AddToDebugInfo($"ProcessColorBackground: created class '{bgClass}', CSS: {css}");
-            }
-            else
-            {
-                AddToDebugInfo("ProcessColorBackground: color value is empty or whitespace");
+                var color = settings.Value<string>("color");
+                if (!string.IsNullOrWhiteSpace(color))
+                {
+                    var bgClass = $"{prefix}-color-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
+                    var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                    
+                    var css = $@"
+.{bgClass} {{
+    background-color: {color};
+    min-height: {minHeight}px;
+    position: relative;
+}}";
+                    
+                    result.CssClass = bgClass;
+                    result.HasBackground = true;
+                    AddToCssStyles(css);
+                }
             }
             
-            AddToDebugInfo($"ProcessColorBackground END for component {componentId}");
             return result;
         }
 
         private BackgroundResult ProcessGradientBackground(IPublishedElement settings, Guid componentId, string prefix)
         {
             var result = new BackgroundResult { Type = BackgroundType.Gradient };
-            AddToDebugInfo($"ProcessGradientBackground START for component {componentId}");
-            
-            // Используем свойства colorStart, colorEnd и direction из вкладки BackgroundColor
-            string colorStart = null;
-            string colorEnd = null;
             
             if (settings.HasProperty("colorStart") && settings.HasValue("colorStart") &&
                 settings.HasProperty("colorEnd") && settings.HasValue("colorEnd"))
             {
-                colorStart = settings.Value<string>("colorStart");
-                colorEnd = settings.Value<string>("colorEnd");
-                AddToDebugInfo($"ProcessGradientBackground: using colorStart/colorEnd: {colorStart} -> {colorEnd}");
-            }
-            else
-            {
-                AddToDebugInfo($"ProcessGradientBackground: missing required color properties. Tried: colorStart/colorEnd");
+                var colorStart = settings.Value<string>("colorStart");
+                var colorEnd = settings.Value<string>("colorEnd");
+                
+                if (!string.IsNullOrWhiteSpace(colorStart) && !string.IsNullOrWhiteSpace(colorEnd))
+                {
+                    var bgClass = $"{prefix}-gradient-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
+                    
+                    var direction = "to bottom";
+                    if (settings.HasProperty("direction") && settings.HasValue("direction"))
+                    {
+                        var directionValue = settings.Value<string>("direction");
+                        direction = ConvertDirectionToCss(directionValue);
+                    }
+                    
+                    var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                    
+                    var css = $@"
+.{bgClass} {{
+    background: linear-gradient({direction}, {colorStart}, {colorEnd});
+    min-height: {minHeight}px;
+    position: relative;
+}}";
+                    
+                    result.CssClass = bgClass;
+                    result.HasBackground = true;
+                    AddToCssStyles(css);
+                }
             }
             
-            if (!string.IsNullOrWhiteSpace(colorStart) && !string.IsNullOrWhiteSpace(colorEnd))
-            {
-                var bgClass = $"{prefix}-gradient-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
-                
-                // Получаем направление градиента (свойство direction из вкладки BackgroundColor)
-                var direction = "to bottom"; // по умолчанию сверху вниз
-                
-                if (settings.HasProperty("direction") && settings.HasValue("direction"))
-                {
-                    var directionValue = settings.Value<string>("direction");
-                    AddToDebugInfo($"ProcessGradientBackground: direction value = '{directionValue}'");
-                    direction = ConvertDirectionToCss(directionValue);
-                }
-                else
-                {
-                    AddToDebugInfo("ProcessGradientBackground: using default direction 'to bottom'");
-                }
-                
-                // Получаем минимальную высоту
-                var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
-                
-                // Генерируем CSS для градиента
-                var css = $".{bgClass} {{ " +
-                          $"background: linear-gradient({direction}, {colorStart}, {colorEnd}) !important; " +
-                          $"min-height: {minHeight}px !important; " +
-                          $"}}";
-                
-                result.CssClass = bgClass;
-                result.CssContent = css;
-                result.HasBackground = true;
-                
-                // Добавляем CSS в коллекцию
-                AddToCssStyles(css);
-                
-                AddToDebugInfo($"ProcessGradientBackground: created class '{bgClass}', CSS: {css}");
-            }
-            else
-            {
-                AddToDebugInfo("ProcessGradientBackground: missing required color properties");
-            }
-            
-            AddToDebugInfo($"ProcessGradientBackground END for component {componentId}");
             return result;
         }
 
         private BackgroundResult ProcessVideoBackground(IPublishedElement settings, Guid componentId, string prefix)
         {
             var result = new BackgroundResult { Type = BackgroundType.Video };
-            AddToDebugInfo($"ProcessVideoBackground START for component {componentId}");
-            
-            // Используем свойство video из вкладки BackgroundColor
-            string videoUrl = null;
             
             if (settings.HasProperty("video") && settings.HasValue("video"))
             {
-                videoUrl = settings.Value<string>("video");
-                AddToDebugInfo($"ProcessVideoBackground: found video URL in property 'video': '{videoUrl}'");
-            }
-            else
-            {
-                AddToDebugInfo("ProcessVideoBackground: no video property found");
-                
-                // Дополнительная отладка: покажем все доступные свойства
-                AddToDebugInfo("ProcessVideoBackground: Available properties:");
-                foreach (var prop in settings.Properties)
+                var videoUrl = settings.Value<string>("video");
+                if (!string.IsNullOrWhiteSpace(videoUrl))
                 {
-                    AddToDebugInfo($"  - {prop.Alias}: HasValue={settings.HasValue(prop.Alias)}");
-                }
-            }
-            
-            if (!string.IsNullOrWhiteSpace(videoUrl))
-            {
-                // Извлекаем ID видео из ссылки Vimeo
-                var videoId = ExtractVimeoVideoId(videoUrl);
-                AddToDebugInfo($"ProcessVideoBackground: extracted videoId = '{videoId}'");
-                
-                if (!string.IsNullOrEmpty(videoId))
-                {
-                    // Создаем уникальный класс для компонента
-                    var bgClass = $"{prefix}-video-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
-                    
-                    // Получаем минимальную высоту
-                    var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
-                    
-                    // Получаем размер видео (используем то же свойство bgSize)
-                    var bgSize = "cover"; // по умолчанию
-                    if (settings.HasProperty("bgSize") && settings.HasValue("bgSize"))
+                    var videoId = ExtractVimeoVideoId(videoUrl);
+                    if (!string.IsNullOrEmpty(videoId))
                     {
-                        var bgSizeValue = settings.Value<string>("bgSize");
-                        if (!string.IsNullOrWhiteSpace(bgSizeValue))
+                        var bgClass = $"{prefix}-video-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
+                        var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                        
+                        // Получаем размер видео
+                        var bgSize = "cover";
+                        if (settings.HasProperty("bgSize") && settings.HasValue("bgSize"))
                         {
-                            bgSize = ConvertBgSizeToCss(bgSizeValue);
+                            var bgSizeValue = settings.Value<string>("bgSize");
+                            if (!string.IsNullOrWhiteSpace(bgSizeValue))
+                            {
+                                bgSize = ConvertBgSizeToCss(bgSizeValue);
+                            }
                         }
+                        
+                        // Получаем позицию видео
+                        var bgPosition = settings.HasValue("backgroundPosition") 
+                            ? settings.Value<string>("backgroundPosition") ?? "center"
+                            : "center";
+                        
+                        // Генерируем CSS
+                        var css = GenerateVideoCss(videoId, bgClass, minHeight, bgSize, bgPosition);
+                        
+                        // Генерируем HTML
+                        var html = GenerateVideoHtml(videoId, bgSize, bgPosition);
+                        
+                        result.CssClass = bgClass;
+                        result.HasBackground = true;
+                        result.HtmlContent = html;
+                        AddToCssStyles(css);
                     }
-                    
-                    // Получаем позицию видео
-                    var bgPosition = settings.HasValue("backgroundPosition") 
-                        ? settings.Value<string>("backgroundPosition") 
-                        : "center";
-                    
-                    AddToDebugInfo($"ProcessVideoBackground: minHeight={minHeight}, bgSize={bgSize}, bgPosition={bgPosition}");
-                    
-                    // Генерируем HTML для встраивания видео Vimeo
-                    var html = GenerateVimeoEmbedHtml(videoId, bgClass, bgSize, bgPosition);
-                    
-                    // CSS для позиционирования
-                    var css = $@"
-.{bgClass} {{
-    position: relative !important;
-    overflow: hidden !important;
-    min-height: {minHeight}px !important;
-}}";
-                    
-                    result.CssClass = bgClass;
-                    result.HtmlContent = html;
-                    result.CssContent = css;
-                    result.HasBackground = true;
-                    
-                    // Добавляем CSS в общую коллекцию
-                    AddToCssStyles(css);
-                    
-                    AddToDebugInfo($"ProcessVideoBackground: created class '{bgClass}', HTML length={html.Length}");
                 }
-                else
-                {
-                    AddToDebugInfo("ProcessVideoBackground: could not extract videoId from URL");
-                }
-            }
-            else
-            {
-                AddToDebugInfo("ProcessVideoBackground: videoUrl value is empty or not found");
             }
             
-            AddToDebugInfo($"ProcessVideoBackground END for component {componentId}");
             return result;
         }
 
-        private string ExtractVimeoVideoId(string url)
+        private string GenerateVideoHtml(string videoId, string bgSize, string bgPosition)
         {
-            if (string.IsNullOrWhiteSpace(url))
+            // Преобразуем настройки в CSS свойства
+            var objectFit = ConvertBgSizeToObjectFit(bgSize);
+            var objectPosition = ConvertBgPositionToObjectPosition(bgPosition);
+            
+            var html = $@"
+<iframe class='video-bg' 
+        src='https://player.vimeo.com/video/{videoId}?autoplay=1&background=1&muted=1&loop=1&autopause=0'
+        allow='autoplay; fullscreen'
+        allowfullscreen
+        title='Vimeo background video'
+        style='object-fit: {objectFit}; object-position: {objectPosition};'>
+</iframe>";
+            
+            return html;
+        }
+
+        private string GenerateOverlayCss(IPublishedElement settings, string overlayType, string mainClass, BackgroundType bgType)
+        {
+            var cssBuilder = new StringBuilder();
+            
+            // Для видео-фона оверлей должен быть выше видео
+            if (bgType == BackgroundType.Video)
             {
-                AddToDebugInfo($"ExtractVimeoVideoId: URL is null or empty");
-                return null;
+                cssBuilder.Append($@"
+.{mainClass}.with-overlay::before {{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}}");
+            }
+            else
+            {
+                cssBuilder.Append($@"
+.{mainClass}::before {{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}}");
             }
             
-            AddToDebugInfo($"ExtractVimeoVideoId: processing URL '{url}'");
+            switch (overlayType)
+            {
+                case "Цвет":
+                    if (settings.HasProperty("colorOverlay") && settings.HasValue("colorOverlay"))
+                    {
+                        var color = settings.Value<string>("colorOverlay");
+                        if (!string.IsNullOrWhiteSpace(color))
+                        {
+                            if (bgType == BackgroundType.Video)
+                            {
+                                cssBuilder.Append($@"
+.{mainClass}.with-overlay::before {{
+    background-color: {color};
+}}");
+                            }
+                            else
+                            {
+                                cssBuilder.Append($@"
+.{mainClass}::before {{
+    background-color: {color};
+}}");
+                            }
+                        }
+                    }
+                    break;
+                    
+                case "Изображение":
+                    if (settings.HasProperty("imageOverlay") && settings.HasValue("imageOverlay"))
+                    {
+                        var image = settings.Value<IPublishedContent>("imageOverlay");
+                        if (image != null)
+                        {
+                            var bgSize = "cover";
+                            var bgPosition = "center";
+                            var repeat = "no-repeat";
+                            
+                            if (settings.HasProperty("bgSizeOverlay") && settings.HasValue("bgSizeOverlay"))
+                            {
+                                var bgSizeValue = settings.Value<string>("bgSizeOverlay");
+                                if (!string.IsNullOrWhiteSpace(bgSizeValue))
+                                {
+                                    bgSize = ConvertBgSizeToCss(bgSizeValue);
+                                }
+                            }
+                            
+                            if (settings.HasProperty("repeatOverlay") && settings.HasValue("repeatOverlay"))
+                            {
+                                var repeatValue = settings.Value<bool>("repeatOverlay");
+                                repeat = repeatValue ? "repeat" : "no-repeat";
+                            }
+                            
+                            if (bgType == BackgroundType.Video)
+                            {
+                                cssBuilder.Append($@"
+.{mainClass}.with-overlay::before {{
+    background-image: url('/umbraco/api/media/get?key={image.Key}');
+    background-size: {bgSize};
+    background-position: {bgPosition};
+    background-repeat: {repeat};
+}}");
+                            }
+                            else
+                            {
+                                cssBuilder.Append($@"
+.{mainClass}::before {{
+    background-image: url('/umbraco/api/media/get?key={image.Key}');
+    background-size: {bgSize};
+    background-position: {bgPosition};
+    background-repeat: {repeat};
+}}");
+                            }
+                        }
+                    }
+                    break;
+                    
+                case "Градиент":
+                    if (settings.HasProperty("colorStartOverlay") && settings.HasValue("colorStartOverlay") &&
+                        settings.HasProperty("colorEndOverlay") && settings.HasValue("colorEndOverlay"))
+                    {
+                        var colorStart = settings.Value<string>("colorStartOverlay");
+                        var colorEnd = settings.Value<string>("colorEndOverlay");
+                        
+                        var direction = "to bottom";
+                        if (settings.HasProperty("directionOverlay") && settings.HasValue("directionOverlay"))
+                        {
+                            var directionValue = settings.Value<string>("directionOverlay");
+                            direction = ConvertDirectionToCss(directionValue);
+                        }
+                        
+                        if (bgType == BackgroundType.Video)
+                        {
+                            cssBuilder.Append($@"
+.{mainClass}.with-overlay::before {{
+    background: linear-gradient({direction}, {colorStart}, {colorEnd});
+}}");
+                        }
+                        else
+                        {
+                            cssBuilder.Append($@"
+.{mainClass}::before {{
+    background: linear-gradient({direction}, {colorStart}, {colorEnd});
+}}");
+                        }
+                    }
+                    break;
+            }
             
-            // Убираем параметры запроса если есть
+            // Прозрачность для оверлея
+            if (settings.HasProperty("opacityOverlay") && settings.HasValue("opacityOverlay"))
+            {
+                var opacityValue = settings.Value<int>("opacityOverlay");
+                var opacity = opacityValue / 100.0;
+                
+                if (bgType == BackgroundType.Video)
+                {
+                    cssBuilder.Append($@"
+.{mainClass}.with-overlay::before {{
+    opacity: {opacity.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)};
+}}");
+                }
+                else
+                {
+                    cssBuilder.Append($@"
+.{mainClass}::before {{
+    opacity: {opacity.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)};
+}}");
+                }
+            }
+            
+            // Базовые CSS для контейнера с контентом
+            cssBuilder.Append($@"
+.{mainClass} .container {{
+    position: relative;
+}}");
+
+            if (bgType == BackgroundType.Video)
+            {
+                cssBuilder.Append($@"
+.{mainClass}.with-overlay .container {{
+    z-index: 2;
+}}");
+            }
+            else
+            {
+                cssBuilder.Append($@"
+.{mainClass} .container {{
+    z-index: 1;
+}}");
+            }
+            
+            return cssBuilder.ToString();
+        }
+
+        private string GenerateVideoCss(string videoId, string bgClass, int minHeight, string bgSize, string bgPosition)
+        {
+            // Преобразуем bgSize в object-fit для видео
+            var objectFit = ConvertBgSizeToObjectFit(bgSize);
+            
+            // Преобразуем bgPosition в object-position для видео
+            var objectPosition = ConvertBgPositionToObjectPosition(bgPosition);
+            
+            var css = $@"
+.{bgClass} {{
+    position: relative;
+    min-height: {minHeight}px;
+    overflow: hidden;
+}}
+.{bgClass} .video-bg {{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    border: 0;
+}}";
+            
+            return css;
+        }
+
+        private string ConvertBgSizeToObjectFit(string bgSize)
+        {
+            return bgSize switch
+            {
+                "cover" => "cover",
+                "contain" => "contain",
+                "100% auto" => "cover", // По ширине - обрезать по высоте
+                "auto 100%" => "cover", // По высоте - обрезать по ширине
+                _ => "cover" // По умолчанию
+            };
+        }
+
+        private string ConvertBgPositionToObjectPosition(string bgPosition)
+        {
+            return bgPosition switch
+            {
+                "top" => "top center",
+                "bottom" => "bottom center",
+                "left" => "center left",
+                "right" => "center right",
+                "top left" => "top left",
+                "top right" => "top right",
+                "bottom left" => "bottom left",
+                "bottom right" => "bottom right",
+                _ => "center"
+            };
+        }
+
+        private string? ExtractVimeoVideoId(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return null;
+            
             url = url.Split('?')[0];
             
-            // Пробуем разные форматы ссылок Vimeo
             var patterns = new[]
             {
                 @"vimeo\.com/(?:.*/)?(\d+)",
@@ -369,93 +547,24 @@ namespace TestUmbraco.Services
                         var id = match.Groups[1].Value;
                         if (!string.IsNullOrWhiteSpace(id) && id.All(char.IsDigit))
                         {
-                            AddToDebugInfo($"ExtractVimeoVideoId: found ID '{id}' with pattern '{pattern}'");
                             return id;
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    AddToDebugInfo($"ExtractVimeoVideoId: error with pattern '{pattern}': {ex.Message}");
-                }
+                catch { }
             }
             
-            AddToDebugInfo($"ExtractVimeoVideoId: no video ID found in URL");
             return null;
-        }
-
-        private string GenerateVimeoEmbedHtml(string videoId, string bgClass, string bgSize, string bgPosition = "center")
-        {
-            AddToDebugInfo($"GenerateVimeoEmbedHtml: videoId='{videoId}', bgClass='{bgClass}', bgSize='{bgSize}', bgPosition='{bgPosition}'");
-            
-            // Преобразуем позицию в CSS
-            var positionCss = bgPosition switch
-            {
-                "top" => "top center",
-                "bottom" => "bottom center",
-                "left" => "center left",
-                "right" => "center right",
-                "top left" => "top left",
-                "top right" => "top right",
-                "bottom left" => "bottom left",
-                "bottom right" => "bottom right",
-                _ => "center"
-            };
-            
-            // Параметры для Vimeo фонового видео:
-            // - autoplay=1: автоматическое воспроизведение
-            // - background=1: режим фонового видео (скрывает элементы управления)
-            // - muted=1: отключение звука (обязательно для автовоспроизведения)
-            // - loop=1: зацикливание видео
-            // - autopause=0: не останавливать видео при переключении вкладок
-            
-            var embedUrl = $"https://player.vimeo.com/video/{videoId}?autoplay=1&background=1&muted=1&loop=1&autopause=0";
-            
-            var html = $@"
-<div class='{bgClass}-container' style='
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    overflow: hidden !important;
-    z-index: 0 !important;
-'>
-    <iframe 
-        src='{embedUrl}'
-        style='
-            position: absolute !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            object-fit: {bgSize} !important;
-            object-position: {positionCss} !important;
-        '
-        frameborder='0'
-        allow='autoplay; fullscreen'
-        allowfullscreen
-        title='Vimeo background video'>
-    </iframe>
-</div>";
-            
-            AddToDebugInfo($"GenerateVimeoEmbedHtml: generated HTML length = {html.Length}");
-            return html;
         }
 
         private string ConvertBgSizeToCss(string bgSizeValue)
         {
             if (string.IsNullOrWhiteSpace(bgSizeValue))
-            {
-                AddToDebugInfo($"ConvertBgSizeToCss: empty value, returning 'auto'");
                 return "auto";
-            }
             
             var trimmedValue = bgSizeValue.Trim();
-            AddToDebugInfo($"ConvertBgSizeToCss: converting '{trimmedValue}'");
             
-            var result = trimmedValue switch
+            return trimmedValue switch
             {
                 "Как есть" => "auto",
                 "По ширине" => "100% auto",
@@ -464,93 +573,53 @@ namespace TestUmbraco.Services
                 "Вместить" => "contain",
                 _ => "auto"
             };
-            
-            AddToDebugInfo($"ConvertBgSizeToCss: result = '{result}'");
-            return result;
         }
 
-        private string ConvertDirectionToCss(string directionValue)
+        private string ConvertDirectionToCss(string? directionValue)
         {
             if (string.IsNullOrWhiteSpace(directionValue))
-            {
-                AddToDebugInfo($"ConvertDirectionToCss: empty value, returning 'to bottom'");
                 return "to bottom";
-            }
             
             var trimmedValue = directionValue.Trim();
-            AddToDebugInfo($"ConvertDirectionToCss: converting '{trimmedValue}'");
             
-            var result = trimmedValue switch
+            return trimmedValue switch
             {
                 "Сверху вниз" => "to bottom",
                 "Снизу вверх" => "to top",
                 "Слева направо" => "to right",
                 "Справа налево" => "to left",
-                _ => "to bottom" // по умолчанию
+                _ => "to bottom"
             };
-            
-            AddToDebugInfo($"ConvertDirectionToCss: result = '{result}'");
-            return result;
         }
 
         private void AddToBackgroundParams(string backgroundParam)
         {
-            AddToDebugInfo($"AddToBackgroundParams: adding param '{backgroundParam}'");
-            
             var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext == null)
-            {
-                AddToDebugInfo("AddToBackgroundParams: HttpContext is NULL");
-                return;
-            }
+            if (httpContext == null) return;
 
             var backgroundParams = httpContext.Items["BackgroundParams"] as List<string>;
             if (backgroundParams == null)
             {
                 backgroundParams = new List<string>();
                 httpContext.Items["BackgroundParams"] = backgroundParams;
-                AddToDebugInfo("AddToBackgroundParams: created new BackgroundParams list");
             }
             
             backgroundParams.Add(backgroundParam);
-            AddToDebugInfo($"AddToBackgroundParams: added. Now {backgroundParams.Count} items in list");
         }
 
         private void AddToCssStyles(string css)
         {
-            AddToDebugInfo($"AddToCssStyles: adding CSS (length={css.Length})");
-            
-            var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext == null)
-            {
-                AddToDebugInfo("AddToCssStyles: HttpContext is NULL");
-                return;
-            }
-
-            var cssStyles = httpContext.Items["CssStyles"] as List<string>;
-            if (cssStyles == null)
-            {
-                cssStyles = new List<string>();
-                httpContext.Items["CssStyles"] = cssStyles;
-                AddToDebugInfo("AddToCssStyles: created new CssStyles list");
-            }
-            
-            cssStyles.Add(css);
-            AddToDebugInfo($"AddToCssStyles: added. Now {cssStyles.Count} items in list");
-        }
-
-        private void AddToDebugInfo(string message)
-        {
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null) return;
 
-            var debugMessages = httpContext.Items["BackgroundDebug"] as List<string>;
-            if (debugMessages == null)
+            var cssStyles = httpContext.Items["BackgroundCss"] as List<string>;
+            if (cssStyles == null)
             {
-                debugMessages = new List<string>();
-                httpContext.Items["BackgroundDebug"] = debugMessages;
+                cssStyles = new List<string>();
+                httpContext.Items["BackgroundCss"] = cssStyles;
             }
-            debugMessages.Add($"[{DateTime.Now:HH:mm:ss.fff}] {message}");
+            
+            cssStyles.Add(css);
         }
     }
 }

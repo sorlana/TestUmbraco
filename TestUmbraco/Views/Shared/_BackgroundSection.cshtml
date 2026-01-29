@@ -1,0 +1,41 @@
+@model TestUmbraco.Models.BackgroundSectionModel
+@inject TestUmbraco.Services.IUmbracoBackgroundService BackgroundService
+
+@{
+    var backgroundResult = BackgroundService.ProcessBackground(Model.Settings, Model.ComponentId, Model.Prefix);
+}
+
+@if (backgroundResult.HasBackground)
+{
+    <section class="@Model.SectionClass @backgroundResult.CssClass @(backgroundResult.HasOverlay ? "with-overlay" : "")">
+        @if (!string.IsNullOrEmpty(backgroundResult.HtmlContent))
+        {
+            @Html.Raw(backgroundResult.HtmlContent)
+        }
+        @if (!string.IsNullOrEmpty(Model.ContainerClass))
+        {
+            <div class="container @Model.ContainerClass.Trim()">
+                @Model.Content?.Invoke(new object()) <!-- Передаем объект вместо null -->
+            </div>
+        }
+        else
+        {
+            @Model.Content?.Invoke(new object()) <!-- Передаем объект вместо null -->
+        }
+    </section>
+}
+else
+{
+    <section class="@Model.SectionClass">
+        @if (!string.IsNullOrEmpty(Model.ContainerClass))
+        {
+            <div class="container @Model.ContainerClass.Trim()">
+                @Model.Content?.Invoke(new object()) <!-- Передаем объект вместо null -->
+            </div>
+        }
+        else
+        {
+            @Model.Content?.Invoke(new object()) <!-- Передаем объект вместо null -->
+        }
+    </section>
+}

@@ -4,7 +4,7 @@
     
     // Инициализируем ViewBag для хранения фонов
     ViewBag.TestMessage = "Hello from Layout";
-    ViewBag.PageBackgrounds = new TestUmbraco.Models.PageBackgroundsModel();
+    // Убрали ссылку на PageBackgroundsModel, так как она больше не используется
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -12,82 +12,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <!-- Подключаем все фоновые стили через API -->
-@{
-    // Отладочная информация
-    var debugInfo = Context.Items["BackgroundDebug"] as List<string>;
-    if (debugInfo != null && debugInfo.Any())
-    {
-        <text><!-- ========== BACKGROUND DEBUG START ========== --></text>
-        @foreach (var msg in debugInfo)
-        {
-            <text><!-- @msg --></text>
-        }
-        <text><!-- ========== BACKGROUND DEBUG END ========== --></text>
+    <!-- Background CSS -->
+    @{
+        var backgroundCss = Context.Items["BackgroundCss"] as List<string>;
     }
-    
-    // 1. Фоновые изображения (через API)
-    var backgroundParams = Context.Items["BackgroundParams"] as List<string>;
-    <text><!-- BackgroundParams count: @(backgroundParams?.Count ?? 0) --></text>
-    
-    if (backgroundParams != null && backgroundParams.Any())
-    {
-        var backgroundsParam = string.Join("|", backgroundParams);
-        <text><!-- Backgrounds param: @backgroundsParam --></text>
-        
-        <link rel="stylesheet" href="/api/background/multiple?backgrounds=@Uri.EscapeDataString(backgroundsParam)" />
-    }
-    else
-    {
-        <text><!-- No background images to load via API --></text>
-    }
-    
-    // 2. CSS стили для цветов, градиентов и видео
-    var cssStyles = Context.Items["CssStyles"] as List<string>;
-    <text><!-- CssStyles count: @(cssStyles?.Count ?? 0) --></text>
-    
-    if (cssStyles != null && cssStyles.Any())
+    @if (backgroundCss != null && backgroundCss.Any())
     {
         <style>
-            /* Background styles for colors, gradients and videos */
-            @Html.Raw(string.Join("\n", cssStyles))
+            @Html.Raw(string.Join("\n", backgroundCss))
         </style>
     }
-    else
-    {
-        <text><!-- No CSS styles to load --></text>
-    }
-}
 
-<style>
-/* Тестовые классы для проверки работы фона */
-.test-color-red {
-    background-color: #ff0000 !important;
-    min-height: 400px !important;
-}
-
-.test-gradient {
-    background: linear-gradient(to right, #ff0000, #0000ff) !important;
-    min-height: 400px !important;
-}
-
-.test-video-container {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    overflow: hidden !important;
-    z-index: 0 !important;
-}
-
-.test-video {
-    position: relative !important;
-    overflow: hidden !important;
-    min-height: 400px !important;
-}
-</style>
-    
     <!-- Остальные стили и скрипты -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
@@ -95,6 +30,9 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
     <link href="~/favicon.ico" rel="icon">
     <link rel="stylesheet" href="@Url.Content("~/css/style.css")" media="screen"/>
+    
+    <!-- Подключаем jQuery перед использованием -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -139,30 +77,6 @@
             return false;
         });
     });
-</script>
-<script>
-// Проверка загрузки видео фона
-document.addEventListener('DOMContentLoaded', function() {
-    var videoElements = document.querySelectorAll('[class*="-video-"]');
-    console.log('Found video background elements:', videoElements.length);
-    
-    videoElements.forEach(function(el) {
-        console.log('Video background class:', el.className);
-        var iframe = el.querySelector('iframe');
-        if (iframe) {
-            console.log('Video iframe found:', iframe.src);
-            
-            // Проверяем загрузку iframe
-            iframe.onload = function() {
-                console.log('Video iframe loaded successfully');
-            };
-            
-            iframe.onerror = function() {
-                console.error('Video iframe failed to load');
-            };
-        }
-    });
-});
 </script>
 </body>
 </html>
