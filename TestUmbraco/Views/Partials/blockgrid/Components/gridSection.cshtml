@@ -1,44 +1,36 @@
 @using Umbraco.Cms.Core.Models.Blocks
+@using TestUmbraco.Services
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@inject IUmbracoBackgroundService BackgroundService
 
 @{
     var content = Model.Content;
     var settings = Model.Settings;
     var rows = content.Value<BlockListModel>("rows");
     
-    var sectionClass = settings?.Value<string>("sectionClass") ?? content.Value<string>("sectionClass");
-    var containerClass = settings?.Value<string>("containerClass") ?? content.Value<string>("containerClass");
+    // Получаем классы из настроек или из контента
+    var sectionClass = "";
+    var containerClass = "";
     
-    // Определяем класс для фона
-    var bgClass = "";
-    
-    // Проверяем наличие фонового изображения в Settings model
-    if (settings != null && settings.HasProperty("backgroundImage") && settings.HasValue("backgroundImage"))
+    if (settings != null)
     {
-        var bgImage = settings.Value<IPublishedContent>("backgroundImage");
-        if (bgImage != null)
-        {
-            // Создаем уникальный класс для этой секции
-            bgClass = $"grid-bg-{content.Key.ToString().Replace("-", "").Substring(0, 8)}";
-            
-            // Получаем дополнительные настройки фона
-            var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
-            var bgSize = settings.HasValue("backgroundSize") ? settings.Value<string>("backgroundSize") : "cover";
-            var bgPosition = settings.HasValue("backgroundPosition") ? settings.Value<string>("backgroundPosition") : "center";
-            
-            // Формируем параметр для API
-            var backgroundParam = $"{bgImage.Key}:{bgClass}:{minHeight}:{bgSize}:{bgPosition}";
-            
-            // Добавляем в Context.Items
-            var backgroundParams = Context.Items["BackgroundParams"] as List<string>;
-            if (backgroundParams == null)
-            {
-                backgroundParams = new List<string>();
-                Context.Items["BackgroundParams"] = backgroundParams;
-            }
-            backgroundParams.Add(backgroundParam);
-        }
+        sectionClass = settings.Value<string>("sectionClass") ?? "";
+        containerClass = settings.Value<string>("containerClass") ?? "";
     }
+    
+    if (string.IsNullOrWhiteSpace(sectionClass))
+    {
+        sectionClass = content.Value<string>("sectionClass") ?? "";
+    }
+    
+    if (string.IsNullOrWhiteSpace(containerClass))
+    {
+        containerClass = content.Value<string>("containerClass") ?? "";
+    }
+    
+    // Используем сервис для обработки фона
+    var backgroundResult = BackgroundService.ProcessBackground(settings, content.Key, "grid-bg");
+    var bgClass = backgroundResult.CssClass;
 }
 
 @if (rows != null && rows.Any())
@@ -46,11 +38,25 @@
     // Открываем section с классом или без
     if (string.IsNullOrWhiteSpace(sectionClass))
     {
-        @:<section class="@bgClass">
+        if (!string.IsNullOrWhiteSpace(bgClass))
+        {
+            @:<section class="@bgClass">
+        }
+        else
+        {
+            @:<section>
+        }
     }
     else
     {
-        @:<section class="@sectionClass.Trim() @bgClass">
+        if (!string.IsNullOrWhiteSpace(bgClass))
+        {
+            @:<section class="@sectionClass.Trim() @bgClass">
+        }
+        else
+        {
+            @:<section class="@sectionClass.Trim()">
+        }
     }
     
         <div class="container @(string.IsNullOrWhiteSpace(containerClass) ? "" : containerClass.Trim())">
