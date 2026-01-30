@@ -9,7 +9,8 @@ using Umbraco.Cms.Web.Common.ApplicationBuilder;
 using Umbraco.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http.Extensions;
-using TestUmbraco.Services; // Добавляем пространство имен сервисов
+using TestUmbraco.Services;
+using Umbraco.Cms.Core.Services; // Добавлен using для IMediaService
 
 namespace TestUmbraco
 {
@@ -52,6 +53,23 @@ namespace TestUmbraco
 
             // Добавляем контроллеры для диагностики
             services.AddControllers();
+
+            // Добавляем кэширование в памяти
+            services.AddMemoryCache();
+            
+            // Добавляем сжатие ответов
+            services.AddResponseCompression(options =>
+            {
+                options.EnableForHttps = true;
+                options.MimeTypes = new[] 
+                {
+                    "text/css",
+                    "application/javascript",
+                    "text/html",
+                    "application/json",
+                    "image/svg+xml"
+                };
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -59,6 +77,68 @@ namespace TestUmbraco
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                
+                // В режиме разработки минимальное кэширование
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    OnPrepareResponse = ctx =>
+                    {
+                        var path = ctx.Context.Request.Path.Value ?? "";
+                        
+                        // Для медиа-файлов в разработке кэшируем на 1 минуту
+                        if (path.Contains("/umbraco/api/media/get"))
+                        {
+                            ctx.Context.Response.Headers["Cache-Control"] = "public, max-age=60";
+                            ctx.Context.Response.Headers["X-Cache-Mode"] = "development";
+                        }
+                    }
+                });
+            }
+            else
+            {
+                // В продакшн режиме включаем сжатие
+                app.UseResponseCompression();
+                
+                // Настраиваем статические файлы с умным кэшированием
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    OnPrepareResponse = ctx =>
+                    {
+                        var path = ctx.Context.Request.Path.Value ?? "";
+                        
+                        // Кэширование медиа-файлов с версией
+                        if (path.Contains("/umbraco/api/media/get"))
+                        {
+                            // Проверяем, есть ли параметр версии
+                            if (ctx.Context.Request.Query.ContainsKey("v"))
+                            {
+                                var version = ctx.Context.Request.Query["v"].ToString();
+                                
+                                // Если есть версия, кэшируем на год
+                                ctx.Context.Response.Headers["Cache-Control"] = "public, max-age=31536000";
+                                ctx.Context.Response.Headers["ETag"] = $"\"{version}\"";
+                                ctx.Context.Response.Headers["Expires"] = DateTime.UtcNow.AddYears(1).ToString("R");
+                            }
+                            else
+                            {
+                                // Если нет версии, кэшируем на 1 день
+                                ctx.Context.Response.Headers["Cache-Control"] = "public, max-age=86400";
+                            }
+                        }
+                        else if (path.EndsWith(".css") || path.EndsWith(".js"))
+                        {
+                            // CSS и JS кэшируем на 1 неделю
+                            ctx.Context.Response.Headers["Cache-Control"] = "public, max-age=604800";
+                        }
+                        else if (path.EndsWith(".jpg") || path.EndsWith(".jpeg") || 
+                                 path.EndsWith(".png") || path.EndsWith(".gif") || 
+                                 path.EndsWith(".webp") || path.EndsWith(".svg"))
+                        {
+                            // Изображения без версии кэшируем на 1 месяц
+                            ctx.Context.Response.Headers["Cache-Control"] = "public, max-age=2592000";
+                        }
+                    }
+                });
             }
 
             // Добавляем диагностические endpoints перед Umbraco
@@ -72,7 +152,6 @@ namespace TestUmbraco
                 })
                 .WithEndpoints(u =>
                 {
-                    // Убрано: u.UseInstallEndpoints() - в Umbraco 17 установщик включается автоматически
                     u.UseBackOfficeEndpoints();
                     u.UseWebsiteEndpoints();
                 });
@@ -129,24 +208,24 @@ namespace TestUmbraco
                 });
             });
 
-            // Endpoint для проверки пути приложения
-            app.Map("/debug/paths", diagnosticApp =>
+            // Endpoint для проверки кэширования
+            app.Map("/debug/cache-info", diagnosticApp =>
             {
                 diagnosticApp.Run(async context =>
                 {
-                    var currentDir = Directory.GetCurrentDirectory();
-                    var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                    var httpContext = context;
+                    var cacheControl = httpContext.Response.Headers["Cache-Control"].ToString();
+                    var expires = httpContext.Response.Headers["Expires"].ToString();
+                    var etag = httpContext.Response.Headers["ETag"].ToString();
                     
                     var result = new
                     {
-                        AppDomainBaseDirectory = baseDir,
-                        DirectoryGetCurrentDirectory = currentDir,
-                        EnvironmentContentRootPath = env.ContentRootPath,
-                        EnvironmentWebRootPath = env.WebRootPath,
-                        EnvironmentApplicationName = env.ApplicationName,
-                        RequestPath = context.Request.Path,
-                        RequestQueryString = context.Request.QueryString,
-                        RequestUrl = context.Request.GetDisplayUrl()
+                        RequestPath = httpContext.Request.Path,
+                        RequestQuery = httpContext.Request.QueryString,
+                        CacheControl = cacheControl,
+                        Expires = expires,
+                        ETag = etag,
+                        IsMediaRequest = httpContext.Request.Path.Value?.Contains("/umbraco/api/media/get") == true
                     };
 
                     context.Response.ContentType = "application/json";
@@ -154,155 +233,26 @@ namespace TestUmbraco
                 });
             });
 
-            // Endpoint для ручной проверки существования файлов
-            app.Map("/debug/file-check/{filename?}", diagnosticApp =>
+            // Endpoint для проверки устройства
+            app.Map("/debug/device-info", diagnosticApp =>
             {
                 diagnosticApp.Run(async context =>
                 {
-                    var filename = context.Request.RouteValues["filename"] as string ?? "BlockGrid.cshtml";
-                    var basePath = env.ContentRootPath;
+                    var userAgent = context.Request.Headers["User-Agent"].ToString();
+                    var isMobile = userAgent.Contains("Mobile", StringComparison.OrdinalIgnoreCase) ||
+                                   userAgent.Contains("Android", StringComparison.OrdinalIgnoreCase) ||
+                                   userAgent.Contains("iPhone", StringComparison.OrdinalIgnoreCase);
                     
-                    var possiblePaths = new[]
+                    var result = new
                     {
-                        Path.Combine(basePath, "Views", filename),
-                        Path.Combine(basePath, "Views", "BlockGrid", filename),
-                        Path.Combine(basePath, "Views", "BlockGrid", "Index.cshtml"),
-                        Path.Combine(basePath, filename)
-                    };
-
-                    var checks = new List<object>();
-                    
-                    foreach (var path in possiblePaths)
-                    {
-                        var exists = File.Exists(path);
-                        checks.Add(new
-                        {
-                            Path = path,
-                            RelativePath = path.Replace(basePath, "~").Replace("\\", "/"),
-                            Exists = exists,
-                            Details = exists ? new
-                            {
-                                Size = new FileInfo(path).Length,
-                                LastModified = File.GetLastWriteTime(path),
-                                IsReadOnly = new FileInfo(path).IsReadOnly
-                            } : null
-                        });
-                    }
-
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsJsonAsync(new
-                    {
-                        CheckedFile = filename,
-                        BasePath = basePath,
-                        Checks = checks
-                    });
-                });
-            });
-
-            // Endpoint для проверки конфигурации Umbraco
-            app.Map("/debug/umbraco-config", diagnosticApp =>
-            {
-                diagnosticApp.Run(async context =>
-                {
-                    var config = context.RequestServices.GetRequiredService<IConfiguration>();
-                    
-                    var umbracoConfig = new
-                    {
-                        TemplateFolders = config.GetSection("Umbraco:CMS:Runtime:TemplateFolders").Get<string[]>(),
-                        EnableTemplateFolders = config["Umbraco:CMS:Templates:EnableTemplateFolders"],
-                        DefaultRenderingEngine = config["Umbraco:CMS:Templates:DefaultRenderingEngine"],
-                        ResolveViewsFromCurrentProject = config["Umbraco:CMS:Content:ResolveViewsFromCurrentProject"],
-                        UnpublishedSupport = config["Umbraco:CMS:Unpublished:SupportUnpublished"]
+                        UserAgent = userAgent,
+                        IsMobile = isMobile,
+                        Headers = context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString())
                     };
 
                     context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsJsonAsync(umbracoConfig);
+                    await context.Response.WriteAsJsonAsync(result);
                 });
-            });
-
-            // Endpoint для симуляции поиска шаблона Umbraco
-            app.Map("/debug/template-simulation/{templateName}", diagnosticApp =>
-            {
-                diagnosticApp.Run(async context =>
-                {
-                    var templateName = context.Request.RouteValues["templateName"] as string ?? "BlockGrid";
-                    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-                    var basePath = env.ContentRootPath;
-                    
-                    logger.LogInformation($"Симуляция поиска шаблона: {templateName}");
-
-                    // Пробуем различные пути, которые может использовать Umbraco
-                    var searchPaths = new[]
-                    {
-                        $"~/Views/{templateName}.cshtml",
-                        $"~/Views/{templateName}/Index.cshtml",
-                        $"~/Views/{templateName}/{templateName}.cshtml",
-                        $"~/Views/{templateName}.cshtml",
-                        $"/Views/{templateName}.cshtml",
-                        $"/Views/{templateName}/Index.cshtml"
-                    };
-
-                    var physicalPaths = searchPaths.Select(sp =>
-                    {
-                        var relativePath = sp.Replace("~/", "").Replace("/", Path.DirectorySeparatorChar.ToString());
-                        var fullPath = Path.Combine(basePath, relativePath);
-                        return new
-                        {
-                            VirtualPath = sp,
-                            PhysicalPath = fullPath,
-                            Exists = File.Exists(fullPath)
-                        };
-                    }).ToList();
-
-                    context.Response.ContentType = "application/json";
-                    await context.Response.WriteAsJsonAsync(new
-                    {
-                        TemplateName = templateName,
-                        SearchPaths = physicalPaths,
-                        CurrentDirectory = basePath
-                    });
-                });
-            });
-
-            // Middleware для логирования всех запросов к шаблонам
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Path.StartsWithSegments("/") || 
-                    context.Request.Path.Value?.Contains("umbraco/rendermvc") == true)
-                {
-                    var logger = context.RequestServices.GetRequiredService<ILogger<Startup>>();
-                    logger.LogInformation($"Запрос: {context.Request.Method} {context.Request.Path}");
-                    
-                    if (context.Request.Path == "/")
-                    {
-                        logger.LogInformation("Главная страница - проверяем шаблоны...");
-                        
-                        var viewsPath = Path.Combine(env.ContentRootPath, "Views");
-                        logger.LogInformation($"Путь к Views: {viewsPath}");
-                        
-                        var blockGridPath = Path.Combine(viewsPath, "BlockGrid.cshtml");
-                        var testTemplatePath = Path.Combine(viewsPath, "TestTemplate.cshtml");
-                        
-                        logger.LogInformation($"BlockGrid exists: {File.Exists(blockGridPath)} at {blockGridPath}");
-                        logger.LogInformation($"TestTemplate exists: {File.Exists(testTemplatePath)} at {testTemplatePath}");
-                        
-                        // Проверяем права доступа
-                        if (File.Exists(blockGridPath))
-                        {
-                            try
-                            {
-                                using var fs = File.OpenRead(blockGridPath);
-                                logger.LogInformation("BlockGrid файл доступен для чтения");
-                            }
-                            catch (Exception ex)
-                            {
-                                logger.LogError(ex, "Нет доступа к файлу BlockGrid");
-                            }
-                        }
-                    }
-                }
-                
-                await next();
             });
 
             // Endpoint для быстрой проверки работы приложения
@@ -318,6 +268,41 @@ namespace TestUmbraco
                         Machine = Environment.MachineName,
                         ViewsFolder = Path.Combine(env.ContentRootPath, "Views"),
                         ViewsExists = Directory.Exists(Path.Combine(env.ContentRootPath, "Views"))
+                    };
+                    
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsJsonAsync(result);
+                });
+            });
+            
+            // Endpoint для проверки версии медиафайла
+            app.Map("/debug/media-version/{mediaKey:guid}", diagnosticApp =>
+            {
+                diagnosticApp.Run(async context =>
+                {
+                    var mediaKey = Guid.Parse(context.Request.RouteValues["mediaKey"]!.ToString()!);
+                    var mediaService = context.RequestServices.GetRequiredService<IMediaService>();
+                    var media = mediaService.GetById(mediaKey);
+                    
+                    if (media == null)
+                    {
+                        context.Response.StatusCode = 404;
+                        await context.Response.WriteAsync("Media not found");
+                        return;
+                    }
+                    
+                    var umbracoFile = media.GetValue<string>("umbracoFile");
+                    var updateDate = media.UpdateDate;
+                    var createDate = media.CreateDate;
+                    
+                    var result = new
+                    {
+                        MediaKey = mediaKey,
+                        Name = media.Name,
+                        UmbracoFile = umbracoFile,
+                        UpdateDate = updateDate,
+                        CreateDate = createDate,
+                        UmbracoVersion = $"{updateDate.Ticks}"
                     };
                     
                     context.Response.ContentType = "application/json";

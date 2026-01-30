@@ -1,3 +1,4 @@
+// Services/BackgroundResult.cs
 namespace TestUmbraco.Services
 {
     public class BackgroundResult
@@ -6,7 +7,8 @@ namespace TestUmbraco.Services
         public string CssClass { get; set; } = string.Empty;
         public bool HasBackground { get; set; }
         public bool HasOverlay { get; set; }
-        public string HtmlContent { get; set; } = string.Empty; // Для видео HTML
+        public bool IsLazyLoaded { get; set; }
+        public bool IsMobileOptimized { get; set; }
     }
 
     public enum BackgroundType

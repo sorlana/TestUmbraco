@@ -12,6 +12,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
+    <!-- Preconnect для оптимизации загрузки ресурсов -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://player.vimeo.com">
+    <link rel="preconnect" href="https://i.vimeocdn.com">
+    
     <!-- Background CSS -->
     @{
         var backgroundCss = Context.Items["BackgroundCss"] as List<string>;
@@ -20,11 +25,44 @@
     {
         <style>
             @Html.Raw(string.Join("\n", backgroundCss))
+            
+            /* Дополнительные стили для оптимизации фонов */
+            .lazy-loaded {
+                will-change: transform, opacity;
+            }
+            
+            .mobile-optimized .video-placeholder {
+                animation: fadeIn 0.5s ease;
+            }
+            
+            @@keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            /* Отключает видео на медленных соединениях */
+            @@media (prefers-reduced-data: reduce) {
+                .video-background-container iframe {
+                    display: none !important;
+                }
+                .video-background-container .video-placeholder {
+                    display: block !important;
+                }
+            }
+            
+            /* Прогрессивная загрузка изображений */
+            .bg-loaded {
+                transition: opacity 0.5s ease;
+            }
+            
+            /* Для старых браузеров без поддержки will-change */
+            .no-willchange .lazy-loaded {
+                transform: translateZ(0);
+            }
         </style>
     }
 
     <!-- Остальные стили и скрипты -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" asp-append-version="true"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
@@ -52,6 +90,14 @@
         });
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/91377387" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    
+    <!-- Detect feature support for older browsers -->
+    <script>
+        // Проверяем поддержку современных функций
+        document.documentElement.className = 
+            ('willChange' in document.documentElement.style ? '' : 'no-willchange') + ' ' +
+            ('IntersectionObserver' in window ? '' : 'no-intersection-observer');
+    </script>
 </head>
 
 <body>
@@ -59,6 +105,18 @@
     <div id="button-up">
       <span class="material-symbols-outlined">keyboard_double_arrow_up</span>
     </div>
+
+    <!-- Background HTML (видео и скрипты) -->
+    @{
+        var backgroundHtml = Context.Items["BackgroundHtml"] as Dictionary<string, string>;
+    }
+    @if (backgroundHtml != null && backgroundHtml.Any())
+    {
+        foreach (var html in backgroundHtml.Values)
+        {
+            @Html.Raw(html)
+        }
+    }
 
 <script>
     $(document).ready(function () {
@@ -75,6 +133,29 @@
                 scrollTop: 0
             }, 800);
             return false;
+        });
+    });
+</script>
+
+<partial name="_BackgroundConfig" />
+<script src="~/js/lazy-backgrounds.js" asp-append-version="true"></script>
+<script>
+    // Проверка работы lazy backgrounds
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('=== LAZY BACKGROUNDS DEBUG ===');
+        const elements = document.querySelectorAll('[data-bg-url]');
+        console.log(`Total elements with data-bg-url: ${elements.length}`);
+        
+        elements.forEach((el, i) => {
+            const url = el.dataset.bgUrl;
+            const rect = el.getBoundingClientRect();
+            console.log(`Element ${i}:`, {
+                url: url,
+                visible: rect.top < window.innerHeight && rect.bottom > 0,
+                position: `${rect.top}px from top`,
+                size: `${rect.width}x${rect.height}`,
+                dataset: el.dataset
+            });
         });
     });
 </script>

@@ -1,41 +1,49 @@
-@model TestUmbraco.Models.BackgroundSectionModel
-@inject TestUmbraco.Services.IUmbracoBackgroundService BackgroundService
+@using TestUmbraco.Models
+@using TestUmbraco.Services
+@inject IUmbracoBackgroundService BackgroundService
+@model BackgroundSectionModel
 
 @{
+    // Получаем фоновые классы из сервиса
     var backgroundResult = BackgroundService.ProcessBackground(Model.Settings, Model.ComponentId, Model.Prefix);
+    var backgroundClass = backgroundResult.CssClass ?? "";
+    
+    // Собираем все классы
+    var allClasses = new List<string>();
+    
+    // Базовый класс компонента
+    if (!string.IsNullOrWhiteSpace(Model.BaseClass))
+    {
+        allClasses.Add(Model.BaseClass.Trim());
+    }
+    
+    // Фоновые классы
+    if (!string.IsNullOrWhiteSpace(backgroundClass))
+    {
+        allClasses.Add(backgroundClass.Trim());
+    }
+    
+    // Дополнительные классы
+    if (!string.IsNullOrWhiteSpace(Model.AdditionalClasses))
+    {
+        allClasses.Add(Model.AdditionalClasses.Trim());
+    }
+    
+    var finalClass = string.Join(" ", allClasses);
+    var containerClass = Model.ContainerClass?.Trim() ?? "";
 }
 
-@if (backgroundResult.HasBackground)
-{
-    <section class="@Model.SectionClass @backgroundResult.CssClass @(backgroundResult.HasOverlay ? "with-overlay" : "")">
-        @if (!string.IsNullOrEmpty(backgroundResult.HtmlContent))
-        {
-            @Html.Raw(backgroundResult.HtmlContent)
-        }
-        @if (!string.IsNullOrEmpty(Model.ContainerClass))
-        {
-            <div class="container @Model.ContainerClass.Trim()">
-                @Model.Content?.Invoke(new object()) <!-- Передаем объект вместо null -->
-            </div>
-        }
-        else
-        {
-            @Model.Content?.Invoke(new object()) <!-- Передаем объект вместо null -->
-        }
-    </section>
-}
-else
-{
-    <section class="@Model.SectionClass">
-        @if (!string.IsNullOrEmpty(Model.ContainerClass))
-        {
-            <div class="container @Model.ContainerClass.Trim()">
-                @Model.Content?.Invoke(new object()) <!-- Передаем объект вместо null -->
-            </div>
-        }
-        else
-        {
-            @Model.Content?.Invoke(new object()) <!-- Передаем объект вместо null -->
-        }
-    </section>
-}
+<section class="@finalClass">
+    <!-- Элемент оверлея (добавляется через CSS) -->
+    
+    @if (!string.IsNullOrWhiteSpace(containerClass))
+    {
+        <div class="@containerClass">
+            @Model.Content?.Invoke(Model)
+        </div>
+    }
+    else
+    {
+        @Model.Content?.Invoke(Model)
+    }
+</section>

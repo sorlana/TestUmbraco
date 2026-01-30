@@ -39,15 +39,16 @@
             }
         </text>;
 
-    // Создаем модель для фона
+    // Создаем модель для фона - используем новую структуру модели
     var backgroundModel = new BackgroundSectionModel
     {
         Settings = settings,
         ComponentId = content.Key,
         Prefix = "grid-bg",
-        SectionClass = sectionClass.Trim(),
+        BaseClass = sectionClass.Trim(),  // Изменили с SectionClass на BaseClass
         ContainerClass = containerClass.Trim(),
         Content = contentFunc
+        // WrapperTag больше не используется - все секции используют <section>
     };
 
     // Рендерим частичное представление

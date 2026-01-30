@@ -1,0 +1,18 @@
+@using TestUmbraco.Services
+@using System.Text.Json
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var httpContext = HttpContextAccessor.HttpContext;
+    var backgroundInfos = httpContext?.Items["LazyBackgroundsInfo"] as List<BackgroundInfo>;
+}
+
+@if (backgroundInfos != null && backgroundInfos.Any())
+{
+    <script>
+        // Конфигурация для ленивой загрузки фонов
+        window.lazyBackgroundsConfig = @Html.Raw(JsonSerializer.Serialize(backgroundInfos));
+        
+        console.log('Lazy backgrounds config loaded:', window.lazyBackgroundsConfig);
+    </script>
+}

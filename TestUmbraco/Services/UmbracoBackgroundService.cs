@@ -1,57 +1,64 @@
+// Services/UmbracoBackgroundService.cs
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Umbraco.Cms.Core.Models.PublishedContent;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using System.Linq;
 using System.Text;
 using TestUmbraco.Services;
+using System.Text.Json;
 
 namespace TestUmbraco.Services
 {
     public class UmbracoBackgroundService : IUmbracoBackgroundService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<UmbracoBackgroundService> _logger;
 
-        public UmbracoBackgroundService(IHttpContextAccessor httpContextAccessor)
+        public UmbracoBackgroundService(
+            IHttpContextAccessor httpContextAccessor,
+            ILogger<UmbracoBackgroundService> logger)
         {
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         public BackgroundResult ProcessBackground(IPublishedElement? settings, Guid componentId, string prefix = "bg")
         {
             var result = new BackgroundResult();
             
-            if (settings == null)
-                return result;
+            if (settings == null) return result;
 
             if (settings.HasProperty("bg") && settings.HasValue("bg"))
             {
                 var bgValue = settings.Value<string>("bg");
-                
-                // Обрабатываем основной фон
-                result = ProcessBackgroundType(settings, componentId, prefix, bgValue);
-                
-                // Обрабатываем оверлей (ТОЛЬКО если выбрано значение)
-                if (settings.HasProperty("overlayBg") && settings.HasValue("overlayBg"))
+                if (!string.IsNullOrWhiteSpace(bgValue))
                 {
-                    var overlayBgValue = settings.Value<string>("overlayBg");
+                    result = ProcessBackgroundType(settings, componentId, prefix, bgValue);
                     
-                    if (!string.IsNullOrWhiteSpace(overlayBgValue) && overlayBgValue != "Не выбрано" && overlayBgValue != "None")
+                    // Обработка оверлея
+                    if (result.HasBackground && settings.HasProperty("overlayBg") && settings.HasValue("overlayBg"))
                     {
-                        result = ProcessOverlay(settings, componentId, prefix, overlayBgValue, result);
+                        var overlayBgValue = settings.Value<string>("overlayBg");
+                        if (!string.IsNullOrWhiteSpace(overlayBgValue) && overlayBgValue != "Не выбрано" && overlayBgValue != "None")
+                        {
+                            result.CssClass += " with-overlay";
+                            // Добавляем специальный класс для оверлея
+                            var overlayClass = $"overlay-{componentId.ToString("N").Substring(0, 8)}";
+                            result.CssClass += $" {overlayClass}";
+                            AddOverlayStyles(settings, result.CssClass, componentId, overlayClass);
+                        }
                     }
+                    
+                    // Регистрируем информацию для JavaScript
+                    RegisterBackgroundInfo(settings, componentId, result, bgValue);
                 }
             }
             
             return result;
         }
 
-        private BackgroundResult ProcessBackgroundType(IPublishedElement settings, Guid componentId, string prefix, string? bgValue)
+        private BackgroundResult ProcessBackgroundType(IPublishedElement settings, Guid componentId, string prefix, string bgValue)
         {
             var result = new BackgroundResult();
-            
-            if (string.IsNullOrWhiteSpace(bgValue))
-                return result;
             
             var trimmedValue = bgValue.Trim();
             
@@ -74,27 +81,6 @@ namespace TestUmbraco.Services
             return result;
         }
 
-        private BackgroundResult ProcessOverlay(IPublishedElement settings, Guid componentId, string prefix, string overlayBgValue, BackgroundResult existingResult)
-        {
-            if (!existingResult.HasBackground)
-                return existingResult;
-            
-            // Создаем CSS для оверлея
-            var overlayCss = GenerateOverlayCss(settings, overlayBgValue, existingResult.CssClass, existingResult.Type);
-            
-            if (!string.IsNullOrEmpty(overlayCss))
-            {
-                AddToCssStyles(overlayCss);
-            }
-            
-            // Устанавливаем флаг наличия оверлея
-            existingResult.HasOverlay = !string.IsNullOrEmpty(overlayBgValue) && 
-                                       overlayBgValue != "Не выбрано" && 
-                                       overlayBgValue != "None";
-            
-            return existingResult;
-        }
-
         private BackgroundResult ProcessImageBackground(IPublishedElement settings, Guid componentId, string prefix)
         {
             var result = new BackgroundResult { Type = BackgroundType.Image };
@@ -105,41 +91,35 @@ namespace TestUmbraco.Services
                 if (bgImage != null)
                 {
                     var bgClass = $"{prefix}-img-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
+                    var imageUrl = bgImage.Url();
                     
-                    // Получаем параметры
                     var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
-                    var bgSize = "auto";
-                    var bgPosition = "center";
+                    var bgSize = settings.HasValue("bgSize") ? 
+                        ConvertBgSizeToCss(settings.Value<string>("bgSize") ?? "") : "cover";
+                    var bgPosition = settings.HasValue("backgroundPosition") ? 
+                        settings.Value<string>("backgroundPosition") ?? "center" : "center";
                     
-                    if (settings.HasProperty("bgSize") && settings.HasValue("bgSize"))
-                    {
-                        var bgSizeValue = settings.Value<string>("bgSize");
-                        if (!string.IsNullOrWhiteSpace(bgSizeValue))
-                        {
-                            bgSize = ConvertBgSizeToCss(bgSizeValue);
-                        }
-                    }
-                    
-                    bgPosition = settings.HasValue("backgroundPosition") 
-                        ? settings.Value<string>("backgroundPosition") ?? "center"
-                        : "center";
-                    
-                    // Формируем параметр для API
-                    var backgroundParam = $"{bgImage.Key}:{bgClass}:{minHeight}:{bgSize}:{bgPosition}";
-                    
-                    AddToBackgroundParams(backgroundParam);
-                    
-                    // CSS для позиционирования
+                    // CSS для изображений
                     var css = $@"
-.{bgClass} {{
-    position: relative;
+.{bgClass}.lazy-image {{
     min-height: {minHeight}px;
+    position: relative;
+    background-color: #f5f5f5;
+}}
+
+.{bgClass}.lazy-image.bg-loaded {{
+    background-image: url('{imageUrl}');
+    background-size: {bgSize};
+    background-position: {bgPosition};
+    background-repeat: no-repeat;
+    background-color: transparent;
 }}";
                     
                     AddToCssStyles(css);
                     
-                    result.CssClass = bgClass;
+                    result.CssClass = $"{bgClass} lazy-image";
                     result.HasBackground = true;
+                    result.IsLazyLoaded = true;
                 }
             }
             
@@ -158,16 +138,11 @@ namespace TestUmbraco.Services
                     var bgClass = $"{prefix}-color-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
                     var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                     
-                    var css = $@"
-.{bgClass} {{
-    background-color: {color};
-    min-height: {minHeight}px;
-    position: relative;
-}}";
+                    var css = $".{bgClass} {{ background-color: {color}; min-height: {minHeight}px; position: relative; }}";
+                    AddToCssStyles(css);
                     
                     result.CssClass = bgClass;
                     result.HasBackground = true;
-                    AddToCssStyles(css);
                 }
             }
             
@@ -191,22 +166,16 @@ namespace TestUmbraco.Services
                     var direction = "to bottom";
                     if (settings.HasProperty("direction") && settings.HasValue("direction"))
                     {
-                        var directionValue = settings.Value<string>("direction");
-                        direction = ConvertDirectionToCss(directionValue);
+                        direction = ConvertDirectionToCss(settings.Value<string>("direction") ?? "");
                     }
                     
                     var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                     
-                    var css = $@"
-.{bgClass} {{
-    background: linear-gradient({direction}, {colorStart}, {colorEnd});
-    min-height: {minHeight}px;
-    position: relative;
-}}";
+                    var css = $".{bgClass} {{ background: linear-gradient({direction}, {colorStart}, {colorEnd}); min-height: {minHeight}px; position: relative; }}";
+                    AddToCssStyles(css);
                     
                     result.CssClass = bgClass;
                     result.HasBackground = true;
-                    AddToCssStyles(css);
                 }
             }
             
@@ -228,32 +197,43 @@ namespace TestUmbraco.Services
                         var bgClass = $"{prefix}-video-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
                         var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                         
-                        // Получаем размер видео
-                        var bgSize = "cover";
-                        if (settings.HasProperty("bgSize") && settings.HasValue("bgSize"))
-                        {
-                            var bgSizeValue = settings.Value<string>("bgSize");
-                            if (!string.IsNullOrWhiteSpace(bgSizeValue))
-                            {
-                                bgSize = ConvertBgSizeToCss(bgSizeValue);
-                            }
-                        }
+                        // Стили для видео, которые точно работают с Vimeo
+                        var css = $@"
+.{bgClass}.lazy-video {{
+    position: relative;
+    min-height: {minHeight}px;
+    overflow: hidden;
+}}
+
+.{bgClass}.lazy-video .video-container {{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}}
+
+.{bgClass}.lazy-video .video-bg-iframe {{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: 0;
+    pointer-events: none;
+}}";
                         
-                        // Получаем позицию видео
-                        var bgPosition = settings.HasValue("backgroundPosition") 
-                            ? settings.Value<string>("backgroundPosition") ?? "center"
-                            : "center";
-                        
-                        // Генерируем CSS
-                        var css = GenerateVideoCss(videoId, bgClass, minHeight, bgSize, bgPosition);
-                        
-                        // Генерируем HTML
-                        var html = GenerateVideoHtml(videoId, bgSize, bgPosition);
-                        
-                        result.CssClass = bgClass;
-                        result.HasBackground = true;
-                        result.HtmlContent = html;
                         AddToCssStyles(css);
+                        
+                        result.CssClass = $"{bgClass} lazy-video";
+                        result.HasBackground = true;
+                        result.IsLazyLoaded = true;
                     }
                 }
             }
@@ -261,57 +241,26 @@ namespace TestUmbraco.Services
             return result;
         }
 
-        private string GenerateVideoHtml(string videoId, string bgSize, string bgPosition)
+        private void AddOverlayStyles(IPublishedElement settings, string mainClass, Guid componentId, string overlayClass)
         {
-            // Преобразуем настройки в CSS свойства
-            var objectFit = ConvertBgSizeToObjectFit(bgSize);
-            var objectPosition = ConvertBgPositionToObjectPosition(bgPosition);
-            
-            var html = $@"
-<iframe class='video-bg' 
-        src='https://player.vimeo.com/video/{videoId}?autoplay=1&background=1&muted=1&loop=1&autopause=0'
-        allow='autoplay; fullscreen'
-        allowfullscreen
-        title='Vimeo background video'
-        style='object-fit: {objectFit}; object-position: {objectPosition};'>
-</iframe>";
-            
-            return html;
-        }
-
-        private string GenerateOverlayCss(IPublishedElement settings, string overlayType, string mainClass, BackgroundType bgType)
-        {
+            var overlayBgValue = settings.Value<string>("overlayBg");
             var cssBuilder = new StringBuilder();
             
-            // Для видео-фона оверлей должен быть выше видео
-            if (bgType == BackgroundType.Video)
-            {
-                cssBuilder.Append($@"
-.{mainClass}.with-overlay::before {{
+            // ВАЖНО: используем отдельный элемент div для оверлея, а не псевдоэлемент
+            cssBuilder.Append($@"
+.{overlayClass} .background-overlay {{
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    z-index: 1; /* Выше видео (0), ниже контента (2) */
+    pointer-events: none;
 }}");
-            }
-            else
-            {
-                cssBuilder.Append($@"
-.{mainClass}::before {{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-}}");
-            }
             
-            switch (overlayType)
+            // Стили в зависимости от типа оверлея
+            switch (overlayBgValue)
             {
                 case "Цвет":
                     if (settings.HasProperty("colorOverlay") && settings.HasValue("colorOverlay"))
@@ -319,20 +268,10 @@ namespace TestUmbraco.Services
                         var color = settings.Value<string>("colorOverlay");
                         if (!string.IsNullOrWhiteSpace(color))
                         {
-                            if (bgType == BackgroundType.Video)
-                            {
-                                cssBuilder.Append($@"
-.{mainClass}.with-overlay::before {{
+                            cssBuilder.Append($@"
+.{overlayClass} .background-overlay {{
     background-color: {color};
 }}");
-                            }
-                            else
-                            {
-                                cssBuilder.Append($@"
-.{mainClass}::before {{
-    background-color: {color};
-}}");
-                            }
                         }
                     }
                     break;
@@ -343,45 +282,14 @@ namespace TestUmbraco.Services
                         var image = settings.Value<IPublishedContent>("imageOverlay");
                         if (image != null)
                         {
-                            var bgSize = "cover";
-                            var bgPosition = "center";
-                            var repeat = "no-repeat";
-                            
-                            if (settings.HasProperty("bgSizeOverlay") && settings.HasValue("bgSizeOverlay"))
-                            {
-                                var bgSizeValue = settings.Value<string>("bgSizeOverlay");
-                                if (!string.IsNullOrWhiteSpace(bgSizeValue))
-                                {
-                                    bgSize = ConvertBgSizeToCss(bgSizeValue);
-                                }
-                            }
-                            
-                            if (settings.HasProperty("repeatOverlay") && settings.HasValue("repeatOverlay"))
-                            {
-                                var repeatValue = settings.Value<bool>("repeatOverlay");
-                                repeat = repeatValue ? "repeat" : "no-repeat";
-                            }
-                            
-                            if (bgType == BackgroundType.Video)
-                            {
-                                cssBuilder.Append($@"
-.{mainClass}.with-overlay::before {{
-    background-image: url('/umbraco/api/media/get?key={image.Key}');
-    background-size: {bgSize};
-    background-position: {bgPosition};
-    background-repeat: {repeat};
+                            var imageUrl = image.Url();
+                            cssBuilder.Append($@"
+.{overlayClass} .background-overlay {{
+    background-image: url('{imageUrl}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }}");
-                            }
-                            else
-                            {
-                                cssBuilder.Append($@"
-.{mainClass}::before {{
-    background-image: url('/umbraco/api/media/get?key={image.Key}');
-    background-size: {bgSize};
-    background-position: {bgPosition};
-    background-repeat: {repeat};
-}}");
-                            }
                         }
                     }
                     break;
@@ -393,174 +301,96 @@ namespace TestUmbraco.Services
                         var colorStart = settings.Value<string>("colorStartOverlay");
                         var colorEnd = settings.Value<string>("colorEndOverlay");
                         
-                        var direction = "to bottom";
-                        if (settings.HasProperty("directionOverlay") && settings.HasValue("directionOverlay"))
-                        {
-                            var directionValue = settings.Value<string>("directionOverlay");
-                            direction = ConvertDirectionToCss(directionValue);
-                        }
-                        
-                        if (bgType == BackgroundType.Video)
+                        if (!string.IsNullOrWhiteSpace(colorStart) && !string.IsNullOrWhiteSpace(colorEnd))
                         {
                             cssBuilder.Append($@"
-.{mainClass}.with-overlay::before {{
-    background: linear-gradient({direction}, {colorStart}, {colorEnd});
-}}");
-                        }
-                        else
-                        {
-                            cssBuilder.Append($@"
-.{mainClass}::before {{
-    background: linear-gradient({direction}, {colorStart}, {colorEnd});
+.{overlayClass} .background-overlay {{
+    background: linear-gradient(to bottom, {colorStart}, {colorEnd});
 }}");
                         }
                     }
                     break;
             }
             
-            // Прозрачность для оверлея
+            // Прозрачность оверлея
             if (settings.HasProperty("opacityOverlay") && settings.HasValue("opacityOverlay"))
             {
                 var opacityValue = settings.Value<int>("opacityOverlay");
                 var opacity = opacityValue / 100.0;
-                
-                if (bgType == BackgroundType.Video)
-                {
-                    cssBuilder.Append($@"
-.{mainClass}.with-overlay::before {{
+                cssBuilder.Append($@"
+.{overlayClass} .background-overlay {{
     opacity: {opacity.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)};
 }}");
-                }
-                else
-                {
-                    cssBuilder.Append($@"
-.{mainClass}::before {{
-    opacity: {opacity.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)};
-}}");
-                }
             }
             
-            // Базовые CSS для контейнера с контентом
-            cssBuilder.Append($@"
-.{mainClass} .container {{
-    position: relative;
-}}");
-
-            if (bgType == BackgroundType.Video)
-            {
-                cssBuilder.Append($@"
-.{mainClass}.with-overlay .container {{
-    z-index: 2;
-}}");
-            }
-            else
-            {
-                cssBuilder.Append($@"
-.{mainClass} .container {{
-    z-index: 1;
-}}");
-            }
-            
-            return cssBuilder.ToString();
+            AddToCssStyles(cssBuilder.ToString());
         }
 
-        private string GenerateVideoCss(string videoId, string bgClass, int minHeight, string bgSize, string bgPosition)
+        private void RegisterBackgroundInfo(IPublishedElement settings, Guid componentId, BackgroundResult result, string bgValue)
         {
-            // Преобразуем bgSize в object-fit для видео
-            var objectFit = ConvertBgSizeToObjectFit(bgSize);
-            
-            // Преобразуем bgPosition в object-position для видео
-            var objectPosition = ConvertBgPositionToObjectPosition(bgPosition);
-            
-            var css = $@"
-.{bgClass} {{
-    position: relative;
-    min-height: {minHeight}px;
-    overflow: hidden;
-}}
-.{bgClass} .video-bg {{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-    border: 0;
-}}";
-            
-            return css;
-        }
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null) return;
 
-        private string ConvertBgSizeToObjectFit(string bgSize)
-        {
-            return bgSize switch
-            {
-                "cover" => "cover",
-                "contain" => "contain",
-                "100% auto" => "cover", // По ширине - обрезать по высоте
-                "auto 100%" => "cover", // По высоте - обрезать по ширине
-                _ => "cover" // По умолчанию
-            };
-        }
-
-        private string ConvertBgPositionToObjectPosition(string bgPosition)
-        {
-            return bgPosition switch
-            {
-                "top" => "top center",
-                "bottom" => "bottom center",
-                "left" => "center left",
-                "right" => "center right",
-                "top left" => "top left",
-                "top right" => "top right",
-                "bottom left" => "bottom left",
-                "bottom right" => "bottom right",
-                _ => "center"
-            };
-        }
-
-        private string? ExtractVimeoVideoId(string url)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-                return null;
+            var backgroundInfos = httpContext.Items["LazyBackgroundsInfo"] as List<BackgroundInfo> ?? new List<BackgroundInfo>();
             
-            url = url.Split('?')[0];
-            
-            var patterns = new[]
+            var info = new BackgroundInfo
             {
-                @"vimeo\.com/(?:.*/)?(\d+)",
-                @"player\.vimeo\.com/video/(\d+)",
-                @"vimeo\.com/channels/[^/]+/(\d+)",
-                @"vimeo\.com/groups/[^/]+/videos/(\d+)"
+                ComponentClass = result.CssClass,
+                Type = bgValue,
+                ComponentId = componentId.ToString()
             };
             
-            foreach (var pattern in patterns)
+            switch (bgValue.Trim())
             {
-                try
-                {
-                    var regex = new Regex(pattern, RegexOptions.IgnoreCase);
-                    var match = regex.Match(url);
-                    
-                    if (match.Success && match.Groups.Count > 1)
+                case "Изображение":
+                    if (settings.HasProperty("backgroundImage") && settings.HasValue("backgroundImage"))
                     {
-                        var id = match.Groups[1].Value;
-                        if (!string.IsNullOrWhiteSpace(id) && id.All(char.IsDigit))
+                        var bgImage = settings.Value<IPublishedContent>("backgroundImage");
+                        if (bgImage != null)
                         {
-                            return id;
+                            info.Url = bgImage.Url();
+                            info.Size = settings.HasValue("bgSize") ? 
+                                ConvertBgSizeToCss(settings.Value<string>("bgSize") ?? "") : "cover";
+                            info.Position = settings.HasValue("backgroundPosition") ? 
+                                settings.Value<string>("backgroundPosition") ?? "center" : "center";
                         }
                     }
-                }
-                catch { }
+                    break;
+                    
+                case "Видео":
+                    if (settings.HasProperty("video") && settings.HasValue("video"))
+                    {
+                        var videoUrl = settings.Value<string>("video");
+                        if (!string.IsNullOrWhiteSpace(videoUrl))
+                        {
+                            var videoId = ExtractVimeoVideoId(videoUrl);
+                            if (!string.IsNullOrEmpty(videoId))
+                            {
+                                info.VideoId = videoId;
+                                
+                                if (settings.HasProperty("videoPlaceholder") && settings.HasValue("videoPlaceholder"))
+                                {
+                                    var placeholder = settings.Value<IPublishedContent>("videoPlaceholder");
+                                    if (placeholder != null)
+                                    {
+                                        info.PlaceholderUrl = placeholder.Url();
+                                        info.UsePlaceholder = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
             }
             
-            return null;
+            backgroundInfos.Add(info);
+            httpContext.Items["LazyBackgroundsInfo"] = backgroundInfos;
         }
 
         private string ConvertBgSizeToCss(string bgSizeValue)
         {
             if (string.IsNullOrWhiteSpace(bgSizeValue))
-                return "auto";
+                return "cover";
             
             var trimmedValue = bgSizeValue.Trim();
             
@@ -571,11 +401,11 @@ namespace TestUmbraco.Services
                 "По высоте" => "auto 100%",
                 "Обложка" => "cover",
                 "Вместить" => "contain",
-                _ => "auto"
+                _ => "cover"
             };
         }
 
-        private string ConvertDirectionToCss(string? directionValue)
+        private string ConvertDirectionToCss(string directionValue)
         {
             if (string.IsNullOrWhiteSpace(directionValue))
                 return "to bottom";
@@ -592,19 +422,16 @@ namespace TestUmbraco.Services
             };
         }
 
-        private void AddToBackgroundParams(string backgroundParam)
+        private string? ExtractVimeoVideoId(string url)
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext == null) return;
-
-            var backgroundParams = httpContext.Items["BackgroundParams"] as List<string>;
-            if (backgroundParams == null)
-            {
-                backgroundParams = new List<string>();
-                httpContext.Items["BackgroundParams"] = backgroundParams;
-            }
+            if (string.IsNullOrWhiteSpace(url))
+                return null;
             
-            backgroundParams.Add(backgroundParam);
+            url = url.Split('?')[0];
+            var regex = new System.Text.RegularExpressions.Regex(@"vimeo\.com/(?:.*/)?(\d+)");
+            var match = regex.Match(url);
+            
+            return match.Success && match.Groups.Count > 1 ? match.Groups[1].Value : null;
         }
 
         private void AddToCssStyles(string css)
@@ -612,14 +439,23 @@ namespace TestUmbraco.Services
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null) return;
 
-            var cssStyles = httpContext.Items["BackgroundCss"] as List<string>;
-            if (cssStyles == null)
-            {
-                cssStyles = new List<string>();
-                httpContext.Items["BackgroundCss"] = cssStyles;
-            }
-            
+            var cssStyles = httpContext.Items["BackgroundCss"] as List<string> ?? new List<string>();
             cssStyles.Add(css);
+            httpContext.Items["BackgroundCss"] = cssStyles;
         }
+    }
+
+    // Класс для хранения информации о фонах
+    public class BackgroundInfo
+    {
+        public string ComponentClass { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string ComponentId { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
+        public string Size { get; set; } = "cover";
+        public string Position { get; set; } = "center";
+        public string VideoId { get; set; } = string.Empty;
+        public bool UsePlaceholder { get; set; }
+        public string PlaceholderUrl { get; set; } = string.Empty;
     }
 }
