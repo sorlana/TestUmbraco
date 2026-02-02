@@ -1,4 +1,3 @@
-// Services/BackgroundResult.cs
 namespace TestUmbraco.Services
 {
     public class BackgroundResult
@@ -9,6 +8,10 @@ namespace TestUmbraco.Services
         public bool HasOverlay { get; set; }
         public bool IsLazyLoaded { get; set; }
         public bool IsMobileOptimized { get; set; }
+        public string OverlayClass { get; set; } = string.Empty;
+        public string VideoId { get; set; } = string.Empty;
+        public string VideoPlaceholder { get; set; } = string.Empty;
+        public bool UseVideoPlaceholder { get; set; }
     }
 
     public enum BackgroundType

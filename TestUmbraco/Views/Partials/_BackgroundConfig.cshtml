@@ -1,18 +1,18 @@
 @using TestUmbraco.Services
-@using System.Text.Json
-@inject IHttpContextAccessor HttpContextAccessor
+@using System.Collections.Generic
 
 @{
-    var httpContext = HttpContextAccessor.HttpContext;
-    var backgroundInfos = httpContext?.Items["LazyBackgroundsInfo"] as List<BackgroundInfo>;
+    // Этот файл остается для совместимости, но теперь стили генерируются в статический CSS
+    // Поэтому он может быть пустым или содержать только ссылку на CSS файл
+    
+    var version = DateTime.Now.ToString("yyyyMMdd");
+    var cssLink = $"/css/backgrounds.css?v={version}";
 }
 
-@if (backgroundInfos != null && backgroundInfos.Any())
-{
-    <script>
-        // Конфигурация для ленивой загрузки фонов
-        window.lazyBackgroundsConfig = @Html.Raw(JsonSerializer.Serialize(backgroundInfos));
-        
-        console.log('Lazy backgrounds config loaded:', window.lazyBackgroundsConfig);
-    </script>
-}
+<!-- Ссылка на статический CSS файл с фонами -->
+<link rel="stylesheet" href="@cssLink" />
+
+@*
+    Старая логика инлайн-стилей больше не используется.
+    Все стили теперь генерируются в backgrounds.css
+*@

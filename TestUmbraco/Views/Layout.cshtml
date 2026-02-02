@@ -15,53 +15,9 @@
     <!-- Preconnect для оптимизации загрузки ресурсов -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://player.vimeo.com">
-    <link rel="preconnect" href="https://i.vimeocdn.com">
-    
+    <link rel="preconnect" href="https://i.vimeocdn.com">  
     <!-- Background CSS -->
-    @{
-        var backgroundCss = Context.Items["BackgroundCss"] as List<string>;
-    }
-    @if (backgroundCss != null && backgroundCss.Any())
-    {
-        <style>
-            @Html.Raw(string.Join("\n", backgroundCss))
-            
-            /* Дополнительные стили для оптимизации фонов */
-            .lazy-loaded {
-                will-change: transform, opacity;
-            }
-            
-            .mobile-optimized .video-placeholder {
-                animation: fadeIn 0.5s ease;
-            }
-            
-            @@keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            
-            /* Отключает видео на медленных соединениях */
-            @@media (prefers-reduced-data: reduce) {
-                .video-background-container iframe {
-                    display: none !important;
-                }
-                .video-background-container .video-placeholder {
-                    display: block !important;
-                }
-            }
-            
-            /* Прогрессивная загрузка изображений */
-            .bg-loaded {
-                transition: opacity 0.5s ease;
-            }
-            
-            /* Для старых браузеров без поддержки will-change */
-            .no-willchange .lazy-loaded {
-                transform: translateZ(0);
-            }
-        </style>
-    }
-
+    <link rel="stylesheet" href="~/css/backgrounds.css" asp-append-version="true" />
     <!-- Остальные стили и скрипты -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" asp-append-version="true"/>

@@ -1,9 +1,6 @@
-//MediaCacheController.cs
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Umbraco.Cms.Core.Cache;
-using Umbraco.Cms.Core.Services;
-using Microsoft.Extensions.Logging;
+using TestUmbraco.Services;
 using Umbraco.Cms.Web.Common.Controllers;
 
 namespace TestUmbraco.Controllers
@@ -13,17 +10,14 @@ namespace TestUmbraco.Controllers
     [Authorize(Policy = "BackOffice")]
     public class MediaCacheController : ControllerBase
     {
-        private readonly IMediaService _mediaService;
-        private readonly IAppPolicyCache _runtimeCache;
+        private readonly IMediaCacheService _mediaCacheService;
         private readonly ILogger<MediaCacheController> _logger;
 
         public MediaCacheController(
-            IMediaService mediaService,
-            AppCaches appCaches,
+            IMediaCacheService mediaCacheService,
             ILogger<MediaCacheController> logger)
         {
-            _mediaService = mediaService;
-            _runtimeCache = appCaches.RuntimeCache;
+            _mediaCacheService = mediaCacheService;
             _logger = logger;
         }
 
@@ -52,16 +46,12 @@ namespace TestUmbraco.Controllers
         {
             try
             {
-                var cacheKey = $"media_{mediaKey}";
-                _runtimeCache.Clear(cacheKey);
-                
-                _logger.LogInformation($"Cache cleared for media: {mediaKey}");
+                _mediaCacheService.ClearCacheForMedia(mediaKey);
                 
                 return Ok(new 
                 { 
                     success = true, 
-                    message = $"Cache cleared for media {mediaKey}",
-                    cacheKey = cacheKey
+                    message = $"Cache cleared for media {mediaKey}"
                 });
             }
             catch (Exception ex)
@@ -76,9 +66,7 @@ namespace TestUmbraco.Controllers
         {
             try
             {
-                _runtimeCache.Clear();
-                
-                _logger.LogInformation("Cleared all cache entries");
+                _mediaCacheService.ClearAllCache();
                 
                 return Ok(new 
                 { 

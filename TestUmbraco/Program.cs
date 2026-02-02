@@ -1,12 +1,20 @@
-// Program.cs
 using Microsoft.AspNetCore.ResponseCompression;
-using Umbraco.Cms.Core.DependencyInjection;
-using System.IO;
+using TestUmbraco.Services;
+using TestUmbraco.Helpers;
+using reCAPTCHA.AspNetCore;
+using AspNetCoreHero.ToastNotification;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // HttpContextAccessor ДО Umbraco
 builder.Services.AddHttpContextAccessor();
+
+// ✅ РЕГИСТРАЦИЯ НАШИХ СЕРВИСОВ
+builder.Services.AddScoped<IMediaCacheService, MediaCacheService>();
+builder.Services.AddScoped<ImageHelper>();
+builder.Services.AddScoped<IUmbracoBackgroundService, UmbracoBackgroundService>();
+// Регистрация статического CSS сервиса
+builder.Services.AddSingleton<IStaticCssGeneratorService, StaticCssGeneratorService>();
 
 // Сервисы кэширования
 builder.Services.AddMemoryCache();
@@ -24,13 +32,22 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
     options.Level = System.IO.Compression.CompressionLevel.Optimal;
 });
 
-// РЕГИСТРАЦИЯ UMBRACO 17.0.0
+// ✅ РЕГИСТРАЦИЯ UMBRACO 17.0.0 - БЕЗ ПРИСВОЕНИЯ ПЕРЕМЕННОЙ
 builder.Services.AddUmbraco(builder.Environment, builder.Configuration)
     .AddBackOffice()
     .AddWebsite()
     .AddDeliveryApi()
-    .AddComposers() // ← КРИТИЧЕСКИ ВАЖНО ДЛЯ КАСТОМНЫХ РЕДАКТОРОВ
+    .AddComposers()
     .Build();
+
+// ✅ ДОПОЛНИТЕЛЬНЫЕ СЕРВИСЫ
+builder.Services.AddRecaptcha(builder.Configuration.GetSection("RecaptchaSettings"));
+builder.Services.AddNotyf(config => 
+{
+    config.DurationInSeconds = 10;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.BottomRight;
+});
 
 var app = builder.Build();
 
@@ -50,12 +67,11 @@ app.UseUmbraco()
     })
     .WithEndpoints(u =>
     {
-        // Только эти эндпоинты для Umbraco 17.0.0
         u.UseBackOfficeEndpoints();
         u.UseWebsiteEndpoints();
     });
 
-// Отладочный middleware для API (перед кастомным кэшированием)
+// Отладочный middleware для API
 app.Use(async (context, next) =>
 {
     var path = context.Request.Path.Value;
@@ -81,11 +97,10 @@ app.Use(async (context, next) =>
     await next();
 });
 
-// 👇 ПРОСТОЙ ОТЛАДОЧНЫЙ ЭНДПОИНТ 👇
+// Отладочный эндпоинт
 app.MapGet("/debug/info", () =>
 {
     return Results.Json(new { status = "ok", message = "Debug endpoint working" });
 });
-// 👆 ПРОСТОЙ ОТЛАДОЧНЫЙ ЭНДПОИНТ 👆
 
 app.Run();

@@ -1,0 +1,450 @@
+﻿/* =========================================== */
+/* BACKGROUNDS.CSS - STATIC BACKGROUND STYLES  */
+/* Generated: 2026-02-02 17:36:18 UTC */
+/* =========================================== */
+
+/* === GLOBAL BACKGROUND CLASSES === */
+.lazy-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.with-overlay {
+  position: relative;
+}
+
+.background-overlay {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* === VIDEO BACKGROUND CLASSES === */
+.lazy-video {
+  position: relative;
+  min-height: 400px;
+  overflow: hidden;
+}
+
+.lazy-video .video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.lazy-video .video-bg-iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 177.77777778vh;
+  min-width: 100%;
+  min-height: 100%;
+  height: 56.25vw;
+  transform: translate(-50%, -50%);
+  border: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                   */
+/* Auto-generated from Umbraco media library  */
+/* =========================================== */
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                   */
+/* =========================================== */
+
+/* =========================================== */
+/* GRADIENT BACKGROUND CLASSES                */
+/* =========================================== */
+
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0292799e */
+.video-0292799e { 
+.bg-video-c8c61d52.lazy-video {
+    position: relative;
+    min-height: 400px;
+    overflow: hidden;
+}
+
+.bg-video-c8c61d52.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.bg-video-c8c61d52.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: 0;
+    pointer-events: none;
+} }
+
+
+/* =========================================== */
+/* OVERLAY BACKGROUND CLASSES               */
+/* =========================================== */
+
+/* overlay-38fcef2a */
+.overlay-38fcef2a { 
+.overlay-d247ab13 .background-overlay {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-d247ab13 .background-overlay {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-d247ab13 .background-overlay {
+    opacity: 0.38;
+} }
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MINHEIGHT BACKGROUND CLASSES             */
+/* =========================================== */
+
+/* minheight-45b4d846 */
+.minheight-45b4d846 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY BACKGROUND CLASSES               */
+/* =========================================== */
+
+/* overlay-097e5c59 */
+.overlay-097e5c59 { 
+.overlay-cec394f1 .background-overlay {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-cec394f1 .background-overlay {
+    background-color: #030303;
+}
+.overlay-cec394f1 .background-overlay {
+    opacity: 0.42;
+} }
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0292799e */
+.video-0292799e { 
+.bg-video-c8c61d52.lazy-video {
+    position: relative;
+    min-height: 400px;
+    overflow: hidden;
+}
+
+.bg-video-c8c61d52.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.bg-video-c8c61d52.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: 0;
+    pointer-events: none;
+} }
+
+
+/* =========================================== */
+/* OVERLAY BACKGROUND CLASSES               */
+/* =========================================== */
+
+/* overlay-38fcef2a */
+.overlay-38fcef2a { 
+.overlay-d247ab13 .background-overlay {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-d247ab13 .background-overlay {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-d247ab13 .background-overlay {
+    opacity: 0.38;
+} }
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MINHEIGHT BACKGROUND CLASSES             */
+/* =========================================== */
+
+/* minheight-45b4d846 */
+.minheight-45b4d846 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY BACKGROUND CLASSES               */
+/* =========================================== */
+
+/* overlay-097e5c59 */
+.overlay-097e5c59 { 
+.overlay-cec394f1 .background-overlay {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-cec394f1 .background-overlay {
+    background-color: #030303;
+}
+.overlay-cec394f1 .background-overlay {
+    opacity: 0.42;
+} }
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-5f29bddd */
+
+.bg-video-c8c61d52.lazy-video {
+    position: relative;
+    min-height: 400px;
+    overflow: hidden;
+}
+
+.bg-video-c8c61d52.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.bg-video-c8c61d52.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.bg-video-c8c61d52.lazy-video .video-placeholder {
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-480c7383 */
+
+.overlay-d247ab134d3b48c3bcded6893cd0e981 .background-overlay {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-d247ab134d3b48c3bcded6893cd0e981 .background-overlay {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-d247ab134d3b48c3bcded6893cd0e981 .background-overlay {
+    opacity: 0.38;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-931199bb */
+
+.overlay-cec394f16efb40aca07bb669465cdf24 .background-overlay {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-cec394f16efb40aca07bb669465cdf24 .background-overlay {
+    background-color: #030303;
+}
+.overlay-cec394f16efb40aca07bb669465cdf24 .background-overlay {
+    opacity: 0.42;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}

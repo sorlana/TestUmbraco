@@ -1,0 +1,817 @@
+
+Структура папки: 
+================= 
+    BackgroundResult.cs
+    IMediaCacheService.cs
+    IUmbracoBackgroundService.cs
+    MediaCacheService.cs
+    temp_full.txt
+    UmbracoBackgroundService.cs
+    
+Подпапки отсутствуют 
+
+ 
+================= 
+ 
+/BackgroundResult.cs: 
+// Services/BackgroundResult.cs
+namespace TestUmbraco.Services
+{
+    public class BackgroundResult
+    {
+        public BackgroundType Type { get; set; } = BackgroundType.None;
+        public string CssClass { get; set; } = string.Empty;
+        public bool HasBackground { get; set; }
+        public bool HasOverlay { get; set; }
+        public bool IsLazyLoaded { get; set; }
+        public bool IsMobileOptimized { get; set; }
+    }
+
+    public enum BackgroundType
+    {
+        None,
+        Image,
+        Color,
+        Gradient,
+        Video
+    }
+} 
+ 
+/IMediaCacheService.cs: 
+using Microsoft.AspNetCore.Html;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.PublishedContent;
+
+namespace TestUmbraco.Services
+{
+    public interface IMediaCacheService
+    {
+        // Основные методы получения URL
+        Task<string?> GetCachedMediaUrlAsync(Guid mediaKey, string? cropAlias = null, int? width = null, int? height = null);
+        Task<string?> GetCachedMediaUrlAsync(IPublishedContent? media, string? cropAlias = null, int? width = null, int? height = null);
+        
+        // Методы для HTML генерации
+        Task<IHtmlContent> GetCachedImageHtmlAsync(Guid mediaKey, string? cropAlias = null, Dictionary<string, string>? attributes = null);
+        Task<IHtmlContent> GetCachedImageHtmlAsync(IPublishedContent? media, string? cropAlias = null, Dictionary<string, string>? attributes = null);
+        
+        // Фоновые изображения
+        Task<string> GetCachedBackgroundCssAsync(string backgrounds);
+        Task<string> GenerateBackgroundCssAsync(Guid mediaGuid, string className, int minHeight = 400, string size = "cover", string position = "center");
+        
+        // Управление кешем
+        void ClearCacheForMedia(Guid mediaKey);
+        void ClearAllCache();
+        
+        // Оптимизация изображений
+        string GeneratePictureElement(string? url, string? altText = "", string? title = "", int? width = null, int? height = null, bool lazyLoad = true);
+        string ConvertToWebP(string? url);
+        string GenerateSrcSet(string? url, string? cropAlias, int baseWidth);
+    }
+} 
+ 
+/IUmbracoBackgroundService.cs: 
+// Services/IUmbracoBackgroundService.cs
+using Umbraco.Cms.Core.Models.PublishedContent;
+
+namespace TestUmbraco.Services
+{
+    public interface IUmbracoBackgroundService
+    {
+        BackgroundResult ProcessBackground(IPublishedElement? settings, Guid componentId, string prefix = "bg");
+    }
+} 
+ 
+/MediaCacheService.cs: 
+using Microsoft.AspNetCore.Html;
+using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Core.Cache;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Web;
+using Microsoft.AspNetCore.Hosting;
+using System.Text;
+
+namespace TestUmbraco.Services
+{
+    public class MediaCacheService : IMediaCacheService
+    {
+        private readonly IAppPolicyCache _runtimeCache;
+        private readonly IMediaService _mediaService;
+        private readonly IUmbracoContextAccessor _umbracoContextAccessor;
+        private readonly ILogger<MediaCacheService> _logger;
+        private readonly IWebHostEnvironment _environment;
+
+        public MediaCacheService(
+            AppCaches appCaches,
+            IMediaService mediaService,
+            IUmbracoContextAccessor umbracoContextAccessor,
+            ILogger<MediaCacheService> logger,
+            IWebHostEnvironment environment)
+        {
+            _runtimeCache = appCaches.RuntimeCache;
+            _mediaService = mediaService;
+            _umbracoContextAccessor = umbracoContextAccessor;
+            _logger = logger;
+            _environment = environment;
+        }
+
+        public async Task<string?> GetCachedMediaUrlAsync(Guid mediaKey, string? cropAlias = null, int? width = null, int? height = null)
+        {
+            var cacheKey = $"media_url_{mediaKey}_{cropAlias}_{width}_{height}";
+            
+            return await _runtimeCache.GetCacheItemAsync(cacheKey, async () =>
+            {
+                try
+                {
+                    var media = _mediaService.GetById(mediaKey);
+                    if (media == null) return null;
+
+                    string? url;
+                    
+                    if (_umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext))
+                    {
+                        var publishedMedia = umbracoContext.Media?.GetById(mediaKey);
+                        url = publishedMedia?.Url();
+                    }
+                    else
+                    {
+                        url = media.GetValue<string>("umbracoFile");
+                    }
+
+                    if (string.IsNullOrEmpty(url)) return null;
+
+                    // Добавляем параметры для ImageProcessor
+                    var parameters = new List<string>();
+                    
+                    if (!string.IsNullOrEmpty(cropAlias))
+                        parameters.Add($"crop={cropAlias}");
+                    
+                    if (width.HasValue)
+                        parameters.Add($"width={width}");
+                    
+                    if (height.HasValue)
+                        parameters.Add($"height={height}");
+                    
+                    // Версия для инвалидации кеша
+                    var version = media.UpdateDate != default ? media.UpdateDate.Ticks.ToString() : DateTime.UtcNow.Ticks.ToString();
+                    
+                    if (parameters.Any())
+                        url = $"{url}?{string.Join("&", parameters)}&v={version}";
+                    else if (!url.Contains("?"))
+                        url = $"{url}?v={version}";
+                    else
+                        url = $"{url}&v={version}";
+
+                    return url;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Error getting media URL for {mediaKey}");
+                    return null;
+                }
+            }, TimeSpan.FromHours(1));
+        }
+
+        public async Task<string?> GetCachedMediaUrlAsync(IPublishedContent? media, string? cropAlias = null, int? width = null, int? height = null)
+        {
+            if (media == null) return null;
+            return await GetCachedMediaUrlAsync(media.Key, cropAlias, width, height);
+        }
+
+        public async Task<IHtmlContent> GetCachedImageHtmlAsync(Guid mediaKey, string? cropAlias = null, Dictionary<string, string>? attributes = null)
+        {
+            var cacheKey = $"media_html_{mediaKey}_{cropAlias}_{(attributes != null ? string.Join("_", attributes) : "")}";
+            
+            return await _runtimeCache.GetCacheItemAsync(cacheKey, async () =>
+            {
+                try
+                {
+                    var media = _mediaService.GetById(mediaKey);
+                    if (media == null) return new HtmlString(string.Empty);
+
+                    var url = await GetCachedMediaUrlAsync(mediaKey, cropAlias);
+                    if (string.IsNullOrEmpty(url)) return new HtmlString(string.Empty);
+
+                    // Получаем дополнительные данные
+                    string? altText = media.GetValue<string>("altText") ?? media.Name;
+                    string? title = media.GetValue<string>("title") ?? string.Empty;
+                    
+                    // Генерируем HTML
+                    var html = GeneratePictureElement(url, altText, title, 
+                        media.GetValue<int?>("width"), 
+                        media.GetValue<int?>("height"), 
+                        true);
+
+                    return new HtmlString(html);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Error generating HTML for media {mediaKey}");
+                    return new HtmlString(string.Empty);
+                }
+            }, TimeSpan.FromMinutes(30));
+        }
+
+        public async Task<IHtmlContent> GetCachedImageHtmlAsync(IPublishedContent? media, string? cropAlias = null, Dictionary<string, string>? attributes = null)
+        {
+            if (media == null) return new HtmlString(string.Empty);
+            return await GetCachedImageHtmlAsync(media.Key, cropAlias, attributes);
+        }
+
+        public async Task<string> GetCachedBackgroundCssAsync(string backgrounds)
+        {
+            var cacheKey = $"bg_css_{backgrounds.GetHashCode()}";
+            
+            var cachedValue = await _runtimeCache.GetCacheItemAsync(cacheKey, async () =>
+            {
+                var cssBuilder = new StringBuilder();
+                var backgroundItems = backgrounds.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                
+                foreach (var item in backgroundItems)
+                {
+                    var parts = item.Split(':');
+                    if (parts.Length >= 2)
+                    {
+                        if (Guid.TryParse(parts[0], out Guid mediaGuid))
+                        {
+                            var className = parts[1];
+                            var minHeight = parts.Length > 2 && int.TryParse(parts[2], out var mh) ? mh : 400;
+                            var size = parts.Length > 3 ? parts[3] : "cover";
+                            var position = parts.Length > 4 ? parts[4] : "center";
+                            
+                            var css = await GenerateBackgroundCssAsync(mediaGuid, className, minHeight, size, position);
+                            if (!string.IsNullOrEmpty(css))
+                                cssBuilder.AppendLine(css);
+                        }
+                    }
+                }
+                
+                var result = cssBuilder.ToString();
+                return result; // string.Empty если пусто
+            }, TimeSpan.FromHours(1));
+
+            // Гарантированно возвращаем не-null строку
+            return cachedValue ?? string.Empty;
+        }
+
+        public async Task<string> GenerateBackgroundCssAsync(Guid mediaGuid, string className, int minHeight = 400, string size = "cover", string position = "center")
+        {
+            var url = await GetCachedMediaUrlAsync(mediaGuid);
+            if (string.IsNullOrEmpty(url))
+                return string.Empty;
+            
+            return $@".{className} {{
+    background-image: url('{url}');
+    background-size: {size};
+    background-position: {position};
+    background-repeat: no-repeat;
+    min-height: {minHeight}px;
+}}";
+        }
+
+        public void ClearCacheForMedia(Guid mediaKey)
+        {
+            // Очищаем все варианты кеша для этого медиа
+            _runtimeCache.ClearByKey($"media_url_{mediaKey}");
+            _runtimeCache.ClearByKey($"media_html_{mediaKey}");
+            
+            _logger.LogInformation($"Cleared cache for media: {mediaKey}");
+        }
+
+        public void ClearAllCache()
+        {
+            _runtimeCache.Clear();
+            _logger.LogInformation("Cleared all media cache");
+        }
+
+        public string GeneratePictureElement(string? url, string? altText = "", string? title = "", int? width = null, int? height = null, bool lazyLoad = true)
+        {
+            if (string.IsNullOrEmpty(url)) return string.Empty;
+            
+            var webpUrl = ConvertToWebP(url);
+            var srcset = width.HasValue ? GenerateSrcSet(url, null, width.Value) : string.Empty;
+            
+            var html = new StringBuilder();
+            
+            html.AppendLine("<picture>");
+            html.AppendLine($"  <source srcset=\"{webpUrl}\" type=\"image/webp\">");
+            
+            if (!string.IsNullOrEmpty(srcset))
+                html.AppendLine($"  <source srcset=\"{srcset}\">");
+            
+            html.Append($"  <img src=\"{url}\"");
+            
+            if (!string.IsNullOrEmpty(altText))
+                html.Append($" alt=\"{altText}\"");
+            
+            if (!string.IsNullOrEmpty(title))
+                html.Append($" title=\"{title}\"");
+            
+            if (lazyLoad)
+                html.Append(" loading=\"lazy\" decoding=\"async\"");
+            
+            html.Append(" class=\"optimized-image\"");
+            
+            if (width.HasValue)
+                html.Append($" width=\"{width}\"");
+            
+            if (height.HasValue)
+                html.Append($" height=\"{height}\"");
+            
+            html.AppendLine(">");
+            html.AppendLine("</picture>");
+            
+            return html.ToString();
+        }
+
+        public string ConvertToWebP(string? url)
+        {
+            if (string.IsNullOrEmpty(url)) return string.Empty;
+            
+            if (url.Contains("?"))
+                return $"{url}&format=webp";
+            return $"{url}?format=webp";
+        }
+
+        public string GenerateSrcSet(string? url, string? cropAlias, int baseWidth)
+        {
+            if (string.IsNullOrEmpty(url)) return string.Empty;
+            
+            var srcset = new List<string>();
+            var multipliers = new[] { 1, 1.5, 2, 3 };
+            
+            foreach (var multiplier in multipliers)
+            {
+                var width = (int)(baseWidth * multiplier);
+                var resizedUrl = url.Contains("?") 
+                    ? $"{url}&width={width}" 
+                    : $"{url}?width={width}";
+                srcset.Add($"{resizedUrl} {multiplier}x");
+            }
+            
+            return string.Join(", ", srcset);
+        }
+    }
+} 
+ 
+/UmbracoBackgroundService.cs: 
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace TestUmbraco.Services
+{
+    public class UmbracoBackgroundService : IUmbracoBackgroundService
+    {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<UmbracoBackgroundService> _logger;
+        private readonly IMediaCacheService _mediaCacheService;
+
+        public UmbracoBackgroundService(
+            IHttpContextAccessor httpContextAccessor,
+            ILogger<UmbracoBackgroundService> logger,
+            IMediaCacheService mediaCacheService)
+        {
+            _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
+            _mediaCacheService = mediaCacheService;
+        }
+
+        public BackgroundResult ProcessBackground(IPublishedElement? settings, Guid componentId, string prefix = "bg")
+        {
+            var result = new BackgroundResult();
+            
+            if (settings == null) return result;
+
+            if (settings.HasProperty("bg") && settings.HasValue("bg"))
+            {
+                var bgValue = settings.Value<string>("bg");
+                if (!string.IsNullOrWhiteSpace(bgValue))
+                {
+                    result = ProcessBackgroundType(settings, componentId, prefix, bgValue);
+                    
+                    // Обработка оверлея
+                    if (result.HasBackground && settings.HasProperty("overlayBg") && settings.HasValue("overlayBg"))
+                    {
+                        var overlayBgValue = settings.Value<string>("overlayBg");
+                        if (!string.IsNullOrWhiteSpace(overlayBgValue) && overlayBgValue != "Не выбрано" && overlayBgValue != "None")
+                        {
+                            result.CssClass += " with-overlay";
+                            var overlayClass = $"overlay-{componentId.ToString("N").Substring(0, 8)}";
+                            result.CssClass += $" {overlayClass}";
+                            AddOverlayStyles(settings, result.CssClass, componentId, overlayClass);
+                        }
+                    }
+                    
+                    // Регистрируем информацию для JavaScript
+                    RegisterBackgroundInfo(settings, componentId, result, bgValue);
+                }
+            }
+            
+            return result;
+        }
+
+        private BackgroundResult ProcessBackgroundType(IPublishedElement settings, Guid componentId, string prefix, string bgValue)
+        {
+            var result = new BackgroundResult();
+            
+            var trimmedValue = bgValue.Trim();
+            
+            switch (trimmedValue)
+            {
+                case "Изображение":
+                    result = ProcessImageBackground(settings, componentId, prefix);
+                    break;
+                case "Цвет":
+                    result = ProcessColorBackground(settings, componentId, prefix);
+                    break;
+                case "Градиент":
+                    result = ProcessGradientBackground(settings, componentId, prefix);
+                    break;
+                case "Видео":
+                    result = ProcessVideoBackground(settings, componentId, prefix);
+                    break;
+            }
+            
+            return result;
+        }
+
+        private BackgroundResult ProcessImageBackground(IPublishedElement settings, Guid componentId, string prefix)
+        {
+            var result = new BackgroundResult { Type = BackgroundType.Image };
+            
+            if (settings.HasProperty("backgroundImage") && settings.HasValue("backgroundImage"))
+            {
+                var bgImage = settings.Value<IPublishedContent>("backgroundImage");
+                if (bgImage != null)
+                {
+                    var bgClass = $"{prefix}-img-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
+                    
+                    var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                    var bgSize = settings.HasValue("bgSize") ? 
+                        ConvertBgSizeToCss(settings.Value<string>("bgSize") ?? "") : "cover";
+                    var bgPosition = settings.HasValue("backgroundPosition") ? 
+                        settings.Value<string>("backgroundPosition") ?? "center" : "center";
+                    
+                    // Регистрируем для генерации CSS через API
+                    var backgroundInfo = $"{bgImage.Key}:{bgClass}:{minHeight}:{bgSize}:{bgPosition}";
+                    RegisterBackgroundCss(backgroundInfo);
+                    
+                    result.CssClass = $"{bgClass} lazy-bg";
+                    result.HasBackground = true;
+                    result.IsLazyLoaded = true;
+                }
+            }
+            
+            return result;
+        }
+
+        private BackgroundResult ProcessColorBackground(IPublishedElement settings, Guid componentId, string prefix)
+        {
+            var result = new BackgroundResult { Type = BackgroundType.Color };
+            
+            if (settings.HasProperty("color") && settings.HasValue("color"))
+            {
+                var color = settings.Value<string>("color");
+                if (!string.IsNullOrWhiteSpace(color))
+                {
+                    var bgClass = $"{prefix}-color-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
+                    var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                    
+                    var css = $".{bgClass} {{ background-color: {color}; min-height: {minHeight}px; position: relative; }}";
+                    AddInlineCss(css);
+                    
+                    result.CssClass = bgClass;
+                    result.HasBackground = true;
+                }
+            }
+            
+            return result;
+        }
+
+        private BackgroundResult ProcessGradientBackground(IPublishedElement settings, Guid componentId, string prefix)
+        {
+            var result = new BackgroundResult { Type = BackgroundType.Gradient };
+            
+            if (settings.HasProperty("colorStart") && settings.HasValue("colorStart") &&
+                settings.HasProperty("colorEnd") && settings.HasValue("colorEnd"))
+            {
+                var colorStart = settings.Value<string>("colorStart");
+                var colorEnd = settings.Value<string>("colorEnd");
+                
+                if (!string.IsNullOrWhiteSpace(colorStart) && !string.IsNullOrWhiteSpace(colorEnd))
+                {
+                    var bgClass = $"{prefix}-gradient-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
+                    
+                    var direction = "to bottom";
+                    if (settings.HasProperty("direction") && settings.HasValue("direction"))
+                    {
+                        direction = ConvertDirectionToCss(settings.Value<string>("direction") ?? "");
+                    }
+                    
+                    var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                    
+                    var css = $".{bgClass} {{ background: linear-gradient({direction}, {colorStart}, {colorEnd}); min-height: {minHeight}px; position: relative; }}";
+                    AddInlineCss(css);
+                    
+                    result.CssClass = bgClass;
+                    result.HasBackground = true;
+                }
+            }
+            
+            return result;
+        }
+
+        private BackgroundResult ProcessVideoBackground(IPublishedElement settings, Guid componentId, string prefix)
+        {
+            var result = new BackgroundResult { Type = BackgroundType.Video };
+            
+            if (settings.HasProperty("video") && settings.HasValue("video"))
+            {
+                var videoUrl = settings.Value<string>("video");
+                if (!string.IsNullOrWhiteSpace(videoUrl))
+                {
+                    var videoId = ExtractVimeoVideoId(videoUrl);
+                    if (!string.IsNullOrEmpty(videoId))
+                    {
+                        var bgClass = $"{prefix}-video-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
+                        var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                        
+                        // Стили для видео
+                        var css = $@"
+.{bgClass}.lazy-video {{
+    position: relative;
+    min-height: {minHeight}px;
+    overflow: hidden;
+}}
+
+.{bgClass}.lazy-video .video-container {{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}}
+
+.{bgClass}.lazy-video .video-bg-iframe {{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: 0;
+    pointer-events: none;
+}}";
+                        
+                        AddInlineCss(css);
+                        
+                        result.CssClass = $"{bgClass} lazy-video";
+                        result.HasBackground = true;
+                        result.IsLazyLoaded = true;
+                    }
+                }
+            }
+            
+            return result;
+        }
+
+        private void AddOverlayStyles(IPublishedElement settings, string mainClass, Guid componentId, string overlayClass)
+        {
+            var overlayBgValue = settings.Value<string>("overlayBg");
+            var cssBuilder = new StringBuilder();
+            
+            cssBuilder.Append($@"
+.{overlayClass} .background-overlay {{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}}");
+            
+            switch (overlayBgValue)
+            {
+                case "Цвет":
+                    if (settings.HasProperty("colorOverlay") && settings.HasValue("colorOverlay"))
+                    {
+                        var color = settings.Value<string>("colorOverlay");
+                        if (!string.IsNullOrWhiteSpace(color))
+                        {
+                            cssBuilder.Append($@"
+.{overlayClass} .background-overlay {{
+    background-color: {color};
+}}");
+                        }
+                    }
+                    break;
+                    
+                case "Изображение":
+                    if (settings.HasProperty("imageOverlay") && settings.HasValue("imageOverlay"))
+                    {
+                        var image = settings.Value<IPublishedContent>("imageOverlay");
+                        if (image != null)
+                        {
+                            // Используем MediaCacheService для получения URL
+                            var imageUrl = _mediaCacheService.GetCachedMediaUrlAsync(image.Key).GetAwaiter().GetResult();
+                            cssBuilder.Append($@"
+.{overlayClass} .background-overlay {{
+    background-image: url('{imageUrl}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}}");
+                        }
+                    }
+                    break;
+                    
+                case "Градиент":
+                    if (settings.HasProperty("colorStartOverlay") && settings.HasValue("colorStartOverlay") &&
+                        settings.HasProperty("colorEndOverlay") && settings.HasValue("colorEndOverlay"))
+                    {
+                        var colorStart = settings.Value<string>("colorStartOverlay");
+                        var colorEnd = settings.Value<string>("colorEndOverlay");
+                        
+                        if (!string.IsNullOrWhiteSpace(colorStart) && !string.IsNullOrWhiteSpace(colorEnd))
+                        {
+                            cssBuilder.Append($@"
+.{overlayClass} .background-overlay {{
+    background: linear-gradient(to bottom, {colorStart}, {colorEnd});
+}}");
+                        }
+                    }
+                    break;
+            }
+            
+            // Прозрачность оверлея
+            if (settings.HasProperty("opacityOverlay") && settings.HasValue("opacityOverlay"))
+            {
+                var opacityValue = settings.Value<int>("opacityOverlay");
+                var opacity = opacityValue / 100.0;
+                cssBuilder.Append($@"
+.{overlayClass} .background-overlay {{
+    opacity: {opacity.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)};
+}}");
+            }
+            
+            AddInlineCss(cssBuilder.ToString());
+        }
+
+        private void RegisterBackgroundInfo(IPublishedElement settings, Guid componentId, BackgroundResult result, string bgValue)
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null) return;
+
+            var backgroundInfos = httpContext.Items["LazyBackgroundsInfo"] as List<BackgroundInfo> ?? new List<BackgroundInfo>();
+            
+            var info = new BackgroundInfo
+            {
+                ComponentClass = result.CssClass,
+                Type = bgValue,
+                ComponentId = componentId.ToString()
+            };
+            
+            switch (bgValue.Trim())
+            {
+                case "Изображение":
+                    if (settings.HasProperty("backgroundImage") && settings.HasValue("backgroundImage"))
+                    {
+                        var bgImage = settings.Value<IPublishedContent>("backgroundImage");
+                        if (bgImage != null)
+                        {
+                            info.Url = _mediaCacheService.GetCachedMediaUrlAsync(bgImage.Key).GetAwaiter().GetResult() ?? string.Empty;
+                            info.Size = settings.HasValue("bgSize") ? 
+                                ConvertBgSizeToCss(settings.Value<string>("bgSize") ?? "") : "cover";
+                            info.Position = settings.HasValue("backgroundPosition") ? 
+                                settings.Value<string>("backgroundPosition") ?? "center" : "center";
+                        }
+                    }
+                    break;
+                    
+                case "Видео":
+                    if (settings.HasProperty("video") && settings.HasValue("video"))
+                    {
+                        var videoUrl = settings.Value<string>("video");
+                        if (!string.IsNullOrWhiteSpace(videoUrl))
+                        {
+                            var videoId = ExtractVimeoVideoId(videoUrl);
+                            if (!string.IsNullOrEmpty(videoId))
+                            {
+                                info.VideoId = videoId;
+                                
+                                if (settings.HasProperty("videoPlaceholder") && settings.HasValue("videoPlaceholder"))
+                                {
+                                    var placeholder = settings.Value<IPublishedContent>("videoPlaceholder");
+                                    if (placeholder != null)
+                                    {
+                                        info.PlaceholderUrl = _mediaCacheService.GetCachedMediaUrlAsync(placeholder.Key).GetAwaiter().GetResult() ?? string.Empty;
+                                        info.UsePlaceholder = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
+            
+            backgroundInfos.Add(info);
+            httpContext.Items["LazyBackgroundsInfo"] = backgroundInfos;
+        }
+
+        private string ConvertBgSizeToCss(string bgSizeValue)
+        {
+            if (string.IsNullOrWhiteSpace(bgSizeValue))
+                return "cover";
+            
+            var trimmedValue = bgSizeValue.Trim();
+            
+            return trimmedValue switch
+            {
+                "Как есть" => "auto",
+                "По ширине" => "100% auto",
+                "По высоте" => "auto 100%",
+                "Обложка" => "cover",
+                "Вместить" => "contain",
+                _ => "cover"
+            };
+        }
+
+        private string ConvertDirectionToCss(string directionValue)
+        {
+            if (string.IsNullOrWhiteSpace(directionValue))
+                return "to bottom";
+            
+            var trimmedValue = directionValue.Trim();
+            
+            return trimmedValue switch
+            {
+                "Сверху вниз" => "to bottom",
+                "Снизу вверх" => "to top",
+                "Слева направо" => "to right",
+                "Справа налево" => "to left",
+                _ => "to bottom"
+            };
+        }
+
+        private string? ExtractVimeoVideoId(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return null;
+            
+            url = url.Split('?')[0];
+            var regex = new Regex(@"vimeo\.com/(?:.*/)?(\d+)");
+            var match = regex.Match(url);
+            
+            return match.Success && match.Groups.Count > 1 ? match.Groups[1].Value : null;
+        }
+
+        private void RegisterBackgroundCss(string backgroundInfo)
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null) return;
+
+            var backgroundInfos = httpContext.Items["BackgroundCssRequests"] as List<string> ?? new List<string>();
+            if (!backgroundInfos.Contains(backgroundInfo))
+            {
+                backgroundInfos.Add(backgroundInfo);
+                httpContext.Items["BackgroundCssRequests"] = backgroundInfos;
+            }
+        }
+
+        private void AddInlineCss(string css)
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext == null) return;
+
+            var cssStyles = httpContext.Items["InlineCss"] as List<string> ?? new List<string>();
+            cssStyles.Add(css);
+            httpContext.Items["InlineCss"] = cssStyles;
+        }
+    }
+
+    // Класс для хранения информации о фонах (оставить в том же файле)
+    public class BackgroundInfo
+    {
+        public string ComponentClass { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string ComponentId { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
+        public string Size { get; set; } = "cover";
+        public string Position { get; set; } = "center";
+        public string VideoId { get; set; } = string.Empty;
+        public bool UsePlaceholder { get; set; }
+        public string PlaceholderUrl { get; set; } = string.Empty;
+    }
+} 
+ 

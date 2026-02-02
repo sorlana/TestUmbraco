@@ -1,10 +1,8 @@
-// Services/UmbracoBackgroundService.cs
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Umbraco.Cms.Core.Models.PublishedContent;
 using System.Text;
-using TestUmbraco.Services;
-using System.Text.Json;
+using System.Text.RegularExpressions;
+using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace TestUmbraco.Services
 {
@@ -12,16 +10,22 @@ namespace TestUmbraco.Services
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<UmbracoBackgroundService> _logger;
+        private readonly IMediaCacheService _mediaCacheService;
+        private readonly IStaticCssGeneratorService _staticCssGenerator;
 
         public UmbracoBackgroundService(
             IHttpContextAccessor httpContextAccessor,
-            ILogger<UmbracoBackgroundService> logger)
+            ILogger<UmbracoBackgroundService> logger,
+            IMediaCacheService mediaCacheService,
+            IStaticCssGeneratorService staticCssGenerator)
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
+            _mediaCacheService = mediaCacheService;
+            _staticCssGenerator = staticCssGenerator;
         }
 
-        public BackgroundResult ProcessBackground(IPublishedElement? settings, Guid componentId, string prefix = "bg")
+        public async Task<BackgroundResult> ProcessBackground(IPublishedElement? settings, Guid componentId, string prefix = "bg")
         {
             var result = new BackgroundResult();
             
@@ -32,7 +36,7 @@ namespace TestUmbraco.Services
                 var bgValue = settings.Value<string>("bg");
                 if (!string.IsNullOrWhiteSpace(bgValue))
                 {
-                    result = ProcessBackgroundType(settings, componentId, prefix, bgValue);
+                    result = await ProcessBackgroundType(settings, componentId, prefix, bgValue);
                     
                     // Обработка оверлея
                     if (result.HasBackground && settings.HasProperty("overlayBg") && settings.HasValue("overlayBg"))
@@ -40,11 +44,10 @@ namespace TestUmbraco.Services
                         var overlayBgValue = settings.Value<string>("overlayBg");
                         if (!string.IsNullOrWhiteSpace(overlayBgValue) && overlayBgValue != "Не выбрано" && overlayBgValue != "None")
                         {
-                            result.CssClass += " with-overlay";
-                            // Добавляем специальный класс для оверлея
-                            var overlayClass = $"overlay-{componentId.ToString("N").Substring(0, 8)}";
-                            result.CssClass += $" {overlayClass}";
-                            AddOverlayStyles(settings, result.CssClass, componentId, overlayClass);
+                            result.HasOverlay = true;
+                            result.OverlayClass = $"overlay-{componentId:N}";
+                            result.CssClass += $" {result.OverlayClass}";
+                            await AddOverlayStyles(settings, componentId, result.OverlayClass);
                         }
                     }
                     
@@ -56,32 +59,35 @@ namespace TestUmbraco.Services
             return result;
         }
 
-        private BackgroundResult ProcessBackgroundType(IPublishedElement settings, Guid componentId, string prefix, string bgValue)
+        private async Task<BackgroundResult> ProcessBackgroundType(IPublishedElement settings, Guid componentId, string prefix, string bgValue)
         {
-            var result = new BackgroundResult();
+            BackgroundResult result;
             
             var trimmedValue = bgValue.Trim();
             
             switch (trimmedValue)
             {
                 case "Изображение":
-                    result = ProcessImageBackground(settings, componentId, prefix);
+                    result = await ProcessImageBackground(settings, componentId, prefix);
                     break;
                 case "Цвет":
-                    result = ProcessColorBackground(settings, componentId, prefix);
+                    result = await ProcessColorBackground(settings, componentId, prefix);
                     break;
                 case "Градиент":
-                    result = ProcessGradientBackground(settings, componentId, prefix);
+                    result = await ProcessGradientBackground(settings, componentId, prefix);
                     break;
                 case "Видео":
-                    result = ProcessVideoBackground(settings, componentId, prefix);
+                    result = await ProcessVideoBackground(settings, componentId, prefix);
+                    break;
+                default:
+                    result = new BackgroundResult();
                     break;
             }
             
             return result;
         }
 
-        private BackgroundResult ProcessImageBackground(IPublishedElement settings, Guid componentId, string prefix)
+        private async Task<BackgroundResult> ProcessImageBackground(IPublishedElement settings, Guid componentId, string prefix)
         {
             var result = new BackgroundResult { Type = BackgroundType.Image };
             
@@ -90,43 +96,45 @@ namespace TestUmbraco.Services
                 var bgImage = settings.Value<IPublishedContent>("backgroundImage");
                 if (bgImage != null)
                 {
-                    var bgClass = $"{prefix}-img-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
-                    var imageUrl = bgImage.Url();
-                    
                     var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                     var bgSize = settings.HasValue("bgSize") ? 
                         ConvertBgSizeToCss(settings.Value<string>("bgSize") ?? "") : "cover";
                     var bgPosition = settings.HasValue("backgroundPosition") ? 
                         settings.Value<string>("backgroundPosition") ?? "center" : "center";
                     
-                    // CSS для изображений
-                    var css = $@"
-.{bgClass}.lazy-image {{
-    min-height: {minHeight}px;
-    position: relative;
-    background-color: #f5f5f5;
-}}
-
-.{bgClass}.lazy-image.bg-loaded {{
-    background-image: url('{imageUrl}');
-    background-size: {bgSize};
-    background-position: {bgPosition};
-    background-repeat: no-repeat;
-    background-color: transparent;
-}}";
+                    // Генерируем класс через статический CSS сервис
+                    var className = $"bg-media-{bgImage.Key:N}";
+                    if (bgSize == "contain")
+                    {
+                        className += "-contain";
+                    }
                     
-                    AddToCssStyles(css);
+                    // Добавляем стиль в статический CSS файл
+                    await _staticCssGenerator.GetOrAddMediaClassAsync(
+                        bgImage.Key, 
+                        className, 
+                        minHeight, 
+                        bgSize, 
+                        bgPosition);
                     
-                    result.CssClass = $"{bgClass} lazy-image";
+                    result.CssClass = $"{className} lazy-bg";
                     result.HasBackground = true;
                     result.IsLazyLoaded = true;
+                    
+                    // Добавляем инлайновые стили для min-height
+                    if (minHeight > 0)
+                    {
+                        var minHeightClass = $"min-h-{minHeight}";
+                        await _staticCssGenerator.AddInlineStyleAsync($"min-height: {minHeight}px;", "minheight");
+                        result.CssClass += $" {minHeightClass}";
+                    }
                 }
             }
             
             return result;
         }
 
-        private BackgroundResult ProcessColorBackground(IPublishedElement settings, Guid componentId, string prefix)
+        private async Task<BackgroundResult> ProcessColorBackground(IPublishedElement settings, Guid componentId, string prefix)
         {
             var result = new BackgroundResult { Type = BackgroundType.Color };
             
@@ -135,13 +143,12 @@ namespace TestUmbraco.Services
                 var color = settings.Value<string>("color");
                 if (!string.IsNullOrWhiteSpace(color))
                 {
-                    var bgClass = $"{prefix}-color-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
                     var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                     
-                    var css = $".{bgClass} {{ background-color: {color}; min-height: {minHeight}px; position: relative; }}";
-                    AddToCssStyles(css);
+                    // Генерируем класс через статический CSS сервис
+                    var className = await _staticCssGenerator.GetOrAddColorClassAsync(color, minHeight);
                     
-                    result.CssClass = bgClass;
+                    result.CssClass = className;
                     result.HasBackground = true;
                 }
             }
@@ -149,7 +156,7 @@ namespace TestUmbraco.Services
             return result;
         }
 
-        private BackgroundResult ProcessGradientBackground(IPublishedElement settings, Guid componentId, string prefix)
+        private async Task<BackgroundResult> ProcessGradientBackground(IPublishedElement settings, Guid componentId, string prefix)
         {
             var result = new BackgroundResult { Type = BackgroundType.Gradient };
             
@@ -161,8 +168,6 @@ namespace TestUmbraco.Services
                 
                 if (!string.IsNullOrWhiteSpace(colorStart) && !string.IsNullOrWhiteSpace(colorEnd))
                 {
-                    var bgClass = $"{prefix}-gradient-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
-                    
                     var direction = "to bottom";
                     if (settings.HasProperty("direction") && settings.HasValue("direction"))
                     {
@@ -171,10 +176,11 @@ namespace TestUmbraco.Services
                     
                     var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                     
-                    var css = $".{bgClass} {{ background: linear-gradient({direction}, {colorStart}, {colorEnd}); min-height: {minHeight}px; position: relative; }}";
-                    AddToCssStyles(css);
+                    // Генерируем класс через статический CSS сервис
+                    var className = await _staticCssGenerator.GetOrAddGradientClassAsync(
+                        colorStart, colorEnd, direction, minHeight);
                     
-                    result.CssClass = bgClass;
+                    result.CssClass = className;
                     result.HasBackground = true;
                 }
             }
@@ -182,7 +188,7 @@ namespace TestUmbraco.Services
             return result;
         }
 
-        private BackgroundResult ProcessVideoBackground(IPublishedElement settings, Guid componentId, string prefix)
+        private async Task<BackgroundResult> ProcessVideoBackground(IPublishedElement settings, Guid componentId, string prefix)
         {
             var result = new BackgroundResult { Type = BackgroundType.Video };
             
@@ -194,18 +200,23 @@ namespace TestUmbraco.Services
                     var videoId = ExtractVimeoVideoId(videoUrl);
                     if (!string.IsNullOrEmpty(videoId))
                     {
-                        var bgClass = $"{prefix}-video-{componentId.ToString().Replace("-", "").Substring(0, 8)}";
+                        result.VideoId = videoId;
+                        
                         var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                         
-                        // Стили для видео, которые точно работают с Vimeo
+                        // Генерируем уникальный класс для видео
+                        var videoHash = ComputeHash(videoUrl);
+                        var videoClass = $"bg-video-{videoHash}";
+                        
+                        // Добавляем стили в статический CSS
                         var css = $@"
-.{bgClass}.lazy-video {{
+.{videoClass}.lazy-video {{
     position: relative;
     min-height: {minHeight}px;
     overflow: hidden;
 }}
 
-.{bgClass}.lazy-video .video-container {{
+.{videoClass}.lazy-video .video-container {{
     position: absolute;
     top: 0;
     left: 0;
@@ -215,7 +226,7 @@ namespace TestUmbraco.Services
     pointer-events: none;
 }}
 
-.{bgClass}.lazy-video .video-bg-iframe {{
+.{videoClass}.lazy-video .video-bg-iframe {{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -227,13 +238,39 @@ namespace TestUmbraco.Services
     border: 0;
     z-index: 0;
     pointer-events: none;
+}}
+
+.{videoClass}.lazy-video .video-placeholder {{
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
 }}";
                         
-                        AddToCssStyles(css);
+                        await _staticCssGenerator.AddInlineStyleAsync(css, "video");
                         
-                        result.CssClass = $"{bgClass} lazy-video";
+                        result.CssClass = $"{videoClass} lazy-video";
                         result.HasBackground = true;
                         result.IsLazyLoaded = true;
+                        
+                        // Проверяем наличие плейсхолдера
+                        if (settings.HasProperty("videoPlaceholder") && settings.HasValue("videoPlaceholder"))
+                        {
+                            var placeholder = settings.Value<IPublishedContent>("videoPlaceholder");
+                            if (placeholder != null)
+                            {
+                                var placeholderUrl = await _mediaCacheService.GetCachedMediaUrlAsync(placeholder.Key);
+                                if (!string.IsNullOrEmpty(placeholderUrl))
+                                {
+                                    result.VideoPlaceholder = placeholderUrl;
+                                    result.UseVideoPlaceholder = true;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -241,12 +278,12 @@ namespace TestUmbraco.Services
             return result;
         }
 
-        private void AddOverlayStyles(IPublishedElement settings, string mainClass, Guid componentId, string overlayClass)
+        private async Task AddOverlayStyles(IPublishedElement settings, Guid componentId, string overlayClass)
         {
             var overlayBgValue = settings.Value<string>("overlayBg");
+            
             var cssBuilder = new StringBuilder();
             
-            // ВАЖНО: используем отдельный элемент div для оверлея, а не псевдоэлемент
             cssBuilder.Append($@"
 .{overlayClass} .background-overlay {{
     content: '';
@@ -255,11 +292,10 @@ namespace TestUmbraco.Services
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* Выше видео (0), ниже контента (2) */
+    z-index: 1;
     pointer-events: none;
 }}");
             
-            // Стили в зависимости от типа оверлея
             switch (overlayBgValue)
             {
                 case "Цвет":
@@ -282,14 +318,17 @@ namespace TestUmbraco.Services
                         var image = settings.Value<IPublishedContent>("imageOverlay");
                         if (image != null)
                         {
-                            var imageUrl = image.Url();
-                            cssBuilder.Append($@"
+                            var imageUrl = await _mediaCacheService.GetCachedMediaUrlAsync(image.Key);
+                            if (!string.IsNullOrEmpty(imageUrl))
+                            {
+                                cssBuilder.Append($@"
 .{overlayClass} .background-overlay {{
     background-image: url('{imageUrl}');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }}");
+                            }
                         }
                     }
                     break;
@@ -323,7 +362,7 @@ namespace TestUmbraco.Services
 }}");
             }
             
-            AddToCssStyles(cssBuilder.ToString());
+            await _staticCssGenerator.AddInlineStyleAsync(cssBuilder.ToString(), "overlay");
         }
 
         private void RegisterBackgroundInfo(IPublishedElement settings, Guid componentId, BackgroundResult result, string bgValue)
@@ -337,7 +376,9 @@ namespace TestUmbraco.Services
             {
                 ComponentClass = result.CssClass,
                 Type = bgValue,
-                ComponentId = componentId.ToString()
+                ComponentId = componentId.ToString(),
+                HasOverlay = result.HasOverlay,
+                OverlayClass = result.OverlayClass
             };
             
             switch (bgValue.Trim())
@@ -348,7 +389,7 @@ namespace TestUmbraco.Services
                         var bgImage = settings.Value<IPublishedContent>("backgroundImage");
                         if (bgImage != null)
                         {
-                            info.Url = bgImage.Url();
+                            info.Url = _mediaCacheService.GetCachedMediaUrlAsync(bgImage.Key).GetAwaiter().GetResult() ?? string.Empty;
                             info.Size = settings.HasValue("bgSize") ? 
                                 ConvertBgSizeToCss(settings.Value<string>("bgSize") ?? "") : "cover";
                             info.Position = settings.HasValue("backgroundPosition") ? 
@@ -373,7 +414,7 @@ namespace TestUmbraco.Services
                                     var placeholder = settings.Value<IPublishedContent>("videoPlaceholder");
                                     if (placeholder != null)
                                     {
-                                        info.PlaceholderUrl = placeholder.Url();
+                                        info.PlaceholderUrl = _mediaCacheService.GetCachedMediaUrlAsync(placeholder.Key).GetAwaiter().GetResult() ?? string.Empty;
                                         info.UsePlaceholder = true;
                                     }
                                 }
@@ -428,34 +469,17 @@ namespace TestUmbraco.Services
                 return null;
             
             url = url.Split('?')[0];
-            var regex = new System.Text.RegularExpressions.Regex(@"vimeo\.com/(?:.*/)?(\d+)");
+            var regex = new Regex(@"vimeo\.com/(?:.*/)?(\d+)");
             var match = regex.Match(url);
             
             return match.Success && match.Groups.Count > 1 ? match.Groups[1].Value : null;
         }
 
-        private void AddToCssStyles(string css)
+        private string ComputeHash(string input)
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-            if (httpContext == null) return;
-
-            var cssStyles = httpContext.Items["BackgroundCss"] as List<string> ?? new List<string>();
-            cssStyles.Add(css);
-            httpContext.Items["BackgroundCss"] = cssStyles;
+            using var md5 = System.Security.Cryptography.MD5.Create();
+            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+            return BitConverter.ToString(hash).Replace("-", "").ToLower().Substring(0, 8);
         }
-    }
-
-    // Класс для хранения информации о фонах
-    public class BackgroundInfo
-    {
-        public string ComponentClass { get; set; } = string.Empty;
-        public string Type { get; set; } = string.Empty;
-        public string ComponentId { get; set; } = string.Empty;
-        public string Url { get; set; } = string.Empty;
-        public string Size { get; set; } = "cover";
-        public string Position { get; set; } = "center";
-        public string VideoId { get; set; } = string.Empty;
-        public bool UsePlaceholder { get; set; }
-        public string PlaceholderUrl { get; set; } = string.Empty;
     }
 }

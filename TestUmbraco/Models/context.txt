@@ -1,0 +1,48 @@
+
+Структура папки: 
+================= 
+    BackgroundSectionModel.cs
+    ImageModel.cs
+    temp_full.txt
+    
+Подпапки отсутствуют 
+
+ 
+================= 
+ 
+/BackgroundSectionModel.cs: 
+// Models/BackgroundSectionModel.cs
+using Microsoft.AspNetCore.Html;
+using Umbraco.Cms.Core.Models.PublishedContent;
+
+namespace TestUmbraco.Models
+{
+    public class BackgroundSectionModel
+    {
+        public IPublishedElement? Settings { get; set; }
+        public Guid ComponentId { get; set; }
+        public string Prefix { get; set; } = "bg";
+        public string? BaseClass { get; set; }
+        public string? AdditionalClasses { get; set; }
+        public string? ContainerClass { get; set; }
+        public Func<object, IHtmlContent>? Content { get; set; }
+    }
+} 
+ 
+/ImageModel.cs: 
+namespace TestUmbraco.Models
+{
+    public class ImageModel
+    {
+        public string? Url { get; set; }
+        public string? AltText { get; set; }
+        public string? Title { get; set; }
+        public int? Width { get; set; }
+        public int? Height { get; set; }
+        public string? FocalPoint { get; set; }
+        public Dictionary<string, string>? Attributes { get; set; }
+        public string? CropAlias { get; set; }
+        public bool LazyLoad { get; set; } = true;
+    }
+} 
+ 
