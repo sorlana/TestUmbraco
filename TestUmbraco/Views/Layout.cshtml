@@ -4,7 +4,6 @@
     
     // Инициализируем ViewBag для хранения фонов
     ViewBag.TestMessage = "Hello from Layout";
-    // Убрали ссылку на PageBackgroundsModel, так как она больше не используется
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -57,6 +56,7 @@
 </head>
 
 <body>
+
     @RenderBody()
     <div id="button-up">
       <span class="material-symbols-outlined">keyboard_double_arrow_up</span>
@@ -98,21 +98,24 @@
 <script>
     // Проверка работы lazy backgrounds
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('=== LAZY BACKGROUNDS DEBUG ===');
-        const elements = document.querySelectorAll('[data-bg-url]');
-        console.log(`Total elements with data-bg-url: ${elements.length}`);
-        
-        elements.forEach((el, i) => {
-            const url = el.dataset.bgUrl;
-            const rect = el.getBoundingClientRect();
-            console.log(`Element ${i}:`, {
-                url: url,
-                visible: rect.top < window.innerHeight && rect.bottom > 0,
-                position: `${rect.top}px from top`,
-                size: `${rect.width}x${rect.height}`,
-                dataset: el.dataset
+        // Условное выполнение только в режиме разработки
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log('=== LAZY BACKGROUNDS DEBUG ===');
+            const elements = document.querySelectorAll('[data-bg-url]');
+            console.log(`Total elements with data-bg-url: ${elements.length}`);
+            
+            elements.forEach((el, i) => {
+                const url = el.dataset.bgUrl;
+                const rect = el.getBoundingClientRect();
+                console.log(`Element ${i}:`, {
+                    url: url,
+                    visible: rect.top < window.innerHeight && rect.bottom > 0,
+                    position: `${rect.top}px from top`,
+                    size: `${rect.width}x${rect.height}`,
+                    dataset: el.dataset
+                });
             });
-        });
+        }
     });
 </script>
 </body>

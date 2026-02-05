@@ -1,4 +1,3 @@
-#pragma warning disable CS8603 // Возможно, возврат ссылки, допускающей значение NULL
 using Microsoft.Extensions.DependencyInjection;
 using TestUmbraco.Helpers;
 using TestUmbraco.Services;
@@ -31,16 +30,16 @@ namespace TestUmbraco.Composers
     {
         private readonly IMediaCacheService _mediaCacheService;
         private readonly IStaticCssGeneratorService _staticCssGenerator;
-        private readonly ILogger<MediaCacheNotificationHandler> _logger;
+        private readonly ILoggingService _loggingService;
 
         public MediaCacheNotificationHandler(
             IMediaCacheService mediaCacheService,
             IStaticCssGeneratorService staticCssGenerator,
-            ILogger<MediaCacheNotificationHandler> logger)
+            ILoggingService loggingService)
         {
             _mediaCacheService = mediaCacheService;
             _staticCssGenerator = staticCssGenerator;
-            _logger = logger;
+            _loggingService = loggingService;
         }
 
         public async void Handle(MediaSavedNotification notification)
@@ -52,7 +51,7 @@ namespace TestUmbraco.Composers
                 // Обновляем статический CSS файл
                 await _staticCssGenerator.UpdateCssForMediaAsync(media.Key);
                 
-                _logger.LogInformation($"Auto-cleared cache and updated CSS for saved media: {media.Key}");
+                _loggingService.LogInformation<MediaCacheNotificationHandler>($"Auto-cleared cache and updated CSS for saved media: {media.Key}");
             }
         }
 
@@ -65,7 +64,7 @@ namespace TestUmbraco.Composers
                 // Удаляем из статического CSS файла
                 await _staticCssGenerator.RemoveCssForMediaAsync(media.Key);
                 
-                _logger.LogInformation($"Auto-cleared cache and removed CSS for deleted media: {media.Key}");
+                _loggingService.LogInformation<MediaCacheNotificationHandler>($"Auto-cleared cache and removed CSS for deleted media: {media.Key}");
             }
         }
 
@@ -78,7 +77,7 @@ namespace TestUmbraco.Composers
                 // Обновляем статический CSS файл
                 await _staticCssGenerator.UpdateCssForMediaAsync(moveEvent.Entity.Key);
                 
-                _logger.LogInformation($"Auto-cleared cache and updated CSS for moved media: {moveEvent.Entity.Key}");
+                _loggingService.LogInformation<MediaCacheNotificationHandler>($"Auto-cleared cache and updated CSS for moved media: {moveEvent.Entity.Key}");
             }
         }
     }

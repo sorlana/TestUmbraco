@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.RegularExpressions;
 using Umbraco.Cms.Core.Models.PublishedContent;
@@ -9,18 +8,18 @@ namespace TestUmbraco.Services
     public class UmbracoBackgroundService : IUmbracoBackgroundService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger<UmbracoBackgroundService> _logger;
+        private readonly ILoggingService _loggingService;
         private readonly IMediaCacheService _mediaCacheService;
         private readonly IStaticCssGeneratorService _staticCssGenerator;
 
         public UmbracoBackgroundService(
             IHttpContextAccessor httpContextAccessor,
-            ILogger<UmbracoBackgroundService> logger,
+            ILoggingService loggingService,
             IMediaCacheService mediaCacheService,
             IStaticCssGeneratorService staticCssGenerator)
         {
             _httpContextAccessor = httpContextAccessor;
-            _logger = logger;
+            _loggingService = loggingService;
             _mediaCacheService = mediaCacheService;
             _staticCssGenerator = staticCssGenerator;
         }
@@ -42,7 +41,7 @@ namespace TestUmbraco.Services
                     if (result.HasBackground && settings.HasProperty("overlayBg") && settings.HasValue("overlayBg"))
                     {
                         var overlayBgValue = settings.Value<string>("overlayBg");
-                        if (!string.IsNullOrWhiteSpace(overlayBgValue) && overlayBgValue != "Не выбрано" && overlayBgValue != "None")
+                        if (!string.IsNullOrWhiteSpace(overlayBgValue) && overlayBgValue != "Не выбран" && overlayBgValue != "None")
                         {
                             result.HasOverlay = true;
                             result.OverlayClass = $"overlay-{componentId:N}";

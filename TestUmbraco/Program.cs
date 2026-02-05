@@ -1,38 +1,32 @@
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.ResponseCompression;
+using TestUmbraco.Application;
+using TestUmbraco.Domain;
+using reCAPTCHA.AspNetCore;
 using TestUmbraco.Services;
 using TestUmbraco.Helpers;
-using reCAPTCHA.AspNetCore;
-using AspNetCoreHero.ToastNotification;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// HttpContextAccessor ДО Umbraco
+// 1. Сначала HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
-// ✅ РЕГИСТРАЦИЯ НАШИХ СЕРВИСОВ
+// 2. Наши сервисы (ДО Umbraco)
+builder.Services.AddSingleton<ILoggingService, LoggingService>();
 builder.Services.AddScoped<IMediaCacheService, MediaCacheService>();
 builder.Services.AddScoped<ImageHelper>();
-builder.Services.AddScoped<IUmbracoBackgroundService, UmbracoBackgroundService>();
-// Регистрация статического CSS сервиса
-builder.Services.AddSingleton<IStaticCssGeneratorService, StaticCssGeneratorService>();
 
-// Сервисы кэширования
+// 3. Другие сервисы
 builder.Services.AddMemoryCache();
 builder.Services.AddResponseCaching();
+builder.Services.AddResponseCompression();
 
-// Сжатие ответов
-builder.Services.AddResponseCompression(options =>
-{
-    options.EnableForHttps = true;
-    options.Providers.Add<GzipCompressionProvider>();
-});
+// 4. Домен и сервисы из Startup
+builder.Services.AddDomain(builder.Configuration);
+builder.Services.AddServices();
 
-builder.Services.Configure<GzipCompressionProviderOptions>(options =>
-{
-    options.Level = System.IO.Compression.CompressionLevel.Optimal;
-});
-
-// ✅ РЕГИСТРАЦИЯ UMBRACO 17.0.0 - БЕЗ ПРИСВОЕНИЯ ПЕРЕМЕННОЙ
+// 5. Umbraco
 builder.Services.AddUmbraco(builder.Environment, builder.Configuration)
     .AddBackOffice()
     .AddWebsite()
@@ -40,7 +34,7 @@ builder.Services.AddUmbraco(builder.Environment, builder.Configuration)
     .AddComposers()
     .Build();
 
-// ✅ ДОПОЛНИТЕЛЬНЫЕ СЕРВИСЫ
+// 6. Дополнительные сервисы
 builder.Services.AddRecaptcha(builder.Configuration.GetSection("RecaptchaSettings"));
 builder.Services.AddNotyf(config => 
 {
@@ -51,14 +45,17 @@ builder.Services.AddNotyf(config =>
 
 var app = builder.Build();
 
-// ЗАГРУЗКА UMBRACO
 await app.BootUmbracoAsync();
 
-// Middleware в правильном порядке
-app.UseResponseCompression();
-app.UseResponseCaching();
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseResponseCompression();
+}
 
-// ОСНОВНОЕ MIDDLEWARE UMBRACO
 app.UseUmbraco()
     .WithMiddleware(u =>
     {
@@ -71,36 +68,6 @@ app.UseUmbraco()
         u.UseWebsiteEndpoints();
     });
 
-// Отладочный middleware для API
-app.Use(async (context, next) =>
-{
-    var path = context.Request.Path.Value;
-    if (path != null && path.Contains("/umbraco/management/api"))
-    {
-        app.Logger.LogInformation("🔍 Запрос к API: {Path}", path);
-    }
-    await next();
-});
-
-// Кастомное кэширование ПОСЛЕ Umbraco
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path.StartsWithSegments("/api/background"))
-    {
-        context.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
-        {
-            Public = true,
-            MaxAge = TimeSpan.FromHours(1)
-        };
-        context.Response.Headers.Append("Vary", "Accept-Encoding");
-    }
-    await next();
-});
-
-// Отладочный эндпоинт
-app.MapGet("/debug/info", () =>
-{
-    return Results.Json(new { status = "ok", message = "Debug endpoint working" });
-});
+app.UseNotyf();
 
 app.Run();

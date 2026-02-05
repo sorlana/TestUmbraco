@@ -20,14 +20,14 @@ namespace TestUmbraco.Composers
     public class StaticCssInitializer : BackgroundService
     {
         private readonly IStaticCssGeneratorService _cssGenerator;
-        private readonly ILogger<StaticCssInitializer> _logger;
+        private readonly ILoggingService _loggingService;
 
         public StaticCssInitializer(
             IStaticCssGeneratorService cssGenerator,
-            ILogger<StaticCssInitializer> logger)
+            ILoggingService loggingService)
         {
             _cssGenerator = cssGenerator;
-            _logger = logger;
+            _loggingService = loggingService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -39,7 +39,7 @@ namespace TestUmbraco.Composers
                 
                 if (stoppingToken.IsCancellationRequested) return;
                 
-                _logger.LogInformation("Initializing static CSS file...");
+                _loggingService.LogInformation<StaticCssInitializer>("Initializing static CSS file...");
                 
                 // Проверяем, существует ли файл
                 var cssDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "css");
@@ -48,16 +48,16 @@ namespace TestUmbraco.Composers
                 if (!File.Exists(cssFile))
                 {
                     await _cssGenerator.GenerateBackgroundCssFileAsync();
-                    _logger.LogInformation("Static CSS file created successfully");
+                    _loggingService.LogInformation<StaticCssInitializer>("Static CSS file created successfully");
                 }
                 else
                 {
-                    _logger.LogInformation("Static CSS file already exists, skipping initialization");
+                    _loggingService.LogInformation<StaticCssInitializer>("Static CSS file already exists, skipping initialization");
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error initializing static CSS file");
+                _loggingService.LogError<StaticCssInitializer>($"Error initializing static CSS file", ex);
             }
         }
     }

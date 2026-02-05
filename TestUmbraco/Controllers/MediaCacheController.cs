@@ -11,14 +11,14 @@ namespace TestUmbraco.Controllers
     public class MediaCacheController : ControllerBase
     {
         private readonly IMediaCacheService _mediaCacheService;
-        private readonly ILogger<MediaCacheController> _logger;
+        private readonly ILoggingService _loggingService;
 
         public MediaCacheController(
             IMediaCacheService mediaCacheService,
-            ILogger<MediaCacheController> logger)
+            ILoggingService loggingService)
         {
             _mediaCacheService = mediaCacheService;
-            _logger = logger;
+            _loggingService = loggingService;
         }
 
         [HttpGet("info")]
@@ -36,7 +36,7 @@ namespace TestUmbraco.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting cache info");
+                _loggingService.LogError<MediaCacheController>($"Error getting cache info", ex);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
@@ -56,7 +56,7 @@ namespace TestUmbraco.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error clearing cache for media {mediaKey}");
+                _loggingService.LogError<MediaCacheController>($"Error clearing cache for media {mediaKey}", ex);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }
@@ -76,7 +76,7 @@ namespace TestUmbraco.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error clearing all media cache");
+                _loggingService.LogError<MediaCacheController>("Error clearing all media cache", ex);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }

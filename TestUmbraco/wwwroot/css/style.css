@@ -107,3 +107,54 @@
 .lazy-video.bg-loaded {
     animation: fadeIn 0.5s ease;
 }
+
+
+/* ===== IMG ===== */
+ /* Обязательные стили для компонента изображения */
+    .optimized-image-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .image-caption {
+        padding: 8px 12px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        font-size: 0.9rem;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+    
+    .image-placeholder {
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 150px;
+        border: 1px dashed #dee2e6;
+    }
+    
+    .placeholder-content {
+        text-align: center;
+    }
+    
+    .placeholder-icon {
+        opacity: 0.5;
+    }
+    
+    .placeholder-text {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+    
+    .image-fallback,
+    .image-error-fallback {
+        width: 100%;
+        height: auto;
+    }
+/* ===== END IMG ===== */

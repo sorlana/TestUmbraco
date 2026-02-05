@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.RegularExpressions;
 using Umbraco.Cms.Core.Services;
@@ -9,25 +8,12 @@ using Umbraco.Extensions;
 
 namespace TestUmbraco.Services
 {
-    public interface IStaticCssGeneratorService
-    {
-        Task<string> GenerateBackgroundCssFileAsync();
-        Task UpdateCssForMediaAsync(Guid mediaKey);
-        Task RemoveCssForMediaAsync(Guid mediaKey);
-        Task RegenerateAllCssAsync();
-        Task<string> AddInlineStyleAsync(string css, string styleType = "custom");
-        Task<string> GetOrAddMediaClassAsync(Guid mediaKey, string className, int minHeight = 400, string size = "cover", string position = "center");
-        Task<string> GetOrAddColorClassAsync(string colorValue, int minHeight = 400);
-        Task<string> GetOrAddGradientClassAsync(string colorStart, string colorEnd, string direction = "to bottom", int minHeight = 400);
-        Task<string> AddOverlayStyleAsync(string overlayClass, string css);
-    }
-
     public class StaticCssGeneratorService : IStaticCssGeneratorService
     {
         private readonly IWebHostEnvironment _env;
         private readonly IMediaService _mediaService;
         private readonly IMediaCacheService _mediaCacheService;
-        private readonly ILogger<StaticCssGeneratorService> _logger;
+        private readonly ILoggingService _loggingService;
         private readonly string _cssFilePath;
         private readonly ConcurrentDictionary<string, string> _styleCache = new();
         private readonly object _fileLock = new();
@@ -36,12 +22,12 @@ namespace TestUmbraco.Services
             IWebHostEnvironment env,
             IMediaService mediaService,
             IMediaCacheService mediaCacheService,
-            ILogger<StaticCssGeneratorService> logger)
+            ILoggingService loggingService)
         {
             _env = env;
             _mediaService = mediaService;
             _mediaCacheService = mediaCacheService;
-            _logger = logger;
+            _loggingService = loggingService;
             
             // Путь к статическому CSS файлу
             _cssFilePath = Path.Combine(_env.WebRootPath, "css", "backgrounds.css");
@@ -177,12 +163,12 @@ namespace TestUmbraco.Services
                     // Используем полное имя System.IO.File для устранения неоднозначности
                     System.IO.File.WriteAllText(_cssFilePath, cssContent, Encoding.UTF8);
                     
-                    _logger.LogInformation($"Static CSS file generated: {_cssFilePath}");
+                    _loggingService.LogInformation<StaticCssGeneratorService>($"Static CSS file generated: {_cssFilePath}");
                     return _cssFilePath;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error generating static CSS file");
+                    _loggingService.LogError<StaticCssGeneratorService>("Error generating static CSS file", ex);
                     throw;
                 }
             }
@@ -206,11 +192,11 @@ namespace TestUmbraco.Services
                 // Добавляем в файл
                 await AppendOrUpdateCssSectionAsync($"media_{mediaKey:N}", css, "MEDIA BACKGROUND CLASSES");
                 
-                _logger.LogInformation($"Updated CSS for media: {mediaKey}");
+                _loggingService.LogInformation<StaticCssGeneratorService>($"Updated CSS for media: {mediaKey}");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error updating CSS for media {mediaKey}");
+                _loggingService.LogError<StaticCssGeneratorService>($"Error updating CSS for media {mediaKey}", ex);
             }
         }
 
@@ -219,11 +205,11 @@ namespace TestUmbraco.Services
             try
             {
                 await RemoveCssSectionAsync($"media_{mediaKey:N}");
-                _logger.LogInformation($"Removed CSS for media: {mediaKey}");
+                _loggingService.LogInformation<StaticCssGeneratorService>($"Removed CSS for media: {mediaKey}");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error removing CSS for media {mediaKey}");
+                _loggingService.LogError<StaticCssGeneratorService>($"Error removing CSS for media {mediaKey}", ex);
             }
         }
 
@@ -242,11 +228,11 @@ namespace TestUmbraco.Services
                     await UpdateCssForMediaAsync(media.Key);
                 }
                 
-                _logger.LogInformation("Regenerated all CSS backgrounds");
+                _loggingService.LogInformation<StaticCssGeneratorService>("Regenerated all CSS backgrounds");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error regenerating all CSS");
+                _loggingService.LogError<StaticCssGeneratorService>("Error regenerating all CSS", ex);
             }
         }
 
@@ -437,7 +423,7 @@ namespace TestUmbraco.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Error appending CSS section: {sectionId}");
+                    _loggingService.LogError<StaticCssGeneratorService>($"Error appending CSS section: {sectionId}", ex);
                     throw;
                 }
             }
@@ -464,7 +450,7 @@ namespace TestUmbraco.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"Error removing CSS section: {sectionId}");
+                    _loggingService.LogError<StaticCssGeneratorService>($"Error removing CSS section: {sectionId}", ex);
                     throw;
                 }
             }
@@ -528,7 +514,7 @@ namespace TestUmbraco.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting all media items");
+                _loggingService.LogError<StaticCssGeneratorService>("Error getting all media items", ex);
             }
             
             return allMedia;
@@ -550,7 +536,7 @@ namespace TestUmbraco.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error getting descendants for media {parent.Id}");
+                _loggingService.LogError<StaticCssGeneratorService>($"Error getting descendants for media {parent.Id}", ex);
             }
         }
     }
