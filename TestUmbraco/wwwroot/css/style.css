@@ -1,160 +1,304 @@
-/* wwwroot/css/backgrounds.css */
-
-/* Базовые стили для всех фоновых секций */
-.lazy-image {
-    background-color: #f5f5f5;
-}
-
-.lazy-image.bg-loaded {
-    background-color: transparent;
-}
-
-/* Стили для ленивой загрузки видео */
-.lazy-video {
+/* ===== IMG ===== */
+/* Обязательные стили для компонента изображения */
+.optimized-image-wrapper {
     position: relative;
     overflow: hidden;
 }
 
-.lazy-video.bg-loaded {
-    background-color: transparent;
+.image-caption {
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 0.9rem;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
 }
 
-/* ОВЕРЛЕЙ - теперь это отдельный элемент */
-.background-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
+.image-placeholder {
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    border: 1px dashed #dee2e6;
+}
+
+.placeholder-content {
+    text-align: center;
+}
+
+.placeholder-icon {
+    opacity: 0.5;
+}
+
+.placeholder-text {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.image-fallback,
+.image-error-fallback {
+    width: 100%;
+    height: auto;
+}
+
+/* ===== ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ ИЗОБРАЖЕНИЙ ===== */
+
+/* Основной контейнер для изображения */
+.image-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: block;
+}
+
+/* Соотношения сторон для контейнеров */
+.image-wrapper.card-img-top {
+    aspect-ratio: 16/9;
+}
+
+.image-wrapper.aspect-ratio-16-9 {
+    aspect-ratio: 16/9;
+}
+
+.image-wrapper.aspect-ratio-4-3 {
+    aspect-ratio: 4/3;
+}
+
+.image-wrapper.aspect-ratio-1-1 {
+    aspect-ratio: 1/1;
+}
+
+.image-wrapper.aspect-ratio-3-2 {
+    aspect-ratio: 3/2;
+}
+
+/* ===== ИСПРАВЛЕНИЕ: УБРАНЫ position: absolute ===== */
+/* Теперь все элементы остаются в нормальном потоке */
+
+/* Picture должен быть блоком и заполнять контейнер */
+.image-wrapper picture {
+    display: block;
     width: 100%;
     height: 100%;
-    z-index: 1; /* Выше видео (0), ниже контента (2) */
-    pointer-events: none;
 }
 
-/* Контейнер для видео */
-.lazy-video .video-container {
-    position: absolute;
-    top: 0;
-    left: 0;
+/* Responsive image класс (если используется) */
+.image-wrapper .responsive-image {
+    display: block;
     width: 100%;
     height: 100%;
-    z-index: 0;
-    pointer-events: none;
 }
 
-/* Vimeo iframe */
-.lazy-video .video-bg-iframe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 177.77777778vh;
-    min-width: 100%;
-    min-height: 100%;
-    height: 56.25vw;
-    transform: translate(-50%, -50%);
-    border: 0;
-    z-index: 0;
-    pointer-events: none;
-}
-
-/* Контейнер для placeholder на мобильных */
-.lazy-video .video-placeholder-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-}
-
-.lazy-video .video-placeholder {
+/* Изображение внутри picture должно заполнять его */
+.image-wrapper picture img,
+.image-wrapper .responsive-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    display: block;
 }
 
-/* Контейнер для контента должен быть поверх фона и оверлея */
-[class*="grid-bg-"] > .container,
-[class*="grid-bg-"] > .row {
-    position: relative;
-    z-index: 2;
+/* ===== СТИЛИ ДЛЯ КАРТОЧЕК ===== */
+
+/* Для карточек */
+.card .image-wrapper.card-img-top {
+    border-radius: 8px 8px 0 0;
 }
 
-/* Убедимся, что контент всегда выше видео и оверлея */
-.lazy-video > *:not(.video-container):not(.background-overlay):not(.video-placeholder-container) {
-    position: relative;
-    z-index: 2;
+/* Изображения в карточках */
+.card .image-wrapper.card-img-top picture,
+.card .image-wrapper.card-img-top .responsive-image {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
-/* Оптимизация для мобильных устройств */
-@media (max-width: 768px) {
-    .lazy-video .video-container {
-        display: none;
-    }
+.card .image-wrapper.card-img-top img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
-/* Состояние ошибки */
-.bg-error {
-    background-color: #ffe6e6 !important;
+/* Placeholder для карточек */
+.card-image-placeholder {
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    width: 100%;
+    aspect-ratio: 16/9;
 }
 
-/* Анимация загрузки */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.placeholder-content {
+    text-align: center;
 }
 
-.lazy-image.bg-loaded,
-.lazy-video.bg-loaded {
-    animation: fadeIn 0.5s ease;
+.placeholder-icon {
+    opacity: 0.5;
+    margin-bottom: 10px;
 }
 
+.placeholder-text {
+    display: block;
+    font-size: 14px;
+}
 
-/* ===== IMG ===== */
- /* Обязательные стили для компонента изображения */
-    .optimized-image-wrapper {
-        position: relative;
-        overflow: hidden;
+/* ===== CARD STYLES ===== */
+.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+/* Для совместимости с Bootstrap */
+.card-img-top {
+    width: 100%;
+    height: auto;
+}
+
+.card-body {
+    padding: 20px;
+    flex: 1;
+}
+
+.card-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.25rem;
+}
+
+.card-text {
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.card-footer {
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e0e0e0;
+}
+
+.card-link {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.card-link:hover {
+    background: #0056b3;
+    color: white;
+    text-decoration: none;
+}
+
+/* Анимация загрузки изображений */
+.image-wrapper picture img {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-wrapper picture img.loaded {
+    opacity: 1;
+}
+
+/* Fallback для браузеров, которые не поддерживают aspect-ratio */
+@supports not (aspect-ratio: 16/9) {
+    .image-wrapper.card-img-top {
+        height: 0;
+        padding-bottom: 56.25%; /* 16:9 в процентах */
     }
     
-    .image-caption {
-        padding: 8px 12px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        font-size: 0.9rem;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        text-align: center;
+    .image-wrapper.aspect-ratio-16-9 {
+        height: 0;
+        padding-bottom: 56.25%;
     }
     
-    .image-placeholder {
-        background: #f8f9fa;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 150px;
-        border: 1px dashed #dee2e6;
+    .image-wrapper.aspect-ratio-4-3 {
+        height: 0;
+        padding-bottom: 75%;
     }
     
-    .placeholder-content {
-        text-align: center;
+    .image-wrapper.aspect-ratio-1-1 {
+        height: 0;
+        padding-bottom: 100%;
     }
     
-    .placeholder-icon {
-        opacity: 0.5;
+    .image-wrapper.aspect-ratio-3-2 {
+        height: 0;
+        padding-bottom: 66.67%;
     }
     
-    .placeholder-text {
-        display: block;
-        margin-top: 8px;
-        font-size: 0.875rem;
-        color: #6c757d;
+    .card-image-placeholder {
+        height: 0;
+        padding-bottom: 56.25%;
     }
     
-    .image-fallback,
-    .image-error-fallback {
-        width: 100%;
+    /* Для fallback нам нужно переопределить height для img */
+    .image-wrapper:not(:has(img[src])) {
         height: auto;
+        min-height: 200px;
     }
+}
+
+/* Дополнительные гарантии для изображений */
+.optimized-image {
+    display: block !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+
+/* ===== КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ ===== */
+
+/* Гарантируем, что изображения будут видимы */
+.image-wrapper img {
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: static !important;
+}
+
+/* Убираем возможные конфликты с другими стилями */
+picture, 
+picture img,
+.responsive-image,
+.responsive-image img {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+}
+
+/* Обеспечиваем правильное поведение для всех браузеров */
+.image-wrapper {
+    display: flow-root; /* Создает новый контекст форматирования */
+}
+
+/* Если все еще есть проблемы, добавьте эти принудительные стили: */
+.image-wrapper:has(picture) {
+    display: block !important;
+    contain: layout; /* Оптимизация для браузера */
+}
+
 /* ===== END IMG ===== */

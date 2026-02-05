@@ -18,7 +18,7 @@ using Umbraco.Extensions;
 
 namespace Umbraco.Cms.Web.Common.PublishedModels
 {
-	/// <summary>Grid Section</summary>
+	/// <summary>Section</summary>
 	[PublishedModel("gridSection")]
 	public partial class GridSection : PublishedElementModel
 	{
@@ -63,7 +63,7 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("rows")]
-		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockListModel Rows => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockListModel>(_publishedValueFallback, "rows");
+		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel Rows => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel>(_publishedValueFallback, "rows");
 
 		///<summary>
 		/// Класс секции

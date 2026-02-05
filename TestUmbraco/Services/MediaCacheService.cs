@@ -29,6 +29,7 @@ namespace TestUmbraco.Services
         {
             var cacheKey = $"media_url_{mediaKey}_{cropAlias}_{width}_{height}";
             
+            // Используем GetCacheItem с синхронным делегатом
             return await _runtimeCache.GetCacheItemAsync(cacheKey, async () =>
             {
                 try
@@ -37,10 +38,10 @@ namespace TestUmbraco.Services
                     
                     if (media == null)
                     {
-                        return null;
+                        return null; // Явно возвращаем null
                     }
 
-                    string? url;
+                    string? url = null;
                     
                     if (_umbracoContextAccessor.TryGetUmbracoContext(out var umbracoContext))
                     {
@@ -54,7 +55,7 @@ namespace TestUmbraco.Services
 
                     if (string.IsNullOrEmpty(url))
                     {
-                        return null;
+                        return null; // Явно возвращаем null
                     }
 
                     var parameters = new List<string>();
@@ -94,7 +95,7 @@ namespace TestUmbraco.Services
                 }
                 catch (Exception)
                 {
-                    return null;
+                    return null; // Явно возвращаем null
                 }
             }, TimeSpan.FromHours(1));
         }
@@ -103,7 +104,7 @@ namespace TestUmbraco.Services
         {
             if (media == null)
             {
-                return null;
+                return null; // Явно возвращаем null
             }
             
             return await GetCachedMediaUrlAsync(media.Key, cropAlias, width, height);

@@ -1,0 +1,18 @@
+@using Umbraco.Cms.Core.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<IPublishedElement>
+
+@{
+    var image = Model.Value<IPublishedContent>("image");
+    var altText = Model.Value<string>("altText") ?? image?.Name ?? "Image";
+}
+
+@if (image != null)
+{
+    <div style="width:100%; border:3px solid red; padding:10px;">
+        <h3>TEST IMAGE (should be visible with red border)</h3>
+        <img src="@image.Url()" 
+             alt="@altText"
+             style="width:100%; height:auto; display:block; border:2px solid blue;">
+        <p>Image URL: @image.Url()</p>
+    </div>
+}

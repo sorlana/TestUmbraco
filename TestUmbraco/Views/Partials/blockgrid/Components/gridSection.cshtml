@@ -1,13 +1,12 @@
-@using Umbraco.Cms.Core.Models.Blocks
+﻿@using Umbraco.Cms.Core.Models.Blocks
 @using TestUmbraco.Models
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
 
 @{
     var content = Model.Content;
     var settings = Model.Settings;
-    var rows = content.Value<BlockListModel>("rows");
+    var gridColumns = content.Value<BlockGridModel>("rows");
     
-    // Получаем классы секции
     var sectionClass = "";
     var containerClass = "";
     
@@ -28,27 +27,26 @@
     }
 }
 
-@if (rows != null && rows.Any())
+@if (gridColumns != null && gridColumns.Any())
 {
     // Создаем функцию для контента
     Func<object, Microsoft.AspNetCore.Html.IHtmlContent> contentFunc = 
         @<text>
-            @foreach (var row in rows)
+            @foreach (var gridColumn in gridColumns)
             {
-                @await Html.PartialAsync($"blockgrid/Components/{row.Content.ContentType.Alias}", row)
+                @await Html.PartialAsync($"blockgrid/Components/{gridColumn.Content.ContentType.Alias}", gridColumn)
             }
         </text>;
 
-    // Создаем модель для фона - используем новую структуру модели
+    // Создаем модель для фона
     var backgroundModel = new BackgroundSectionModel
     {
         Settings = settings,
         ComponentId = content.Key,
         Prefix = "grid-bg",
-        BaseClass = sectionClass.Trim(),  // Изменили с SectionClass на BaseClass
+        BaseClass = sectionClass.Trim(),
         ContainerClass = containerClass.Trim(),
         Content = contentFunc
-        // WrapperTag больше не используется - все секции используют <section>
     };
 
     // Рендерим частичное представление

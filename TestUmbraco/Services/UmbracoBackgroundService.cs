@@ -283,18 +283,25 @@ namespace TestUmbraco.Services
             
             var cssBuilder = new StringBuilder();
             
+            // Исправляем подход: оверлей должен быть фоном, а не перекрытием
             cssBuilder.Append($@"
-.{overlayClass} .background-overlay {{
+.{overlayClass} {{
+    position: relative;
+}}
+
+/* Оверлей как фон - ниже всего контента */
+.{overlayClass}::before {{
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
     pointer-events: none;
 }}");
             
+            // Обрабатываем тип оверлея
             switch (overlayBgValue)
             {
                 case "Цвет":
@@ -304,7 +311,7 @@ namespace TestUmbraco.Services
                         if (!string.IsNullOrWhiteSpace(color))
                         {
                             cssBuilder.Append($@"
-.{overlayClass} .background-overlay {{
+.{overlayClass}::before {{
     background-color: {color};
 }}");
                         }
@@ -321,7 +328,7 @@ namespace TestUmbraco.Services
                             if (!string.IsNullOrEmpty(imageUrl))
                             {
                                 cssBuilder.Append($@"
-.{overlayClass} .background-overlay {{
+.{overlayClass}::before {{
     background-image: url('{imageUrl}');
     background-size: cover;
     background-position: center;
@@ -341,9 +348,16 @@ namespace TestUmbraco.Services
                         
                         if (!string.IsNullOrWhiteSpace(colorStart) && !string.IsNullOrWhiteSpace(colorEnd))
                         {
+                            // Получаем направление градиента
+                            var direction = "to bottom";
+                            if (settings.HasProperty("directionOverlay") && settings.HasValue("directionOverlay"))
+                            {
+                                direction = ConvertDirectionToCss(settings.Value<string>("directionOverlay") ?? "");
+                            }
+                            
                             cssBuilder.Append($@"
-.{overlayClass} .background-overlay {{
-    background: linear-gradient(to bottom, {colorStart}, {colorEnd});
+.{overlayClass}::before {{
+    background: linear-gradient({direction}, {colorStart}, {colorEnd});
 }}");
                         }
                     }
@@ -356,10 +370,27 @@ namespace TestUmbraco.Services
                 var opacityValue = settings.Value<int>("opacityOverlay");
                 var opacity = opacityValue / 100.0;
                 cssBuilder.Append($@"
-.{overlayClass} .background-overlay {{
+.{overlayClass}::before {{
     opacity: {opacity.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)};
 }}");
             }
+            
+            // Добавляем стили для поднятия контента над оверлеем
+            cssBuilder.Append($@"
+/* Поднимаем контент над оверлеем */
+.{overlayClass} > .cmt,
+.{overlayClass} > [class*=""container""] {{
+    position: relative;
+    z-index: 2;
+}}
+
+/* Особенно изображения и карточки */
+.{overlayClass} .image-wrapper,
+.{overlayClass} .card,
+.{overlayClass} img {{
+    position: relative;
+    z-index: 2 !important;
+}}");
             
             await _staticCssGenerator.AddInlineStyleAsync(cssBuilder.ToString(), "overlay");
         }
@@ -458,6 +489,10 @@ namespace TestUmbraco.Services
                 "Снизу вверх" => "to top",
                 "Слева направо" => "to right",
                 "Справа налево" => "to left",
+                "Диагональ (↘)" => "to bottom right",
+                "Диагональ (↙)" => "to bottom left",
+                "Диагональ (↗)" => "to top right",
+                "Диагональ (↖)" => "to top left",
                 _ => "to bottom"
             };
         }

@@ -1,0 +1,56 @@
+﻿@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    var content = Model.Content;
+    var blocks = content.Value<BlockGridModel>("content");
+    
+    var typeBlock = content.Value<bool>("typeBlock");
+    var bootstrapValue = content.Value<int?>("bootstrap");
+    var classRow = content.Value<string>("classRow")?.Trim();
+}
+
+@if (blocks != null && blocks.Any())
+{
+    if (typeBlock)
+    {
+        <ul class="row @classRow">
+            @foreach (var block in blocks)
+            {
+                <li class="@GetColumnClass(block, bootstrapValue)">
+                    @await Html.PartialAsync($"blockgrid/Components/{block.Content.ContentType.Alias}", block.Content)
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <div class="row @classRow">
+            @foreach (var block in blocks)
+            {
+                <div class="@GetColumnClass(block, bootstrapValue)">
+                    @await Html.PartialAsync($"blockgrid/Components/{block.Content.ContentType.Alias}", block.Content)
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+    <!-- GridColumn: нет блоков в свойстве content -->
+}
+
+@functions {
+    private string GetColumnClass(BlockGridItem block, int? bootstrapValue)
+    {
+        if (bootstrapValue.HasValue && bootstrapValue.Value > 0)
+        {
+            var columnWidth = 12 / bootstrapValue.Value;
+            return $"col-{columnWidth}";
+        }
+        else
+        {
+            return $"col-{block.ColumnSpan}";
+        }
+    }
+}

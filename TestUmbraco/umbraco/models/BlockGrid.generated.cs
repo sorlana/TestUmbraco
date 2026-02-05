@@ -18,7 +18,7 @@ using Umbraco.Extensions;
 
 namespace Umbraco.Cms.Web.Common.PublishedModels
 {
-	/// <summary>BlockGrid</summary>
+	/// <summary>PageTemplate</summary>
 	[PublishedModel("blockGrid")]
 	public partial class BlockGrid : PublishedContentModel
 	{

@@ -10,56 +10,72 @@
     var altText = ViewData["AltText"] as string ?? Model?.Name ?? "";
     var lazyLoad = ViewData["LazyLoad"] as bool? ?? true;
     var attributes = ViewData["Attributes"] as Dictionary<string, string>;
+    
+    // Уберите этот параметр - он не нужен
+    // var skipWrapper = ViewData["SkipWrapper"] as bool? ?? false;
+    
+    // Просто всегда передаем skipWrapper: false в ImageHelper
+    // но НЕ создаем свою обертку
 }
 
 @if (Model != null)
 {
-    <div class="image-wrapper @cssClass">
-        @try
+    try
+    {
+        if (ImageHelper != null)
         {
-            if (ImageHelper != null)
+            // Используем skipWrapper: false, чтобы ImageHelper сам создал обертку
+            var imageHtml = await ImageHelper.RenderResponsiveMediaAsync(
+                media: Model,
+                cropAlias: cropAlias,
+                cssClass: cssClass,
+                altText: altText,
+                lazyLoad: lazyLoad,
+                attributes: attributes,
+                responsiveWidths: null,
+                sizes: null,
+                gridColumns: "col-12",
+                includeWebp: true,
+                skipWrapper: false  // Пусть ImageHelper создает обертку
+            );
+            
+            if (imageHtml != null && !string.IsNullOrEmpty(imageHtml.ToString()))
             {
-                var imageHtml = await ImageHelper.RenderMediaAsync(
-                    media: Model,
-                    cropAlias: cropAlias,
-                    attributes: attributes,
-                    lazyLoad: lazyLoad
-                );
-                
-                if (imageHtml != null && !string.IsNullOrEmpty(imageHtml.ToString()))
-                {
-                    @imageHtml
-                }
-                else
-                {
-                    <img src="@Model.Url()" 
-                         alt="@altText"
-                         class="image-fallback @cssClass"
-                         loading="lazy"
-                         decoding="async" />
-                }
+                @imageHtml
             }
             else
             {
                 <img src="@Model.Url()" 
                      alt="@altText"
                      class="image-fallback @cssClass"
+                     style="width:100%; height:auto; display:block; border:2px solid red;"
                      loading="lazy"
                      decoding="async" />
             }
         }
-        catch (Exception)
+        else
         {
             <img src="@Model.Url()" 
                  alt="@altText"
-                 class="image-error @cssClass"
+                 class="image-fallback @cssClass"
+                 style="width:100%; height:auto; display:block; border:2px solid red;"
                  loading="lazy"
                  decoding="async" />
         }
-    </div>
+    }
+    catch (Exception)
+    {
+        <img src="@Model.Url()" 
+             alt="@altText"
+             class="image-error @cssClass"
+             style="width:100%; height:auto; display:block; border:2px solid red;"
+             loading="lazy"
+             decoding="async" />
+    }
 }
 else
 {
+    <!-- Если изображение отсутствует -->
     <div class="image-placeholder @cssClass">
         <div class="placeholder-content">
             <svg class="placeholder-icon" width="40" height="40" viewBox="0 0 24 24">

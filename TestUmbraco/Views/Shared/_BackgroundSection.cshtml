@@ -36,12 +36,6 @@
 }
 
 <section class="@finalClass">
-    <!-- Элемент оверлея -->
-    @if (hasOverlay)
-    {
-        <div class="background-overlay"></div>
-    }
-    
     <!-- Видео фон -->
     @if (backgroundResult.Type == BackgroundType.Video && !string.IsNullOrEmpty(backgroundResult.VideoId))
     {
