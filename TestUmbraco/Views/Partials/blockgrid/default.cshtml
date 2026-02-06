@@ -1,20 +1,25 @@
 ﻿@using Umbraco.Cms.Core.Models.Blocks
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridModel>
 
-@foreach (var item in Model)
+@if (Model != null && Model.Any())
 {
-    if (item.Content.ContentType.Alias == "gridSection")
+    foreach (var item in Model)
     {
-        // Grid Section без дополнительных оберток
-        @await Html.PartialAsync("blockgrid/Components/gridSection", item)
-    }
-    else
-    {
-        // Обычные блоки в отдельном row
-        <div class="row">
-            <div class="col-@item.ColumnSpan">
-                @await Html.PartialAsync($"blockgrid/Components/{item.Content.ContentType.Alias}", item)
+        if (item.Content.ContentType.Alias == "gridSection")
+        {
+            @* Grid Section рендерится напрямую *@
+            @await Html.PartialAsync("blockgrid/Components/gridSection", item)
+        }
+        else
+        {
+            @* Обычные блоки оборачиваем в container и row *@
+            <div class="container">
+                <div class="row">
+                    <div class="col-@item.ColumnSpan">
+                        @await Html.PartialAsync($"blockgrid/Components/{item.Content.ContentType.Alias}", item)
+                    </div>
+                </div>
             </div>
-        </div>
+        }
     }
 }

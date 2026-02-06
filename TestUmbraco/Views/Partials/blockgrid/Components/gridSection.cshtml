@@ -3,9 +3,11 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
 
 @{
-    var content = Model.Content;
-    var settings = Model.Settings;
-    var gridColumns = content.Value<BlockGridModel>("rows");
+    var content = (IPublishedElement?)Model.Content;
+    var settings = (IPublishedElement?)Model.Settings;
+    
+    // Получаем вложенный BlockGrid из свойства "rows"
+    var gridRows = content?.Value<BlockGridModel>("rows");
     
     var sectionClass = "";
     var containerClass = "";
@@ -18,37 +20,88 @@
     
     if (string.IsNullOrWhiteSpace(sectionClass))
     {
-        sectionClass = content.Value<string>("sectionClass") ?? "";
+        sectionClass = content?.Value<string>("sectionClass") ?? "";
     }
     
     if (string.IsNullOrWhiteSpace(containerClass))
     {
-        containerClass = content.Value<string>("containerClass") ?? "";
+        containerClass = content?.Value<string>("containerClass") ?? "";
     }
+    
+    // DEBUG
+    var hasRows = gridRows != null && gridRows.Any();
+    var rowCount = gridRows?.Count() ?? 0;
+    var hasSettings = settings != null;
 }
 
-@if (gridColumns != null && gridColumns.Any())
+@* DEBUG OUTPUT - Remove in production *@
+@if (Context.Request.Query.ContainsKey("debug"))
 {
-    // Создаем функцию для контента
-    Func<object, Microsoft.AspNetCore.Html.IHtmlContent> contentFunc = 
+    <div style="border: 2px solid blue; padding: 10px; margin: 10px; background: #e0e0ff;">
+        <strong>DEBUG: gridSection</strong><br/>
+        Has 'rows' property: @hasRows<br/>
+        Rows count: @rowCount<br/>
+        <strong style="color: red;">Has Settings: @hasSettings</strong><br/>
+        @if (hasSettings && settings != null)
+        {
+            <div style="margin-left: 20px;">
+                Settings Type: @settings.ContentType.Alias<br/>
+                @foreach (var prop in settings.Properties)
+                {
+                    var val = settings.Value(prop.Alias);
+                    <div>- @prop.Alias: @(val ?? "null")</div>
+                }
+            </div>
+        }
+        @if (hasRows && gridRows != null)
+        {
+            <div style="margin-left: 20px;">
+                @foreach (var row in gridRows)
+                {
+                    <div>- Row: @row.Content.ContentType.Alias (ColumnSpan: @row.ColumnSpan, Has Settings: @(row.Settings != null))</div>
+                }
+            </div>
+        }
+    </div>
+}
+
+@if (gridRows != null && gridRows.Any())
+{
+    // Создаем функцию для контента section (container + row с колонками)
+    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? sectionContentFunc = 
         @<text>
-            @foreach (var gridColumn in gridColumns)
-            {
-                @await Html.PartialAsync($"blockgrid/Components/{gridColumn.Content.ContentType.Alias}", gridColumn)
-            }
+            <div class="container @containerClass.Trim()">
+                @* Рендерим дочерние элементы (gridColumn) - они сами создадут row с фоном *@
+                @foreach (var gridRow in gridRows)
+                {
+                    @await Html.PartialAsync($"blockgrid/Components/{gridRow.Content.ContentType.Alias}", gridRow)
+                }
+            </div>
         </text>;
 
-    // Создаем модель для фона
-    var backgroundModel = new BackgroundSectionModel
+    // Создаем модель для BackgroundClasses - применяем к section
+    var backgroundModel = new BackgroundClassesModel
     {
         Settings = settings,
-        ComponentId = content.Key,
-        Prefix = "grid-bg",
+        ComponentId = content?.Key,
+        Prefix = "gridsection-bg",
         BaseClass = sectionClass.Trim(),
-        ContainerClass = containerClass.Trim(),
-        Content = contentFunc
+        AdditionalClasses = "",
+        Tag = "section",
+        ContainerClass = "",
+        Content = sectionContentFunc
     };
 
-    // Рендерим частичное представление
-    <partial name="_BackgroundSection" model="backgroundModel" />
+    // Рендерим section через универсальный компонент с фоном
+    <partial name="_BackgroundClasses" model="backgroundModel" />
+}
+else
+{
+    <section class="@sectionClass.Trim()" style="border: 2px solid red; padding: 20px; margin: 10px;">
+        <div class="container @containerClass.Trim()">
+            <p style="color: red;">
+                <strong>GridSection Error:</strong> No rows configured. Please add content to this section in Umbraco.
+            </p>
+        </div>
+    </section>
 }

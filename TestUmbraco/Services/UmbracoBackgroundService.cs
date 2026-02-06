@@ -41,7 +41,9 @@ namespace TestUmbraco.Services
                     if (result.HasBackground && settings.HasProperty("overlayBg") && settings.HasValue("overlayBg"))
                     {
                         var overlayBgValue = settings.Value<string>("overlayBg");
-                        if (!string.IsNullOrWhiteSpace(overlayBgValue) && overlayBgValue != "Не выбран" && overlayBgValue != "None")
+                        if (!string.IsNullOrWhiteSpace(overlayBgValue) && 
+                            overlayBgValue != "Не выбран" && overlayBgValue != "None" && 
+                            overlayBgValue != "мЕ БШАПЮМ")
                         {
                             result.HasOverlay = true;
                             result.OverlayClass = $"overlay-{componentId:N}";
@@ -50,7 +52,7 @@ namespace TestUmbraco.Services
                         }
                     }
                     
-                    // Регистрируем информацию для JavaScript
+                    // Передача данных для JavaScript
                     RegisterBackgroundInfo(settings, componentId, result, bgValue);
                 }
             }
@@ -64,23 +66,35 @@ namespace TestUmbraco.Services
             
             var trimmedValue = bgValue.Trim();
             
-            switch (trimmedValue)
+            // DEBUG: Log the actual value and its bytes for encoding analysis
+            _loggingService.LogInformation($"ProcessBackgroundType - Input: '{trimmedValue}' (Length: {trimmedValue.Length})");
+            _loggingService.LogInformation($"Bytes: {string.Join(" ", Encoding.UTF8.GetBytes(trimmedValue).Select(b => b.ToString("X2")))}");
+            
+            // Поддержка как русских, так и английских значений
+            if (trimmedValue == "Изображение" || trimmedValue == "Image" || trimmedValue == "хГНАПЮФЕМХЕ")
             {
-                case "Изображение":
-                    result = await ProcessImageBackground(settings, componentId, prefix);
-                    break;
-                case "Цвет":
-                    result = await ProcessColorBackground(settings, componentId, prefix);
-                    break;
-                case "Градиент":
-                    result = await ProcessGradientBackground(settings, componentId, prefix);
-                    break;
-                case "Видео":
-                    result = await ProcessVideoBackground(settings, componentId, prefix);
-                    break;
-                default:
-                    result = new BackgroundResult();
-                    break;
+                _loggingService.LogInformation("Matched: Image background");
+                result = await ProcessImageBackground(settings, componentId, prefix);
+            }
+            else if (trimmedValue == "Цвет" || trimmedValue == "Color" || trimmedValue == "жБЕР")
+            {
+                _loggingService.LogInformation("Matched: Color background");
+                result = await ProcessColorBackground(settings, componentId, prefix);
+            }
+            else if (trimmedValue == "Градиент" || trimmedValue == "Gradient" || trimmedValue == "цПЮДХЕМР")
+            {
+                _loggingService.LogInformation("Matched: Gradient background");
+                result = await ProcessGradientBackground(settings, componentId, prefix);
+            }
+            else if (trimmedValue == "Видео" || trimmedValue == "Video" || trimmedValue == "бХДЕН")
+            {
+                _loggingService.LogInformation("Matched: Video background");
+                result = await ProcessVideoBackground(settings, componentId, prefix);
+            }
+            else
+            {
+                _loggingService.LogInformation($"NO MATCH - Creating empty result. Value was: '{trimmedValue}'");
+                result = new BackgroundResult();
             }
             
             return result;
@@ -101,14 +115,14 @@ namespace TestUmbraco.Services
                     var bgPosition = settings.HasValue("backgroundPosition") ? 
                         settings.Value<string>("backgroundPosition") ?? "center" : "center";
                     
-                    // Генерируем класс через статический CSS сервис
+                    // Генерация класса с медиа
                     var className = $"bg-media-{bgImage.Key:N}";
                     if (bgSize == "contain")
                     {
                         className += "-contain";
                     }
                     
-                    // Добавляем стиль в статический CSS файл
+                    // Добавляем стили в CSS
                     await _staticCssGenerator.GetOrAddMediaClassAsync(
                         bgImage.Key, 
                         className, 
@@ -120,7 +134,7 @@ namespace TestUmbraco.Services
                     result.HasBackground = true;
                     result.IsLazyLoaded = true;
                     
-                    // Добавляем инлайновые стили для min-height
+                    // Добавляем минимальную высоту
                     if (minHeight > 0)
                     {
                         var minHeightClass = $"min-h-{minHeight}";
@@ -144,7 +158,7 @@ namespace TestUmbraco.Services
                 {
                     var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                     
-                    // Генерируем класс через статический CSS сервис
+                    // Генерация класса с цветом
                     var className = await _staticCssGenerator.GetOrAddColorClassAsync(color, minHeight);
                     
                     result.CssClass = className;
@@ -175,7 +189,7 @@ namespace TestUmbraco.Services
                     
                     var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                     
-                    // Генерируем класс через статический CSS сервис
+                    // Генерация класса с градиентом
                     var className = await _staticCssGenerator.GetOrAddGradientClassAsync(
                         colorStart, colorEnd, direction, minHeight);
                     
@@ -203,11 +217,11 @@ namespace TestUmbraco.Services
                         
                         var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
                         
-                        // Генерируем уникальный класс для видео
+                        // Генерация уникального класса для видео
                         var videoHash = ComputeHash(videoUrl);
                         var videoClass = $"bg-video-{videoHash}";
                         
-                        // Добавляем стили в статический CSS
+                        // Добавляем стили в CSS
                         var css = $@"
 .{videoClass}.lazy-video {{
     position: relative;
@@ -256,7 +270,7 @@ namespace TestUmbraco.Services
                         result.HasBackground = true;
                         result.IsLazyLoaded = true;
                         
-                        // Проверяем наличие плейсхолдера
+                        // Проверяем наличие видеоплейсхолдера
                         if (settings.HasProperty("videoPlaceholder") && settings.HasValue("videoPlaceholder"))
                         {
                             var placeholder = settings.Value<IPublishedContent>("videoPlaceholder");
@@ -283,13 +297,13 @@ namespace TestUmbraco.Services
             
             var cssBuilder = new StringBuilder();
             
-            // Исправляем подход: оверлей должен быть фоном, а не перекрытием
+            // Добавляем основу: оверлей должен быть под контентом, а не поверх
             cssBuilder.Append($@"
 .{overlayClass} {{
     position: relative;
 }}
 
-/* Оверлей как фон - ниже всего контента */
+/* Оверлей под контентом - не перекрывает */
 .{overlayClass}::before {{
     content: '';
     position: absolute;
@@ -297,71 +311,73 @@ namespace TestUmbraco.Services
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    z-index: 0;
     pointer-events: none;
 }}");
             
-            // Обрабатываем тип оверлея
-            switch (overlayBgValue)
+            // Настраиваем тип оверлея
+            if (overlayBgValue == "Цвет" || overlayBgValue == "Color" || overlayBgValue == "жБЕР")
             {
-                case "Цвет":
-                    if (settings.HasProperty("colorOverlay") && settings.HasValue("colorOverlay"))
+                if (settings.HasProperty("colorOverlay") && settings.HasValue("colorOverlay"))
+                {
+                    var color = settings.Value<string>("colorOverlay");
+                    if (!string.IsNullOrWhiteSpace(color))
                     {
-                        var color = settings.Value<string>("colorOverlay");
-                        if (!string.IsNullOrWhiteSpace(color))
-                        {
-                            cssBuilder.Append($@"
+                        cssBuilder.Append($@"
 .{overlayClass}::before {{
     background-color: {color};
 }}");
-                        }
                     }
-                    break;
-                    
-                case "Изображение":
-                    if (settings.HasProperty("imageOverlay") && settings.HasValue("imageOverlay"))
+                }
+            }
+            else if (overlayBgValue == "Изображение" || overlayBgValue == "Image" || overlayBgValue == "хГНАПЮФЕМХЕ")
+            {
+                if (settings.HasProperty("imageOverlay") && settings.HasValue("imageOverlay"))
+                {
+                    var image = settings.Value<IPublishedContent>("imageOverlay");
+                    if (image != null)
                     {
-                        var image = settings.Value<IPublishedContent>("imageOverlay");
-                        if (image != null)
+                        var imageUrl = await _mediaCacheService.GetCachedMediaUrlAsync(image.Key);
+                        if (!string.IsNullOrEmpty(imageUrl))
                         {
-                            var imageUrl = await _mediaCacheService.GetCachedMediaUrlAsync(image.Key);
-                            if (!string.IsNullOrEmpty(imageUrl))
-                            {
-                                cssBuilder.Append($@"
+                            cssBuilder.Append($@"
 .{overlayClass}::before {{
     background-image: url('{imageUrl}');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }}");
-                            }
                         }
                     }
-                    break;
+                }
+            }
+            else if (overlayBgValue == "Градиент" || overlayBgValue == "Gradient" || overlayBgValue == "цПЮДХЕМР")
+            {
+                if (settings.HasProperty("colorStartOverlay") && settings.HasValue("colorStartOverlay") &&
+                    settings.HasProperty("colorEndOverlay") && settings.HasValue("colorEndOverlay"))
+                {
+                    var colorStart = settings.Value<string>("colorStartOverlay");
+                    var colorEnd = settings.Value<string>("colorEndOverlay");
                     
-                case "Градиент":
-                    if (settings.HasProperty("colorStartOverlay") && settings.HasValue("colorStartOverlay") &&
-                        settings.HasProperty("colorEndOverlay") && settings.HasValue("colorEndOverlay"))
+                    if (!string.IsNullOrWhiteSpace(colorStart) && !string.IsNullOrWhiteSpace(colorEnd))
                     {
-                        var colorStart = settings.Value<string>("colorStartOverlay");
-                        var colorEnd = settings.Value<string>("colorEndOverlay");
-                        
-                        if (!string.IsNullOrWhiteSpace(colorStart) && !string.IsNullOrWhiteSpace(colorEnd))
+                        // Определяем направление градиента - проверяем оба возможных имени свойства
+                        var direction = "to bottom";
+                        if (settings.HasProperty("directionOverlay") && settings.HasValue("directionOverlay"))
                         {
-                            // Получаем направление градиента
-                            var direction = "to bottom";
-                            if (settings.HasProperty("directionOverlay") && settings.HasValue("directionOverlay"))
-                            {
-                                direction = ConvertDirectionToCss(settings.Value<string>("directionOverlay") ?? "");
-                            }
-                            
-                            cssBuilder.Append($@"
+                            direction = ConvertDirectionToCss(settings.Value<string>("directionOverlay") ?? "");
+                        }
+                        else if (settings.HasProperty("directionGradient") && settings.HasValue("directionGradient"))
+                        {
+                            direction = ConvertDirectionToCss(settings.Value<string>("directionGradient") ?? "");
+                        }
+                        
+                        cssBuilder.Append($@"
 .{overlayClass}::before {{
     background: linear-gradient({direction}, {colorStart}, {colorEnd});
 }}");
-                        }
                     }
-                    break;
+                }
             }
             
             // Прозрачность оверлея
@@ -375,16 +391,16 @@ namespace TestUmbraco.Services
 }}");
             }
             
-            // Добавляем стили для поднятия контента над оверлеем
+            // Добавляем стили для правильного позиционирования контента над оверлеем
             cssBuilder.Append($@"
-/* Поднимаем контент над оверлеем */
+/* Позиционируем контент над оверлеем */
 .{overlayClass} > .cmt,
 .{overlayClass} > [class*=""container""] {{
     position: relative;
     z-index: 2;
 }}
 
-/* Особенно изображения и карточки */
+/* Картинки и карточки */
 .{overlayClass} .image-wrapper,
 .{overlayClass} .card,
 .{overlayClass} img {{
@@ -411,47 +427,47 @@ namespace TestUmbraco.Services
                 OverlayClass = result.OverlayClass
             };
             
-            switch (bgValue.Trim())
+            var trimmedBgValue = bgValue.Trim();
+            
+            if (trimmedBgValue == "Изображение" || trimmedBgValue == "Image" || trimmedBgValue == "хГНАПЮФЕМХЕ")
             {
-                case "Изображение":
-                    if (settings.HasProperty("backgroundImage") && settings.HasValue("backgroundImage"))
+                if (settings.HasProperty("backgroundImage") && settings.HasValue("backgroundImage"))
+                {
+                    var bgImage = settings.Value<IPublishedContent>("backgroundImage");
+                    if (bgImage != null)
                     {
-                        var bgImage = settings.Value<IPublishedContent>("backgroundImage");
-                        if (bgImage != null)
-                        {
-                            info.Url = _mediaCacheService.GetCachedMediaUrlAsync(bgImage.Key).GetAwaiter().GetResult() ?? string.Empty;
-                            info.Size = settings.HasValue("bgSize") ? 
-                                ConvertBgSizeToCss(settings.Value<string>("bgSize") ?? "") : "cover";
-                            info.Position = settings.HasValue("backgroundPosition") ? 
-                                settings.Value<string>("backgroundPosition") ?? "center" : "center";
-                        }
+                        info.Url = _mediaCacheService.GetCachedMediaUrlAsync(bgImage.Key).GetAwaiter().GetResult() ?? string.Empty;
+                        info.Size = settings.HasValue("bgSize") ? 
+                            ConvertBgSizeToCss(settings.Value<string>("bgSize") ?? "") : "cover";
+                        info.Position = settings.HasValue("backgroundPosition") ? 
+                            settings.Value<string>("backgroundPosition") ?? "center" : "center";
                     }
-                    break;
-                    
-                case "Видео":
-                    if (settings.HasProperty("video") && settings.HasValue("video"))
+                }
+            }
+            else if (trimmedBgValue == "Видео" || trimmedBgValue == "Video" || trimmedBgValue == "бХДЕН")
+            {
+                if (settings.HasProperty("video") && settings.HasValue("video"))
+                {
+                    var videoUrl = settings.Value<string>("video");
+                    if (!string.IsNullOrWhiteSpace(videoUrl))
                     {
-                        var videoUrl = settings.Value<string>("video");
-                        if (!string.IsNullOrWhiteSpace(videoUrl))
+                        var videoId = ExtractVimeoVideoId(videoUrl);
+                        if (!string.IsNullOrEmpty(videoId))
                         {
-                            var videoId = ExtractVimeoVideoId(videoUrl);
-                            if (!string.IsNullOrEmpty(videoId))
+                            info.VideoId = videoId;
+                            
+                            if (settings.HasProperty("videoPlaceholder") && settings.HasValue("videoPlaceholder"))
                             {
-                                info.VideoId = videoId;
-                                
-                                if (settings.HasProperty("videoPlaceholder") && settings.HasValue("videoPlaceholder"))
+                                var placeholder = settings.Value<IPublishedContent>("videoPlaceholder");
+                                if (placeholder != null)
                                 {
-                                    var placeholder = settings.Value<IPublishedContent>("videoPlaceholder");
-                                    if (placeholder != null)
-                                    {
-                                        info.PlaceholderUrl = _mediaCacheService.GetCachedMediaUrlAsync(placeholder.Key).GetAwaiter().GetResult() ?? string.Empty;
-                                        info.UsePlaceholder = true;
-                                    }
+                                    info.PlaceholderUrl = _mediaCacheService.GetCachedMediaUrlAsync(placeholder.Key).GetAwaiter().GetResult() ?? string.Empty;
+                                    info.UsePlaceholder = true;
                                 }
                             }
                         }
                     }
-                    break;
+                }
             }
             
             backgroundInfos.Add(info);
@@ -465,15 +481,18 @@ namespace TestUmbraco.Services
             
             var trimmedValue = bgSizeValue.Trim();
             
-            return trimmedValue switch
-            {
-                "Как есть" => "auto",
-                "По ширине" => "100% auto",
-                "По высоте" => "auto 100%",
-                "Обложка" => "cover",
-                "Вместить" => "contain",
-                _ => "cover"
-            };
+            if (trimmedValue == "йЮЙ ЕЯРЭ")
+                return "auto";
+            if (trimmedValue == "оН ЬХПХМЕ")
+                return "100% auto";
+            if (trimmedValue == "оН БШЯНРЕ")
+                return "auto 100%";
+            if (trimmedValue == "нАКНФЙЮ")
+                return "cover";
+            if (trimmedValue == "бЛЕЯРХРЭ")
+                return "contain";
+            
+            return "cover";
         }
 
         private string ConvertDirectionToCss(string directionValue)
@@ -483,18 +502,37 @@ namespace TestUmbraco.Services
             
             var trimmedValue = directionValue.Trim();
             
-            return trimmedValue switch
+            // Поддержка русских и английских значений
+            if (trimmedValue == "Сверху вниз" || trimmedValue == "Top to Bottom" || trimmedValue == "яБЕПУС БМХГ") return "to bottom";
+            if (trimmedValue == "Снизу вверх" || trimmedValue == "Bottom to Top" || trimmedValue == "яМХГС ББЕПУ") return "to top";
+            if (trimmedValue == "Слева направо" || trimmedValue == "Left to Right" || trimmedValue == "яКЕБЮ МЮОПЮБН") return "to right";
+            if (trimmedValue == "Справа налево" || trimmedValue == "Right to Left" || trimmedValue == "яОПЮБЮ МЮКЕБН") return "to left";
+            
+            // Обработка диагональных направлений
+            if (trimmedValue.Contains("Диагональ") || trimmedValue == "дХЮЦНМЮКЭ")
             {
-                "Сверху вниз" => "to bottom",
-                "Снизу вверх" => "to top",
-                "Слева направо" => "to right",
-                "Справа налево" => "to left",
-                "Диагональ (↘)" => "to bottom right",
-                "Диагональ (↙)" => "to bottom left",
-                "Диагональ (↗)" => "to top right",
-                "Диагональ (↖)" => "to top left",
-                _ => "to bottom"
-            };
+                // Определяем конкретное направление по содержимому строки
+                if (trimmedValue.Contains("вниз") && trimmedValue.Contains("право"))
+                    return "to bottom right";
+                if (trimmedValue.Contains("вниз") && trimmedValue.Contains("лево"))
+                    return "to bottom left";
+                if (trimmedValue.Contains("вверх") && trimmedValue.Contains("право"))
+                    return "to top right";
+                if (trimmedValue.Contains("вверх") && trimmedValue.Contains("лево"))
+                    return "to top left";
+                    
+                // Старая кодировка
+                if (trimmedValue.Contains("БМХГ") && trimmedValue.Contains("ОПЮБН"))
+                    return "to bottom right";
+                if (trimmedValue.Contains("БМХГ") && trimmedValue.Contains("КЕБН"))
+                    return "to bottom left";
+                if (trimmedValue.Contains("ББЕПУ") && trimmedValue.Contains("ОПЮБН"))
+                    return "to top right";
+                if (trimmedValue.Contains("ББЕПУ") && trimmedValue.Contains("КЕБН"))
+                    return "to top left";
+            }
+            
+            return "to bottom";
         }
 
         private string? ExtractVimeoVideoId(string url)

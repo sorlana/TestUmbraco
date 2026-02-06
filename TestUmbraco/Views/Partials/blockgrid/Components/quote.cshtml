@@ -1,37 +1,45 @@
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Umbraco.Cms.Core.Models.Blocks.BlockGridItem>
-@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using TestUmbraco.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
 
 @{
+    var content = Model.Content;
+    var settings = Model.Settings;
+    
     // Получаем значение свойства "Class"
-    var customClass = Model.Content.Value<string>("Class");
+    var customClass = content.Value<string>("Class");
     
     // Получаем изображение (предполагается, что свойство Img - это Media Picker)
-    var image = Model.Content.Value<IPublishedContent>("Img");
+    var image = content.Value<IPublishedContent>("Img");
     
-    var content = Model.Content.Value<string>("content");
+    var quoteContent = content.Value<string>("content");
 }
 
-@if (!string.IsNullOrWhiteSpace(content))
+@if (!string.IsNullOrWhiteSpace(quoteContent))
 {
-    // Определяем, выводить ли класс
-    if (string.IsNullOrWhiteSpace(customClass))
+    // Создаем функцию для контента
+    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
+        @<text>
+            @if (image != null)
+            {
+                <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
+            }
+            @Html.Raw(quoteContent)
+        </text>;
+
+    // Создаем модель для BackgroundClasses
+    var backgroundModel = new BackgroundClassesModel
     {
-        // Если свойство Class пустое - выводим тег без атрибута class
-        @:<blockquote>
-    }
-    else
-    {
-        // Если свойство Class не пустое - выводим тег с пользовательским классом
-        @:<blockquote class="@customClass">
-    }
-    
-    // Если есть изображение - выводим его
-    if (image != null)
-    {
-        <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
-    }
-    
-        @Html.Raw(content)
-    
-    @:</blockquote>
+        Settings = settings,
+        ComponentId = content.Key,
+        Prefix = "quote-bg",
+        BaseClass = customClass ?? "",
+        AdditionalClasses = "",
+        Tag = "blockquote",
+        ContainerClass = "",
+        Content = contentFunc
+    };
+
+    // Рендерим через универсальный компонент
+    <partial name="_BackgroundClasses" model="backgroundModel" />
 }

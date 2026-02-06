@@ -1,56 +1,146 @@
 ﻿@using Umbraco.Cms.Core.Models.Blocks
+@using TestUmbraco.Models
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
 
 @{
     var content = Model.Content;
-    var blocks = content.Value<BlockGridModel>("content");
+    var settings = Model.Settings;
     
-    var typeBlock = content.Value<bool>("typeBlock");
-    var bootstrapValue = content.Value<int?>("bootstrap");
-    var classRow = content.Value<string>("classRow")?.Trim();
+    // Получаем вложенный BlockGrid из свойства "content"
+    var gridContent = content.Value<BlockGridModel>("content");
+    
+    var sectionClass = "";
+    var containerClass = "";
+    
+    if (settings != null)
+    {
+        sectionClass = settings.Value<string>("sectionClass") ?? "";
+        containerClass = settings.Value<string>("containerClass") ?? "";
+    }
+    
+    if (string.IsNullOrWhiteSpace(sectionClass))
+    {
+        sectionClass = content.Value<string>("sectionClass") ?? "";
+    }
+    
+    if (string.IsNullOrWhiteSpace(containerClass))
+    {
+        containerClass = content.Value<string>("containerClass") ?? "";
+    }
+    
+    // Получаем дополнительные свойства
+    var classRow = content.Value<string>("classRow") ?? "";
+    var bootstrap = content.Value<string>("bootstrap") ?? "";
+    
+    // DEBUG
+    var hasContent = gridContent != null && gridContent.Any();
+    var contentCount = gridContent?.Count() ?? 0;
 }
 
-@if (blocks != null && blocks.Any())
+@* DEBUG OUTPUT - Remove in production *@
+@if (Context.Request.Query.ContainsKey("debug"))
 {
-    if (typeBlock)
-    {
-        <ul class="row @classRow">
-            @foreach (var block in blocks)
-            {
-                <li class="@GetColumnClass(block, bootstrapValue)">
-                    @await Html.PartialAsync($"blockgrid/Components/{block.Content.ContentType.Alias}", block.Content)
-                </li>
-            }
-        </ul>
-    }
-    else
-    {
-        <div class="row @classRow">
-            @foreach (var block in blocks)
-            {
-                <div class="@GetColumnClass(block, bootstrapValue)">
-                    @await Html.PartialAsync($"blockgrid/Components/{block.Content.ContentType.Alias}", block.Content)
-                </div>
-            }
-        </div>
-    }
-}
-else
-{
-    <!-- GridColumn: нет блоков в свойстве content -->
+    <div style="border: 2px solid green; padding: 10px; margin: 10px; background: #e0ffe0;">
+        <strong>DEBUG: gridColumn</strong><br/>
+        ColumnSpan: @Model.ColumnSpan<br/>
+        Has 'content' property: @hasContent<br/>
+        Content count: @contentCount<br/>
+        Bootstrap: @bootstrap<br/>
+        ClassRow: @classRow<br/>
+        @if (hasContent && gridContent != null)
+        {
+            <div style="margin-left: 20px;">
+                @foreach (var item in gridContent)
+                {
+                    <div>- Item: @item.Content.ContentType.Alias (Has Settings: @(item.Settings != null))</div>
+                }
+            </div>
+        }
+    </div>
 }
 
-@functions {
-    private string GetColumnClass(BlockGridItem block, int? bootstrapValue)
+@* Рендерим gridColumn - создаем row с фоном, внутри col *@
+@{
+    // Создаем функцию для контента row (col + content)
+    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? rowContentFunc = 
+        @<text>
+            <div class="col-@Model.ColumnSpan @classRow.Trim()">
+                @if (!string.IsNullOrWhiteSpace(containerClass))
+                {
+                    <div class="@containerClass.Trim()">
+                        @* Рендерим дочерние элементы из свойства content *@
+                        @if (gridContent != null && gridContent.Any())
+                        {
+                            foreach (var item in gridContent)
+                            {
+                                @* Check if the component has its own view that handles BlockGridItem *@
+                                var componentAlias = item.Content.ContentType.Alias;
+                                
+                                @* For components that need settings (backgrounds), pass the full BlockGridItem *@
+                                @if (componentAlias == "textEditor" || componentAlias == "img" || componentAlias == "quote")
+                                {
+                                    @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item)
+                                }
+                                else
+                                {
+                                    @* For other components, pass just the content *@
+                                    @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item.Content)
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <p style="color: orange; border: 2px solid orange; padding: 5px;">
+                                GridColumn: No content configured. Add content blocks in Umbraco.
+                            </p>
+                        }
+                    </div>
+                }
+                else
+                {
+                    @* Рендерим дочерние элементы из свойства content *@
+                    @if (gridContent != null && gridContent.Any())
+                    {
+                        foreach (var item in gridContent)
+                        {
+                            @* Check if the component has its own view that handles BlockGridItem *@
+                            var componentAlias = item.Content.ContentType.Alias;
+                            
+                            @* For components that need settings (backgrounds), pass the full BlockGridItem *@
+                            @if (componentAlias == "textEditor" || componentAlias == "img" || componentAlias == "quote")
+                            {
+                                @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item)
+                            }
+                            else
+                            {
+                                @* For other components, pass just the content *@
+                                @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item.Content)
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <p style="color: orange; border: 2px solid orange; padding: 5px;">
+                            GridColumn: No content configured. Add content blocks in Umbraco.
+                        </p>
+                    }
+                }
+            </div>
+        </text>;
+
+    // Создаем модель для BackgroundClasses - применяем к row
+    var backgroundModel = new BackgroundClassesModel
     {
-        if (bootstrapValue.HasValue && bootstrapValue.Value > 0)
-        {
-            var columnWidth = 12 / bootstrapValue.Value;
-            return $"col-{columnWidth}";
-        }
-        else
-        {
-            return $"col-{block.ColumnSpan}";
-        }
-    }
+        Settings = settings,
+        ComponentId = content.Key,
+        Prefix = "gridcolumn-bg",
+        BaseClass = "row",
+        AdditionalClasses = "",
+        Tag = "div",
+        ContainerClass = "",
+        Content = rowContentFunc
+    };
+
+    // Рендерим row через универсальный компонент с фоном
+    <partial name="_BackgroundClasses" model="backgroundModel" />
 }

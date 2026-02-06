@@ -17,10 +17,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<ImageOptimizationSettings>(
     builder.Configuration.GetSection("ImageOptimization"));
 
-// 3. Наши сервисы (ДО Umbraco)
-builder.Services.AddSingleton<ILoggingService, LoggingService>();
-builder.Services.AddScoped<IMediaCacheService, MediaCacheService>();
-builder.Services.AddScoped<ImageHelper>();
+// 3. Наши сервисы регистрируются через Composers
+// Не регистрируем здесь, чтобы избежать дублирования
 
 // 4. Другие сервисы
 builder.Services.AddMemoryCache();

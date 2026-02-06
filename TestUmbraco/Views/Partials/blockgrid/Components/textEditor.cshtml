@@ -1,26 +1,37 @@
-@using Umbraco.Cms.Core.Models
-@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<IPublishedElement>
+@using Umbraco.Cms.Core.Models.Blocks
+@using TestUmbraco.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
 
 @{
+    var content = Model.Content;
+    var settings = Model.Settings;
+    
     // Получаем значения свойств
-    var tagValue = Model.Value<string>("tag");
+    var tagValue = content.Value<string>("tag");
     var wrapperTag = string.IsNullOrWhiteSpace(tagValue) ? "div" : tagValue;
-    var customClass = Model.Value<string>("Class");
-    var textContent = Model.Value<string>("content");
+    var customClass = content.Value<string>("Class");
+    var textContent = content.Value<string>("content");
 }
 
 @if (!string.IsNullOrWhiteSpace(textContent))
 {
-    if (string.IsNullOrWhiteSpace(customClass))
+    // Создаем функцию для контента
+    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
+        @<text>@Html.Raw(textContent)</text>;
+
+    // Создаем модель для BackgroundClasses
+    var backgroundModel = new BackgroundClassesModel
     {
-        @:<@wrapperTag>
-    }
-    else
-    {
-        @:<@wrapperTag class="@customClass">
-    }
-    
-    @Html.Raw(textContent)
-    
-    @:</@wrapperTag>
+        Settings = settings,
+        ComponentId = content.Key,
+        Prefix = "texteditor-bg",
+        BaseClass = customClass ?? "",
+        AdditionalClasses = "",
+        Tag = wrapperTag,
+        ContainerClass = "",
+        Content = contentFunc
+    };
+
+    // Рендерим через универсальный компонент
+    <partial name="_BackgroundClasses" model="backgroundModel" />
 }

@@ -1,0 +1,23 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@model BlockGridItem
+
+@* Debug helper - remove in production *@
+<div style="border: 2px solid red; padding: 10px; margin: 10px; background: #ffe0e0;">
+    <strong>DEBUG: @Model.Content.ContentType.Alias</strong><br/>
+    ColumnSpan: @Model.ColumnSpan<br/>
+    RowSpan: @Model.RowSpan<br/>
+    Areas Count: @(Model.Areas?.Count() ?? 0)<br/>
+    @if (Model.Areas != null && Model.Areas.Any())
+    {
+        <div style="margin-left: 20px;">
+            @foreach (var area in Model.Areas)
+            {
+                <div>Area Items: @area.Count()</div>
+                @foreach (var item in area)
+                {
+                    <div style="margin-left: 20px;">- @item.Content.ContentType.Alias</div>
+                }
+            }
+        </div>
+    }
+</div>

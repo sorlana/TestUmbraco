@@ -6168,3 +6168,1537 @@
     background-repeat: no-repeat;
     min-height: 400px;
 }
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-28c5ade8 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-60bfc493 */
+
+.bg-color-60bfc493 {
+    background-color: #2b00ff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-28c5ade8 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-60bfc493 */
+
+.bg-color-60bfc493 {
+    background-color: #2b00ff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-28c5ade8 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-60bfc493 */
+
+.bg-color-60bfc493 {
+    background-color: #2b00ff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-e5740774 */
+
+.overlay-df31d2e2233743c79f23c1eb6e87d226 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    background: linear-gradient(to bottom, #2b00ff, #030303);
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    opacity: 0.39;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > .cmt,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .image-wrapper,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .card,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-28c5ade8 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-e5740774 */
+
+.overlay-df31d2e2233743c79f23c1eb6e87d226 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    background: linear-gradient(to bottom, #2b00ff, #030303);
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    opacity: 0.39;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > .cmt,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .image-wrapper,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .card,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-28c5ade8 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-e5740774 */
+
+.overlay-df31d2e2233743c79f23c1eb6e87d226 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    background: linear-gradient(to bottom, #2b00ff, #030303);
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    opacity: 0.39;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > .cmt,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .image-wrapper,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .card,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-28c5ade8 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-e5740774 */
+
+.overlay-df31d2e2233743c79f23c1eb6e87d226 {
+    position: relative;
+}
+
+/* Оверлей как фон - ниже всего контента */
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;  // ← ИСПРАВЛЕНО: было 1, стало 0
+    pointer-events: none;
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    background: linear-gradient(to bottom, #2b00ff, #030303);
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    opacity: 0.39;
+}
+/* Поднимаем контент над оверлеем */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > .cmt,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Особенно изображения и карточки */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .image-wrapper,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .card,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-871fa2b2 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей под контентом - не перекрывает */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Картинки и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-871fa2b2 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей под контентом - не перекрывает */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Картинки и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-7a099644 */
+
+.overlay-df31d2e2233743c79f23c1eb6e87d226 {
+    position: relative;
+}
+
+/* Оверлей под контентом - не перекрывает */
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    background: linear-gradient(to bottom, #2b00ff, #030303);
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    opacity: 0.39;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > .cmt,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Картинки и карточки */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .image-wrapper,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .card,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-871fa2b2 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей под контентом - не перекрывает */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Картинки и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-871fa2b2 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей под контентом - не перекрывает */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background: linear-gradient(to bottom, #030303, #2b00ff);
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Картинки и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-ba0735d4 */
+
+.bg-color-ba0735d4 {
+    background-color: #ffffff;
+    min-height: 400px;
+    position: relative;
+}
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-7a099644 */
+
+.overlay-df31d2e2233743c79f23c1eb6e87d226 {
+    position: relative;
+}
+
+/* Оверлей под контентом - не перекрывает */
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    background: linear-gradient(to bottom, #2b00ff, #030303);
+}
+.overlay-df31d2e2233743c79f23c1eb6e87d226::before {
+    opacity: 0.39;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > .cmt,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Картинки и карточки */
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .image-wrapper,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 .card,
+.overlay-df31d2e2233743c79f23c1eb6e87d226 img {
+    position: relative;
+    z-index: 2 !important;
+}

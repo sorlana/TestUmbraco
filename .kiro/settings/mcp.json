@@ -9,7 +9,7 @@
         "QDRANT_URL": "http://localhost:6333",
         "EMBEDDING_BASE_URL": "http://localhost:11434",
         "EMBEDDING_PROVIDER": "ollama",
-        "EMBEDDING_MODEL": "codellama:7b-instruct-q4_0"
+        "EMBEDDING_MODEL": "nomic-embed-text"
       },
       "autoApprove": [
         "index_codebase",

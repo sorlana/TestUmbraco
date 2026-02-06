@@ -1,12 +1,21 @@
 @using TestUmbraco.Models
 @using TestUmbraco.Services
+@model BackgroundClassesModel
 @inject IUmbracoBackgroundService BackgroundService
-@model BackgroundSectionModel
 
 @{
+    // DEBUG
+    var hasSettings = Model.Settings != null;
+    var hasComponentId = Model.ComponentId.HasValue;
+    var prefix = Model.Prefix ?? "bg";
+    
     // Получаем фоновые классы из сервиса
-    var backgroundResult = await BackgroundService.ProcessBackground(Model.Settings, Model.ComponentId, Model.Prefix);
-    var backgroundClass = backgroundResult.CssClass ?? "";
+    var backgroundResult = await BackgroundService.ProcessBackground(
+        Model.Settings, 
+        Model.ComponentId ?? Guid.Empty,
+        prefix);
+    
+    var backgroundClass = backgroundResult?.CssClass ?? "";
     
     // Собираем все классы
     var allClasses = new List<string>();
@@ -31,13 +40,39 @@
     
     var finalClass = string.Join(" ", allClasses);
     var containerClass = Model.ContainerClass?.Trim() ?? "";
-    var overlayClass = $"overlay-{Model.ComponentId:N}";
-    var hasOverlay = backgroundResult.HasOverlay;
+    var overlayClass = Model.ComponentId.HasValue ? $"overlay-{Model.ComponentId.Value:N}" : "";
+    var hasOverlay = backgroundResult?.HasOverlay ?? false;
+    
+    // Определяем тег обертки
+    var wrapperTag = !string.IsNullOrWhiteSpace(Model.Tag) ? Model.Tag : "div";
 }
 
-<section class="@finalClass">
-    <!-- Видео фон -->
-    @if (backgroundResult.Type == BackgroundType.Video && !string.IsNullOrEmpty(backgroundResult.VideoId))
+@* DEBUG OUTPUT *@
+@if (Context.Request.Query.ContainsKey("debug"))
+{
+    <div style="border: 2px solid purple; padding: 5px; margin: 5px; background: #f0e0ff; font-size: 11px;">
+        <strong>_BackgroundClasses DEBUG:</strong><br/>
+        Tag: @wrapperTag<br/>
+        Has Settings: @hasSettings<br/>
+        Has ComponentId: @hasComponentId (@Model.ComponentId)<br/>
+        Prefix: @prefix<br/>
+        Background Result: @(backgroundResult != null ? "YES" : "NULL")<br/>
+        Background Class: "@backgroundClass"<br/>
+        Base Class: "@Model.BaseClass"<br/>
+        Final Class: "@finalClass"<br/>
+        @if (backgroundResult != null)
+        {
+            <div style="margin-left: 10px;">
+                Type: @backgroundResult.Type<br/>
+                HasOverlay: @backgroundResult.HasOverlay<br/>
+            </div>
+        }
+    </div>
+}
+
+<@wrapperTag class="@finalClass">
+    <!-- Видео фон (если есть) -->
+    @if (backgroundResult?.Type == BackgroundType.Video && !string.IsNullOrEmpty(backgroundResult.VideoId))
     {
         <div class="video-container">
             @if (backgroundResult.UseVideoPlaceholder && !string.IsNullOrEmpty(backgroundResult.VideoPlaceholder))
@@ -63,6 +98,7 @@
         </div>
     }
     
+    <!-- Контейнер (если задан) -->
     @if (!string.IsNullOrWhiteSpace(containerClass))
     {
         <div class="@containerClass">
@@ -73,4 +109,4 @@
     {
         @Model.Content?.Invoke(Model)
     }
-</section>
+</@wrapperTag>

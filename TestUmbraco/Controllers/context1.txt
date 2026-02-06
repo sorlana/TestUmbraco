@@ -1,0 +1,206 @@
+
+Структура папки: 
+================= 
+    EmailController.cs
+    MediaCacheController.cs
+    temp_full.txt
+    UniversalBackgroundController.cs
+    
+Подпапки отсутствуют 
+
+ 
+================= 
+ 
+/EmailController.cs: 
+using TestUmbraco.Application.Contracts;
+using TestUmbraco.Application.DTO;
+using Microsoft.AspNetCore.Mvc;
+using Umbraco.Cms.Core.Cache;
+using Umbraco.Cms.Core.Logging;
+using Umbraco.Cms.Core.Routing;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Web;
+using Umbraco.Cms.Infrastructure.Persistence;
+using Umbraco.Cms.Web.Website.Controllers;
+using reCAPTCHA.AspNetCore.Attributes;
+using AspNetCoreHero.ToastNotification.Abstractions;
+
+namespace TestUmbraco.Controllers
+{
+    public class EmailController : SurfaceController
+    {
+        private readonly IEmailService _emailService;
+        private readonly INotyfService _notifyService;
+
+        public EmailController(IUmbracoContextAccessor umbracoContextAccessor,
+            IUmbracoDatabaseFactory databaseFactory,
+            ServiceContext services,
+            AppCaches appCaches, IProfilingLogger profilingLogger,
+            IPublishedUrlProvider publishedUrlProvider,
+            IEmailService emailService, 
+            INotyfService notifyService)
+            : base(umbracoContextAccessor, databaseFactory, services, appCaches, profilingLogger, publishedUrlProvider)
+        {
+            _emailService = emailService;
+            _notifyService = notifyService;
+        }
+
+        [HttpPost]
+        [ValidateRecaptcha(0.5)]
+        public async Task<IActionResult> SendEmailRequest(EmailRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                _notifyService.Error("При отправлении заявки произошла ошибка");
+                return CurrentUmbracoPage();
+            }
+            await _emailService.SendEmailRequestAsync(request);
+            _notifyService.Success("Ваш запрос успешно отправлен!");
+            return RedirectToCurrentUmbracoPage();
+        }
+
+        [HttpPost]
+        [ValidateRecaptcha(0.5)]
+        public async Task<IActionResult> SendCallRequest(CallRequestDto callRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                _notifyService.Error("При отправлении заявки произошла ошибка");
+                return CurrentUmbracoPage();
+            }
+            await _emailService.SendCallRequestAsync(callRequest);
+            _notifyService.Success("Ваш запрос успешно отправлен!");
+            return RedirectToCurrentUmbracoPage();
+        }
+
+        public IActionResult Error()
+        {
+            return CurrentUmbracoPage();
+        }
+    }
+}
+ 
+ 
+/MediaCacheController.cs: 
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TestUmbraco.Services;
+using Umbraco.Cms.Web.Common.Controllers;
+
+namespace TestUmbraco.Controllers
+{
+    [Route("umbraco/backoffice/api/media-cache")]
+    [ApiController]
+    [Authorize(Policy = "BackOffice")]
+    public class MediaCacheController : ControllerBase
+    {
+        private readonly IMediaCacheService _mediaCacheService;
+        private readonly ILoggingService _loggingService;
+
+        public MediaCacheController(
+            IMediaCacheService mediaCacheService,
+            ILoggingService loggingService)
+        {
+            _mediaCacheService = mediaCacheService;
+            _loggingService = loggingService;
+        }
+
+        [HttpGet("info")]
+        public IActionResult GetCacheInfo()
+        {
+            try
+            {
+                var cacheStats = new
+                {
+                    MemoryUsage = GC.GetTotalMemory(false) / 1024 / 1024 + "MB",
+                    Timestamp = DateTime.UtcNow
+                };
+                
+                return Ok(cacheStats);
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError<MediaCacheController>($"Error getting cache info", ex);
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("clear-for-media")]
+        public IActionResult ClearCacheForMedia([FromBody] Guid mediaKey)
+        {
+            try
+            {
+                _mediaCacheService.ClearCacheForMedia(mediaKey);
+                
+                return Ok(new 
+                { 
+                    success = true, 
+                    message = $"Cache cleared for media {mediaKey}"
+                });
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError<MediaCacheController>($"Error clearing cache for media {mediaKey}", ex);
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("clear-all")]
+        public IActionResult ClearAllMediaCache()
+        {
+            try
+            {
+                _mediaCacheService.ClearAllCache();
+                
+                return Ok(new 
+                { 
+                    success = true, 
+                    message = "Cleared all cache entries"
+                });
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError<MediaCacheController>("Error clearing all media cache", ex);
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+    }
+} 
+ 
+/UniversalBackgroundController.cs: 
+using Microsoft.AspNetCore.Mvc;
+using TestUmbraco.Services;
+
+namespace TestUmbraco.Controllers
+{
+    [Route("api/background")]
+    [ApiController]
+    public class UniversalBackgroundController : ControllerBase
+    {
+        private readonly IMediaCacheService _mediaCacheService;
+        private readonly ILogger<UniversalBackgroundController> _logger;
+
+        public UniversalBackgroundController(
+            IMediaCacheService mediaCacheService,
+            ILogger<UniversalBackgroundController> logger)
+        {
+            _mediaCacheService = mediaCacheService;
+            _logger = logger;
+        }
+
+        [HttpGet("multiple")]
+        public async Task<IActionResult> GetMultipleCss([FromQuery] string backgrounds)
+        {
+            if (string.IsNullOrEmpty(backgrounds))
+                return Content("/* No backgrounds specified */", "text/css");
+
+            var css = await _mediaCacheService.GetCachedBackgroundCssAsync(backgrounds);
+            
+            if (string.IsNullOrWhiteSpace(css))
+                css = "/* No valid backgrounds generated */";
+            
+            return Content(css, "text/css");
+        }
+    }
+} 
+ 
