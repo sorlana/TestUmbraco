@@ -31,32 +31,6 @@
     // Получаем дополнительные свойства
     var classRow = content.Value<string>("classRow") ?? "";
     var bootstrap = content.Value<string>("bootstrap") ?? "";
-    
-    // DEBUG
-    var hasContent = gridContent != null && gridContent.Any();
-    var contentCount = gridContent?.Count() ?? 0;
-}
-
-@* DEBUG OUTPUT - Remove in production *@
-@if (Context.Request.Query.ContainsKey("debug"))
-{
-    <div style="border: 2px solid green; padding: 10px; margin: 10px; background: #e0ffe0;">
-        <strong>DEBUG: gridColumn</strong><br/>
-        ColumnSpan: @Model.ColumnSpan<br/>
-        Has 'content' property: @hasContent<br/>
-        Content count: @contentCount<br/>
-        Bootstrap: @bootstrap<br/>
-        ClassRow: @classRow<br/>
-        @if (hasContent && gridContent != null)
-        {
-            <div style="margin-left: 20px;">
-                @foreach (var item in gridContent)
-                {
-                    <div>- Item: @item.Content.ContentType.Alias (Has Settings: @(item.Settings != null))</div>
-                }
-            </div>
-        }
-    </div>
 }
 
 @* Рендерим gridColumn - создаем row с фоном, внутри col *@

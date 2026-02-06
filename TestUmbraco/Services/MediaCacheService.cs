@@ -114,7 +114,7 @@ namespace TestUmbraco.Services
         {
             var cacheKey = $"media_html_{mediaKey}_{cropAlias}_{(attributes != null ? string.Join("_", attributes) : "")}";
             
-            return await _runtimeCache.GetCacheItemAsync(cacheKey, async () =>
+            var result = await _runtimeCache.GetCacheItemAsync(cacheKey, async () =>
             {
                 try
                 {
@@ -145,6 +145,9 @@ namespace TestUmbraco.Services
                     return new HtmlString(string.Empty);
                 }
             }, TimeSpan.FromMinutes(30));
+            
+            // Ensure we never return null
+            return result ?? new HtmlString(string.Empty);
         }
 
         public async Task<IHtmlContent> GetCachedImageHtmlAsync(IPublishedContent? media, string? cropAlias = null, Dictionary<string, string>? attributes = null)

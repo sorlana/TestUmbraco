@@ -27,42 +27,6 @@
     {
         containerClass = content?.Value<string>("containerClass") ?? "";
     }
-    
-    // DEBUG
-    var hasRows = gridRows != null && gridRows.Any();
-    var rowCount = gridRows?.Count() ?? 0;
-    var hasSettings = settings != null;
-}
-
-@* DEBUG OUTPUT - Remove in production *@
-@if (Context.Request.Query.ContainsKey("debug"))
-{
-    <div style="border: 2px solid blue; padding: 10px; margin: 10px; background: #e0e0ff;">
-        <strong>DEBUG: gridSection</strong><br/>
-        Has 'rows' property: @hasRows<br/>
-        Rows count: @rowCount<br/>
-        <strong style="color: red;">Has Settings: @hasSettings</strong><br/>
-        @if (hasSettings && settings != null)
-        {
-            <div style="margin-left: 20px;">
-                Settings Type: @settings.ContentType.Alias<br/>
-                @foreach (var prop in settings.Properties)
-                {
-                    var val = settings.Value(prop.Alias);
-                    <div>- @prop.Alias: @(val ?? "null")</div>
-                }
-            </div>
-        }
-        @if (hasRows && gridRows != null)
-        {
-            <div style="margin-left: 20px;">
-                @foreach (var row in gridRows)
-                {
-                    <div>- Row: @row.Content.ContentType.Alias (ColumnSpan: @row.ColumnSpan, Has Settings: @(row.Settings != null))</div>
-                }
-            </div>
-        }
-    </div>
 }
 
 @if (gridRows != null && gridRows.Any())
