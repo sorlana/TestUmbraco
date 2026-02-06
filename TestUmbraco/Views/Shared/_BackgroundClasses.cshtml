@@ -47,7 +47,6 @@
 }
 
 <@wrapperTag class="@finalClass">
-    <!-- Видео фон (если есть) -->
     @if (backgroundResult?.Type == BackgroundType.Video && !string.IsNullOrEmpty(backgroundResult.VideoId))
     {
         <div class="video-container">
@@ -74,7 +73,6 @@
         </div>
     }
     
-    <!-- Контейнер (если задан) -->
     @if (!string.IsNullOrWhiteSpace(containerClass))
     {
         <div class="@containerClass">

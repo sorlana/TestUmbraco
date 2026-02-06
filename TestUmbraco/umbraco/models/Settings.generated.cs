@@ -174,13 +174,5 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[ImplementPropertyType("repeatOverlay")]
 		public virtual bool RepeatOverlay => this.Value<bool>(_publishedValueFallback, "repeatOverlay");
-
-		///<summary>
-		/// Video
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("video")]
-		public virtual string Video => this.Value<string>(_publishedValueFallback, "video");
 	}
 }

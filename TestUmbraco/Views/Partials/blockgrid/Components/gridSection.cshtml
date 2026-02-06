@@ -31,7 +31,7 @@
 
 @if (gridRows != null && gridRows.Any())
 {
-    // Создаем функцию для контента section (container + row с колонками)
+    // Создаем функцию для контента section (container)
     Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? sectionContentFunc = 
         @<text>
             <div class="container @containerClass.Trim()">

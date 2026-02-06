@@ -31,25 +31,51 @@
     // Получаем дополнительные свойства
     var classRow = content.Value<string>("classRow") ?? "";
     var bootstrap = content.Value<string>("bootstrap") ?? "";
+    var typeBlock = content.Value<bool>("typeBlock");
+    
+    // Определяем теги в зависимости от typeBlock
+    var rowTag = typeBlock ? "ul" : "div";
+    var colTag = typeBlock ? "li" : "div";
 }
 
-@* Рендерим gridColumn - создаем row с фоном, внутри col *@
+@* Рендерим gridColumn - создаем row с фоном, внутри несколько col *@
 @{
-    // Создаем функцию для контента row (col + content)
+    // Создаем функцию для контента row (несколько col)
     Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? rowContentFunc = 
         @<text>
-            <div class="col-@Model.ColumnSpan @classRow.Trim()">
-                @if (!string.IsNullOrWhiteSpace(containerClass))
+            @if (gridContent != null && gridContent.Any())
+            {
+                @* Каждый элемент content рендерится в отдельном col *@
+                foreach (var item in gridContent)
                 {
-                    <div class="@containerClass.Trim()">
-                        @* Рендерим дочерние элементы из свойства content *@
-                        @if (gridContent != null && gridContent.Any())
+                    var componentAlias = item.Content.ContentType.Alias;
+                    
+                    // Определяем класс колонки для каждого элемента
+                    string itemColumnClass = "";
+                    
+                    if (!string.IsNullOrWhiteSpace(bootstrap))
+                    {
+                        // Если выбрано значение в bootstrap - все колонки одинакового размера
+                        if (int.TryParse(bootstrap, out int columnsPerRow) && columnsPerRow > 0 && columnsPerRow <= 12)
                         {
-                            foreach (var item in gridContent)
-                            {
-                                @* Check if the component has its own view that handles BlockGridItem *@
-                                var componentAlias = item.Content.ContentType.Alias;
-                                
+                            int columnSize = 12 / columnsPerRow;
+                            itemColumnClass = $"col-{columnSize}";
+                        }
+                        else
+                        {
+                            itemColumnClass = $"col-{item.ColumnSpan}";
+                        }
+                    }
+                    else
+                    {
+                        // Если bootstrap не выбран - используем размер области каждого элемента
+                        itemColumnClass = $"col-{item.ColumnSpan}";
+                    }
+                    
+                    @Html.Raw($"<{colTag} class=\"{itemColumnClass} {classRow.Trim()}\">")
+                        @if (!string.IsNullOrWhiteSpace(containerClass))
+                        {
+                            <div class="@containerClass.Trim()">
                                 @* For components that need settings (backgrounds), pass the full BlockGridItem *@
                                 @if (componentAlias == "textEditor" || componentAlias == "img" || componentAlias == "quote")
                                 {
@@ -60,26 +86,10 @@
                                     @* For other components, pass just the content *@
                                     @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item.Content)
                                 }
-                            }
+                            </div>
                         }
                         else
                         {
-                            <p style="color: orange; border: 2px solid orange; padding: 5px;">
-                                GridColumn: No content configured. Add content blocks in Umbraco.
-                            </p>
-                        }
-                    </div>
-                }
-                else
-                {
-                    @* Рендерим дочерние элементы из свойства content *@
-                    @if (gridContent != null && gridContent.Any())
-                    {
-                        foreach (var item in gridContent)
-                        {
-                            @* Check if the component has its own view that handles BlockGridItem *@
-                            var componentAlias = item.Content.ContentType.Alias;
-                            
                             @* For components that need settings (backgrounds), pass the full BlockGridItem *@
                             @if (componentAlias == "textEditor" || componentAlias == "img" || componentAlias == "quote")
                             {
@@ -91,15 +101,17 @@
                                 @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item.Content)
                             }
                         }
-                    }
-                    else
-                    {
-                        <p style="color: orange; border: 2px solid orange; padding: 5px;">
-                            GridColumn: No content configured. Add content blocks in Umbraco.
-                        </p>
-                    }
+                    @Html.Raw($"</{colTag}>")
                 }
-            </div>
+            }
+            else
+            {
+                @Html.Raw($"<{colTag} class=\"col-12\">")
+                    <p style="color: orange; border: 2px solid orange; padding: 5px;">
+                        GridColumn: No content configured. Add content blocks in Umbraco.
+                    </p>
+                @Html.Raw($"</{colTag}>")
+            }
         </text>;
 
     // Создаем модель для BackgroundClasses - применяем к row
@@ -110,7 +122,7 @@
         Prefix = "gridcolumn-bg",
         BaseClass = "row",
         AdditionalClasses = "",
-        Tag = "div",
+        Tag = rowTag,
         ContainerClass = "",
         Content = rowContentFunc
     };

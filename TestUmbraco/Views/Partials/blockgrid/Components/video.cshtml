@@ -1,0 +1,64 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models
+@using TestUmbraco.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+    
+    // Получаем значение свойства "Class"
+    var customClass = content.Value<string>("Class");
+    
+    // Получаем видео-контент (ссылка на Vimeo)
+    var videoContent = content.Value<string>("videoContent");
+    
+    // Получаем изображение-заглушку
+    var videoPlaceholder = content.Value<IPublishedContent>("videoPlaceholder");
+}
+
+@if (!string.IsNullOrWhiteSpace(videoContent))
+{
+    // Создаем функцию для контента с видео
+    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
+        @<text>
+            <div class="video-container">
+                @if (videoPlaceholder != null)
+                {
+                    <div class="video-placeholder">
+                        <img src="@videoPlaceholder.Url()" alt="Video placeholder" class="video-preview" />
+                        <button class="video-play-button" type="button" aria-label="Play video">
+                            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5v14l11-7z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                }
+                
+                <div class="video-embed" data-vimeo-id="@videoContent" hidden>
+                    <iframe src="https://player.vimeo.com/video/@videoContent" 
+                            frameborder="0" 
+                            allow="autoplay; fullscreen; picture-in-picture" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+        </text>;
+
+    // Создаем модель для BackgroundClasses
+    var backgroundModel = new BackgroundClassesModel
+    {
+        Settings = settings,
+        ComponentId = content.Key,
+        Prefix = "video-bg",
+        BaseClass = customClass ?? "",
+        AdditionalClasses = "video-component",
+        Tag = "div",
+        ContainerClass = "video-wrapper",
+        Content = contentFunc
+    };
+
+    // Рендерим через универсальный компонент
+    <partial name="_BackgroundClasses" model="backgroundModel" />
+    
+    }

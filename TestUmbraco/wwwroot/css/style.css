@@ -1,81 +1,311 @@
-/* ===== IMG ===== */
+/*=====FONT=====*/
+/*@charset "UTF-8";*/
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@100;200;300;400;500;600;800;900;1000&display=swap");
+/*=====End FONT=====*/
+
+/*=====ALL=====*/
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: "Roboto Flex", sans-serif;
+  width: 100%;
+  max-width: 100%;
+  background-color: #ededed;
+}
+
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+*,
+a:focus {
+  outline: none !important;
+}
+
+body {
+  overflow-y: scroll;
+}
+
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.container {
+  margin: 0 auto;
+  width: 92%;
+}
+/*=====End ALL=====*/
+
+/*=======TYPOGRAPHY==========*/
+
+h2 {
+  font-size: 3rem;
+  font-weight: 300;
+  padding: 0;
+  margin: 0;
+}
+
+p {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+@media (max-width: 665px) and (orientation: portrait) {
+  h2 {
+    font-size: 2em;
+  }
+
+  p {
+    font-size: 1em;
+  }
+}
+/*=====End TYPOGRAPHY=====*/
+
+/*=====SCROLLBAR=====*/
+::-webkit-scrollbar-button {
+  background-image: url("");
+  background-repeat: no-repeat;
+  width: 1px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #dddddd;
+  border-radius: 0.165rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #262930;
+  background-image: url("https://yraaa.ru/_pu/24/59610063.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0.165rem;
+  border: 0.5px solid #fff;
+}
+
+::-webkit-resizer {
+  background-image: url("");
+  background-repeat: no-repeat;
+  width: 0.22rem;
+  height: 0px;
+}
+
+::-webkit-scrollbar {
+  width: 0.66rem;
+  background-color: #fff;
+  border-radius: 0.165rem;
+}
+
+/*=====End SCROLLBAR=====*/
+
+/*=====BUTTON UP=====*/
+#button-up {
+  display: none;
+  width: 2.585rem;
+  height: 2.585rem;
+  position: fixed;
+  right: 0.55rem;
+  bottom: 0.55rem;
+  padding: 0.55rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  transition: 0.3s;
+  z-index: 10;
+}
+
+#button-up span {
+  font-size: 1.485rem;
+  height: 1.375rem;
+}
+
+#button-up:hover {
+  cursor: pointer;
+  transition: 0.3s;
+  background: #000;
+}
+
+#button-up:hover span {
+  animation: 1200ms ease 0s normal none 1 running shame;
+}
+
+@keyframes shame {
+  0% {
+    transform: translateY(0);
+  }
+  10% {
+    transform: translateY(-3px);
+  }
+  20% {
+    transform: translateY(2px);
+  }
+  30% {
+    transform: translateY(-2px);
+  }
+  40% {
+    transform: translateY(1px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  60% {
+    transform: translateY(2px);
+  }
+  70% {
+    transform: translateY(-2px);
+  }
+  80% {
+    transform: translateY(1);
+  }
+  90% {
+    transform: translateY(-1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+/*=====End BUTTON UP=====*/
+
+/*=====GRID=====*/
+/* Базовые стили сетки */
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+/* Общие стили для всех колонок */
+[class*="col-"] {
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+/* 12-колоночная система (как в Bootstrap) */
+.col-1 {
+  width: 8.333333%;
+}
+.col-2 {
+  width: 16.666667%;
+}
+.col-3 {
+  width: 25%;
+}
+.col-4 {
+  width: 33.333333%;
+}
+.col-5 {
+  width: 41.666667%;
+}
+.col-6 {
+  width: 50%;
+}
+.col-7 {
+  width: 58.333333%;
+}
+.col-8 {
+  width: 66.666667%;
+}
+.col-9 {
+  width: 75%;
+}
+.col-10 {
+  width: 83.333333%;
+}
+.col-11 {
+  width: 91.666667%;
+}
+.col-12 {
+  width: 100%;
+}
+
+/*=====End GRID=====*/
+
+/*=====IMG=====*/
 /* Обязательные стили для компонента изображения */
 .optimized-image-wrapper {
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 
 .image-caption {
-    padding: 8px 12px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    font-size: 0.9rem;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    text-align: center;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  font-size: 0.9rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
 }
 
 .image-placeholder {
-    background: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 150px;
-    border: 1px dashed #dee2e6;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  border: 1px dashed #dee2e6;
 }
 
 .placeholder-content {
-    text-align: center;
+  text-align: center;
 }
 
 .placeholder-icon {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 .placeholder-text {
-    display: block;
-    margin-top: 8px;
-    font-size: 0.875rem;
-    color: #6c757d;
+  display: block;
+  margin-top: 8px;
+  font-size: 0.875rem;
+  color: #6c757d;
 }
 
 .image-fallback,
 .image-error-fallback {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 }
 
-/* ===== ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ ИЗОБРАЖЕНИЙ ===== */
+/*=====ИСПРАВЛЕННЫЕ СТИЛИ ДЛЯ ИЗОБРАЖЕНИЙ=====*/
 
 /* Основной контейнер для изображения */
 .image-wrapper {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    display: block;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  display: block;
 }
 
 /* Соотношения сторон для контейнеров */
 .image-wrapper.card-img-top {
-    aspect-ratio: 16/9;
+  aspect-ratio: 16/9;
 }
 
 .image-wrapper.aspect-ratio-16-9 {
-    aspect-ratio: 16/9;
+  aspect-ratio: 16/9;
 }
 
 .image-wrapper.aspect-ratio-4-3 {
-    aspect-ratio: 4/3;
+  aspect-ratio: 4/3;
 }
 
 .image-wrapper.aspect-ratio-1-1 {
-    aspect-ratio: 1/1;
+  aspect-ratio: 1/1;
 }
 
 .image-wrapper.aspect-ratio-3-2 {
-    aspect-ratio: 3/2;
+  aspect-ratio: 3/2;
 }
 
 /* ===== ИСПРАВЛЕНИЕ: УБРАНЫ position: absolute ===== */
@@ -83,222 +313,223 @@
 
 /* Picture должен быть блоком и заполнять контейнер */
 .image-wrapper picture {
-    display: block;
-    width: 100%;
-    height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* Responsive image класс (если используется) */
 .image-wrapper .responsive-image {
-    display: block;
-    width: 100%;
-    height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* Изображение внутри picture должно заполнять его */
 .image-wrapper picture img,
 .image-wrapper .responsive-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 /* ===== СТИЛИ ДЛЯ КАРТОЧЕК ===== */
 
 /* Для карточек */
 .card .image-wrapper.card-img-top {
-    border-radius: 8px 8px 0 0;
+  border-radius: 8px 8px 0 0;
 }
 
 /* Изображения в карточках */
 .card .image-wrapper.card-img-top picture,
 .card .image-wrapper.card-img-top .responsive-image {
-    display: block;
-    width: 100%;
-    height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .card .image-wrapper.card-img-top img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Placeholder для карточек */
 .card-image-placeholder {
-    background: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #6c757d;
-    width: 100%;
-    aspect-ratio: 16/9;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  width: 100%;
+  aspect-ratio: 16/9;
 }
 
 .placeholder-content {
-    text-align: center;
+  text-align: center;
 }
 
 .placeholder-icon {
-    opacity: 0.5;
-    margin-bottom: 10px;
+  opacity: 0.5;
+  margin-bottom: 10px;
 }
 
 .placeholder-text {
-    display: block;
-    font-size: 14px;
+  display: block;
+  font-size: 14px;
 }
 
 /* ===== CARD STYLES ===== */
 .card {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: white;
-    display: flex;
-    flex-direction: column;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  background: white;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 /* Для совместимости с Bootstrap */
 .card-img-top {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 }
 
 .card-body {
-    padding: 20px;
-    flex: 1;
+  padding: 20px;
+  flex: 1;
 }
 
 .card-title {
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.25rem;
 }
 
 .card-text {
-    margin-bottom: 15px;
-    color: #555;
+  margin-bottom: 15px;
+  color: #555;
 }
 
 .card-footer {
-    padding: 10px 20px;
-    background-color: #f8f9fa;
-    border-top: 1px solid #e0e0e0;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
 }
 
 .card-link {
-    display: inline-block;
-    padding: 8px 16px;
-    background: #007bff;
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background 0.3s ease;
+  display: inline-block;
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.3s ease;
 }
 
 .card-link:hover {
-    background: #0056b3;
-    color: white;
-    text-decoration: none;
+  background: #0056b3;
+  color: white;
+  text-decoration: none;
 }
 
 /* Анимация загрузки изображений */
 .image-wrapper picture img {
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .image-wrapper picture img.loaded {
-    opacity: 1;
+  opacity: 1;
 }
 
 /* Fallback для браузеров, которые не поддерживают aspect-ratio */
 @supports not (aspect-ratio: 16/9) {
-    .image-wrapper.card-img-top {
-        height: 0;
-        padding-bottom: 56.25%; /* 16:9 в процентах */
-    }
-    
-    .image-wrapper.aspect-ratio-16-9 {
-        height: 0;
-        padding-bottom: 56.25%;
-    }
-    
-    .image-wrapper.aspect-ratio-4-3 {
-        height: 0;
-        padding-bottom: 75%;
-    }
-    
-    .image-wrapper.aspect-ratio-1-1 {
-        height: 0;
-        padding-bottom: 100%;
-    }
-    
-    .image-wrapper.aspect-ratio-3-2 {
-        height: 0;
-        padding-bottom: 66.67%;
-    }
-    
-    .card-image-placeholder {
-        height: 0;
-        padding-bottom: 56.25%;
-    }
-    
-    /* Для fallback нам нужно переопределить height для img */
-    .image-wrapper:not(:has(img[src])) {
-        height: auto;
-        min-height: 200px;
-    }
+  .image-wrapper.card-img-top {
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 в процентах */
+  }
+
+  .image-wrapper.aspect-ratio-16-9 {
+    height: 0;
+    padding-bottom: 56.25%;
+  }
+
+  .image-wrapper.aspect-ratio-4-3 {
+    height: 0;
+    padding-bottom: 75%;
+  }
+
+  .image-wrapper.aspect-ratio-1-1 {
+    height: 0;
+    padding-bottom: 100%;
+  }
+
+  .image-wrapper.aspect-ratio-3-2 {
+    height: 0;
+    padding-bottom: 66.67%;
+  }
+
+  .card-image-placeholder {
+    height: 0;
+    padding-bottom: 56.25%;
+  }
+
+  /* Для fallback нам нужно переопределить height для img */
+  .image-wrapper:not(:has(img[src])) {
+    height: auto;
+    min-height: 200px;
+  }
 }
 
 /* Дополнительные гарантии для изображений */
 .optimized-image {
-    display: block !important;
-    max-width: 100% !important;
-    height: auto !important;
+  display: block !important;
+  max-width: 100% !important;
+  height: auto !important;
 }
-
 
 /* ===== КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ ===== */
 
 /* Гарантируем, что изображения будут видимы */
 .image-wrapper img {
-    opacity: 1 !important;
-    visibility: visible !important;
-    position: static !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: static !important;
 }
 
 /* Убираем возможные конфликты с другими стилями */
-picture, 
+picture,
 picture img,
 .responsive-image,
 .responsive-image img {
-    position: static !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
 }
 
 /* Обеспечиваем правильное поведение для всех браузеров */
 .image-wrapper {
-    display: flow-root; /* Создает новый контекст форматирования */
+  display: flow-root; /* Создает новый контекст форматирования */
 }
 
 /* Если все еще есть проблемы, добавьте эти принудительные стили: */
 .image-wrapper:has(picture) {
-    display: block !important;
-    contain: layout; /* Оптимизация для браузера */
+  display: block !important;
+  contain: layout; /* Оптимизация для браузера */
 }
 
 /* ===== END IMG ===== */

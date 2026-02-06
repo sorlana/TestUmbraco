@@ -1,4 +1,5 @@
 @using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models
 @using TestUmbraco.Models
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
 
@@ -9,22 +10,16 @@
     // Получаем значение свойства "Class"
     var customClass = content.Value<string>("Class");
     
-    // Получаем изображение (предполагается, что свойство Img - это Media Picker)
+    // Получаем изображение
     var image = content.Value<IPublishedContent>("BgImg");
-    
-    var quoteContent = content.Value<string>("content");
 }
 
-@if (!string.IsNullOrWhiteSpace(quoteContent))
+@if (image != null)
 {
     // Создаем функцию для контента
     Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
         @<text>
-            @if (image != null)
-            {
-                <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
-            }
-            @Html.Raw(quoteContent)
+            <img src="@image.Url()" alt="Separator image" class="separator" />
         </text>;
 
     // Создаем модель для BackgroundClasses
@@ -32,10 +27,10 @@
     {
         Settings = settings,
         ComponentId = content.Key,
-        Prefix = "quote-bg",
+        Prefix = "separator-bg", // Изменил префикс, так как это разделитель, а не цитата
         BaseClass = customClass ?? "",
         AdditionalClasses = "",
-        Tag = "blockquote",
+        Tag = "div", // Изменил на div, так как это не цитата
         ContainerClass = "",
         Content = contentFunc
     };
