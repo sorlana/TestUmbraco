@@ -46,38 +46,50 @@
     
     // Определяем тег обертки
     var wrapperTag = !string.IsNullOrWhiteSpace(Model.Tag) ? Model.Tag : "div";
+    
+    // Получаем ID элемента, если указан
+    var elementId = !string.IsNullOrWhiteSpace(Model.ElementId) ? Model.ElementId.Trim() : "";
 }
 
-<@wrapperTag class="@finalClass">
-    @if (backgroundResult?.Type == BackgroundType.Video && !string.IsNullOrEmpty(backgroundResult.VideoId))
-    {
-        <div class="video-container">
-            @* Видео для десктопа *@
-            <iframe class="video-bg-iframe" 
-                    src="https://player.vimeo.com/video/@backgroundResult.VideoId?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" 
-                    frameborder="0" 
-                    allow="autoplay; fullscreen" 
-                    allowfullscreen>
-            </iframe>
-            
-            @* Placeholder для мобильных устройств *@
-            @if (backgroundResult.UseVideoPlaceholder && !string.IsNullOrEmpty(backgroundResult.VideoPlaceholder))
-            {
-                <div class="video-placeholder-mobile" 
-                     style="background-image: url('@backgroundResult.VideoPlaceholder');">
-                </div>
-            }
-        </div>
-    }
-    
-    @if (!string.IsNullOrWhiteSpace(containerClass))
-    {
-        <div class="@containerClass">
-            @Model.Content?.Invoke(Model)
-        </div>
-    }
-    else
-    {
+@if (!string.IsNullOrWhiteSpace(elementId))
+{
+    @Html.Raw($"<{wrapperTag} id=\"{elementId}\" class=\"{finalClass}\">")
+}
+else
+{
+    @Html.Raw($"<{wrapperTag} class=\"{finalClass}\">")
+}
+
+@if (backgroundResult?.Type == BackgroundType.Video && !string.IsNullOrEmpty(backgroundResult.VideoId))
+{
+    <div class="video-container">
+        @* Видео для десктопа *@
+        <iframe class="video-bg-iframe" 
+                src="https://player.vimeo.com/video/@backgroundResult.VideoId?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" 
+                frameborder="0" 
+                allow="autoplay; fullscreen" 
+                allowfullscreen>
+        </iframe>
+        
+        @* Placeholder для мобильных устройств *@
+        @if (backgroundResult.UseVideoPlaceholder && !string.IsNullOrEmpty(backgroundResult.VideoPlaceholder))
+        {
+            <div class="video-placeholder-mobile" 
+                 style="background-image: url('@backgroundResult.VideoPlaceholder');">
+            </div>
+        }
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(containerClass))
+{
+    <div class="@containerClass">
         @Model.Content?.Invoke(Model)
-    }
-</@wrapperTag>
+    </div>
+}
+else
+{
+    @Model.Content?.Invoke(Model)
+}
+
+@Html.Raw($"</{wrapperTag}>")

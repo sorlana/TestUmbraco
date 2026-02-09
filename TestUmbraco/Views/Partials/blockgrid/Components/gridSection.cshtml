@@ -11,11 +11,13 @@
     
     var sectionClass = "";
     var containerClass = "";
+    var idSection = "";
     
     if (settings != null)
     {
         sectionClass = settings.Value<string>("sectionClass") ?? "";
         containerClass = settings.Value<string>("containerClass") ?? "";
+        idSection = settings.Value<string>("idSection") ?? "";
     }
     
     if (string.IsNullOrWhiteSpace(sectionClass))
@@ -26,6 +28,11 @@
     if (string.IsNullOrWhiteSpace(containerClass))
     {
         containerClass = content?.Value<string>("containerClass") ?? "";
+    }
+    
+    if (string.IsNullOrWhiteSpace(idSection))
+    {
+        idSection = content?.Value<string>("idSection") ?? "";
     }
 }
 
@@ -53,6 +60,7 @@
         AdditionalClasses = "",
         Tag = "section",
         ContainerClass = "",
+        ElementId = idSection.Trim(),
         Content = sectionContentFunc
     };
 

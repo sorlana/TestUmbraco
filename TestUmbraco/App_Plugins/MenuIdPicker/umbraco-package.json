@@ -7,8 +7,7 @@
       "type": "propertyEditorUi",
       "alias": "My.MenuIdPicker",
       "name": "Menu ID Picker",
-      "element": "/App_Plugins/MenuIdPicker/menu-id-picker.js",
-      "elementName": "menu-id-picker",
+      "js": "/App_Plugins/MenuIdPicker/menu-id-picker.js",
       "meta": {
         "label": "Menu ID Picker",
         "propertyEditorSchemaAlias": "Umbraco.TextBox",
@@ -20,29 +19,43 @@
               "label": "Menu Content",
               "alias": "menuContentId",
               "description": "Select the content item containing the menu block list",
-              "propertyEditorUiAlias": "Umb.PropertyEditorUi.ContentPicker",
-              "config": {
-                "multiPicker": false,
-                "ignoreUserStartNodes": false
-              }
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.ContentPicker"
             },
             {
               "label": "Menu Property Alias",
               "alias": "menuPropertyAlias",
-              "description": "Enter the alias of the block list property",
-              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+              "description": "Enter the alias of the block list property (default: menuLanding)",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox",
+              "config": [
+                {
+                  "alias": "placeholder",
+                  "value": "menuLanding"
+                }
+              ]
             },
             {
               "label": "Include Empty Option",
               "alias": "includeEmptyOption",
               "description": "Show empty option in dropdown",
-              "propertyEditorUiAlias": "Umb.PropertyEditorUi.Toggle"
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.Toggle",
+              "config": [
+                {
+                  "alias": "default",
+                  "value": true
+                }
+              ]
             },
             {
               "label": "Empty Option Text",
               "alias": "emptyOptionText",
               "description": "Text for empty option",
-              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox",
+              "config": [
+                {
+                  "alias": "placeholder",
+                  "value": "-- Select a menu section --"
+                }
+              ]
             }
           ]
         }

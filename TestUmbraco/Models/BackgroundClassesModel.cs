@@ -13,6 +13,7 @@ namespace TestUmbraco.Models
         public string AdditionalClasses { get; set; } = string.Empty;
         public string Tag { get; set; } = "div";
         public string ContainerClass { get; set; } = string.Empty;
+        public string ElementId { get; set; } = string.Empty;
         public Func<object, IHtmlContent>? Content { get; set; }
         public string RawContent { get; set; } = string.Empty;
         public string Placeholder { get; set; } = string.Empty;
