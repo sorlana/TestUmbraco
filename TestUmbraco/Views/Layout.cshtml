@@ -2,6 +2,19 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
     Layout = null;
+    
+    // Проверяем, нужно ли подключать стили меню
+    var blockGridPage = Model as Umbraco.Cms.Web.Common.PublishedModels.BlockGrid;
+    var hasMenu = false;
+    var hasMenuLanding = false;
+    
+    if (blockGridPage != null)
+    {
+        var menuItems = blockGridPage.Value<IEnumerable<IPublishedContent>>("menu");
+        var menuLandingItems = blockGridPage.Value<Umbraco.Cms.Core.Models.Blocks.BlockListModel>("menuLanding");
+        hasMenu = menuItems != null && menuItems.Any();
+        hasMenuLanding = menuLandingItems != null && menuLandingItems.Any();
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +33,7 @@
     
     <link rel="stylesheet" href="~/css/backgrounds.css" asp-append-version="true" />
     <link rel="stylesheet" href="@Url.Content("~/css/style.css")" media="screen"/>
+    
     <!-- Остальные стили и скрипты -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" asp-append-version="true"/>
@@ -28,27 +42,11 @@
     <!-- Favicon через Partial View -->
     @await Html.PartialAsync("~/Views/Partials/layout/_Favicon.cshtml", Model)
     
+    <!-- Яндекс.Метрика через Partial View -->
+    @await Html.PartialAsync("~/Views/Partials/layout/_YandexMetrika.cshtml")
+    
     <!-- Подключаем jQuery перед использованием -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function (m, e, t, r, i, k, a) {
-            m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
-            m[i].l = 1 * new Date();
-            for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
-            k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
-        })
-            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-        ym(91377387, "init", {
-            clickmap: true,
-            accurateTrackBounce: true,
-            trackLinks: true,
-            webvisor: false
-        });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/91377387" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     
     <!-- Detect feature support for older browsers -->
     <script>
@@ -59,6 +57,9 @@
 </head>
 
 <body>
+
+    <!-- Меню сайта через Partial View -->
+    @await Html.PartialAsync("~/Views/Partials/layout/_SiteMenu.cshtml", Model)
 
     @RenderBody()
     
@@ -77,8 +78,14 @@
         }
     }
 
-    <!-- Подключаем скрипт для кнопки "Наверх" -->
+    <!-- Скрипт для кнопки "Наверх" -->
     <script src="~/js/button-up.js" asp-append-version="true"></script>
+    
+    <!-- Скрипт для меню (только если нужно) -->
+    @if (hasMenu || hasMenuLanding)
+    {
+        <script src="~/js/site-menu.js" asp-append-version="true"></script>
+    }
 
     <partial name="_BackgroundConfig" />
     <script src="~/js/lazy-backgrounds.js" asp-append-version="true"></script>

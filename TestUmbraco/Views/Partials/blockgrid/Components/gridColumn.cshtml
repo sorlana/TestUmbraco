@@ -72,36 +72,34 @@
                         itemColumnClass = $"col-{item.ColumnSpan}";
                     }
                     
-                    @Html.Raw($"<{colTag} class=\"{itemColumnClass} {classRow.Trim()}\">")
-                        @if (!string.IsNullOrWhiteSpace(containerClass))
-                        {
-                            <div class="@containerClass.Trim()">
-                                @* For components that need settings (backgrounds), pass the full BlockGridItem *@
-                                @if (componentAlias == "textEditor" || componentAlias == "img" || componentAlias == "quote" || componentAlias == "video" || componentAlias == "separator" || componentAlias == "title")
-                                {
-                                    @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item)
-                                }
-                                else
-                                {
-                                    @* For other components, pass just the content *@
-                                    @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item.Content)
-                                }
-                            </div>
-                        }
-                        else
-                        {
-                            @* For components that need settings (backgrounds), pass the full BlockGridItem *@
-                            @if (componentAlias == "textEditor" || componentAlias == "img" || componentAlias == "quote" || componentAlias == "video" || componentAlias == "separator" || componentAlias == "title")
+                    @* Для компонентов с фоном используем специальный helper *@
+                    @if (componentAlias == "textEditor" || componentAlias == "img" || componentAlias == "quote" || componentAlias == "video" || componentAlias == "separator" || componentAlias == "title")
+                    {
+                        @await Html.PartialAsync("blockgrid/_ColumnWithBackground", new {
+                            Item = item,
+                            ColTag = colTag,
+                            ItemColumnClass = itemColumnClass,
+                            ClassRow = classRow.Trim(),
+                            ContainerClass = containerClass,
+                            ComponentAlias = componentAlias
+                        })
+                    }
+                    else
+                    {
+                        @* Для остальных компонентов рендерим обычную колонку *@
+                        @Html.Raw($"<{colTag} class=\"{itemColumnClass} {classRow.Trim()}\">")
+                            @if (!string.IsNullOrWhiteSpace(containerClass))
                             {
-                                @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item)
+                                <div class="@containerClass.Trim()">
+                                    @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item)
+                                </div>
                             }
                             else
                             {
-                                @* For other components, pass just the content *@
-                                @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item.Content)
+                                @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item)
                             }
-                        }
-                    @Html.Raw($"</{colTag}>")
+                        @Html.Raw($"</{colTag}>")
+                    }
                 }
             }
             else

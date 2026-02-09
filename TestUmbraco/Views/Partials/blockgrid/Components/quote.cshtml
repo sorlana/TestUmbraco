@@ -6,6 +6,9 @@
     var content = Model.Content;
     var settings = Model.Settings;
     
+    // Проверяем, нужно ли применять фон к родителю
+    var applyBackgroundToParent = ViewData["ApplyBackgroundToParent"] as bool? ?? false;
+    
     // Получаем значение свойства "Class"
     var customClass = content.Value<string>("Class");
     
@@ -17,29 +20,42 @@
 
 @if (!string.IsNullOrWhiteSpace(quoteContent))
 {
-    // Создаем функцию для контента
-    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
-        @<text>
-            @if (image != null)
-            {
-                <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
-            }
-            @Html.Raw(quoteContent)
-        </text>;
-
-    // Создаем модель для BackgroundClasses
-    var backgroundModel = new BackgroundClassesModel
+    @if (applyBackgroundToParent)
     {
-        Settings = settings,
-        ComponentId = content.Key,
-        Prefix = "quote-bg",
-        BaseClass = customClass ?? "",
-        AdditionalClasses = "",
-        Tag = "blockquote",
-        ContainerClass = "",
-        Content = contentFunc
-    };
+        @* Фон применяется к родительскому элементу, рендерим только контент без обертки *@
+        @if (image != null)
+        {
+            <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
+        }
+        @Html.Raw(quoteContent)
+    }
+    else
+    {
+        @* Обычный рендеринг с фоном *@
+        // Создаем функцию для контента
+        Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
+            @<text>
+                @if (image != null)
+                {
+                    <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
+                }
+                @Html.Raw(quoteContent)
+            </text>;
 
-    // Рендерим через универсальный компонент
-    <partial name="_BackgroundClasses" model="backgroundModel" />
+        // Создаем модель для BackgroundClasses
+        var backgroundModel = new BackgroundClassesModel
+        {
+            Settings = settings,
+            ComponentId = content.Key,
+            Prefix = "quote-bg",
+            BaseClass = customClass ?? "",
+            AdditionalClasses = "",
+            Tag = "blockquote",
+            ContainerClass = "",
+            Content = contentFunc
+        };
+
+        // Рендерим через универсальный компонент
+        <partial name="_BackgroundClasses" model="backgroundModel" />
+    }
 }

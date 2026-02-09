@@ -6,6 +6,9 @@
     var content = Model.Content; 
     var settings = Model.Settings;
     
+    // Проверяем, нужно ли применять фон к родителю
+    var applyBackgroundToParent = ViewData["ApplyBackgroundToParent"] as bool? ?? false;
+    
     // Получаем значения свойств
     var tagValue = content.Value<string>("tag");
     var wrapperTag = string.IsNullOrWhiteSpace(tagValue) ? "div" : tagValue;
@@ -15,23 +18,32 @@
 
 @if (!string.IsNullOrWhiteSpace(textContent))
 {
-    // Создаем функцию для контента
-    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
-        @<text>@Html.Raw(textContent)</text>;
-
-    // Создаем модель для BackgroundClasses
-    var backgroundModel = new BackgroundClassesModel
+    @if (applyBackgroundToParent)
     {
-        Settings = settings,
-        ComponentId = content.Key,
-        Prefix = "texteditor-bg",
-        BaseClass = customClass ?? "",
-        AdditionalClasses = "",
-        Tag = wrapperTag,
-        ContainerClass = "",
-        Content = contentFunc
-    };
+        @* Фон применяется к родительскому элементу, рендерим только контент без обертки *@
+        @Html.Raw(textContent)
+    }
+    else
+    {
+        @* Обычный рендеринг с фоном *@
+        // Создаем функцию для контента
+        Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
+            @<text>@Html.Raw(textContent)</text>;
 
-    // Рендерим через универсальный компонент
-    <partial name="_BackgroundClasses" model="backgroundModel" />
+        // Создаем модель для BackgroundClasses
+        var backgroundModel = new BackgroundClassesModel
+        {
+            Settings = settings,
+            ComponentId = content.Key,
+            Prefix = "texteditor-bg",
+            BaseClass = customClass ?? "",
+            AdditionalClasses = "",
+            Tag = wrapperTag,
+            ContainerClass = "",
+            Content = contentFunc
+        };
+
+        // Рендерим через универсальный компонент
+        <partial name="_BackgroundClasses" model="backgroundModel" />
+    }
 }

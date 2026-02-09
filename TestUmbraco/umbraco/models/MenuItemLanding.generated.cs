@@ -18,14 +18,14 @@ using Umbraco.Extensions;
 
 namespace Umbraco.Cms.Web.Common.PublishedModels
 {
-	/// <summary>Section</summary>
-	[PublishedModel("gridSection")]
-	public partial class GridSection : PublishedElementModel
+	/// <summary>menuItemLanding</summary>
+	[PublishedModel("menuItemLanding")]
+	public partial class MenuItemLanding : PublishedElementModel
 	{
 		// helpers
 #pragma warning disable 0109 // new is redundant
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
-		public new const string ModelTypeAlias = "gridSection";
+		public new const string ModelTypeAlias = "menuItemLanding";
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		public new const PublishedItemType ModelItemType = PublishedItemType.Content;
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
@@ -34,14 +34,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 			=> PublishedModelUtility.GetModelContentType(contentTypeCache, ModelItemType, ModelTypeAlias);
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[return: global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedContentTypeCache contentTypeCache, Expression<Func<GridSection, TValue>> selector)
+		public static IPublishedPropertyType GetModelPropertyType<TValue>(IPublishedContentTypeCache contentTypeCache, Expression<Func<MenuItemLanding, TValue>> selector)
 			=> PublishedModelUtility.GetModelPropertyType(GetModelContentType(contentTypeCache), selector);
 #pragma warning restore 0109
 
 		private IPublishedValueFallback _publishedValueFallback;
 
 		// ctor
-		public GridSection(IPublishedElement content, IPublishedValueFallback publishedValueFallback)
+		public MenuItemLanding(IPublishedElement content, IPublishedValueFallback publishedValueFallback)
 			: base(content, publishedValueFallback)
 		{
 			_publishedValueFallback = publishedValueFallback;
@@ -50,35 +50,26 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
-		/// Класс контейнера
+		/// Id
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("containerClass")]
-		public virtual string ContainerClass => this.Value<string>(_publishedValueFallback, "containerClass");
+		[ImplementPropertyType("idItem")]
+		public virtual string IdItem => this.Value<string>(_publishedValueFallback, "idItem");
 
 		///<summary>
-		/// Id секции (для лендинга): название секции на английском
+		/// Наименование
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("idSection")]
-		public virtual string IdSection => this.Value<string>(_publishedValueFallback, "idSection");
+		[ImplementPropertyType("nameItem")]
+		public virtual string NameItem => this.Value<string>(_publishedValueFallback, "nameItem");
 
 		///<summary>
-		/// Контент для секции
+		/// Показать / Скрыть
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("rows")]
-		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel Rows => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockGridModel>(_publishedValueFallback, "rows");
-
-		///<summary>
-		/// Класс секции
-		///</summary>
-		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("sectionClass")]
-		public virtual string SectionClass => this.Value<string>(_publishedValueFallback, "sectionClass");
+		[ImplementPropertyType("show")]
+		public virtual bool Show => this.Value<bool>(_publishedValueFallback, "show");
 	}
 }

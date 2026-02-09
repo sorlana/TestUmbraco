@@ -8,6 +8,9 @@
     var separator = Model.Content;
     var settings = Model.Settings;
     
+    // Проверяем, нужно ли применять фон к родителю
+    var applyBackgroundToParent = ViewData["ApplyBackgroundToParent"] as bool? ?? false;
+    
     // Получаем значение свойства "Class"
     var customClass = separator.Value<string>("Class");
     
@@ -17,25 +20,34 @@
 
 @if (image != null)
 {
-    // Создаем функцию для контента
-    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
-        @<text>
-            <img src="@image.Url()" alt="Separator image" class="separator" />
-        </text>;
-
-    // Создаем модель для BackgroundClasses
-    var backgroundModel = new BackgroundClassesModel
+    @if (applyBackgroundToParent)
     {
-        Settings = settings,
-        ComponentId = separator.Key,
-        Prefix = "separator-bg",
-        BaseClass = customClass ?? "",
-        AdditionalClasses = "",
-        Tag = "div",
-        ContainerClass = "",
-        Content = contentFunc
-    };
+        @* Фон применяется к родительскому элементу, рендерим только контент без обертки *@
+        <img src="@image.Url()" alt="Separator image" class="separator" />
+    }
+    else
+    {
+        @* Обычный рендеринг с фоном *@
+        // Создаем функцию для контента
+        Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
+            @<text>
+                <img src="@image.Url()" alt="Separator image" class="separator" />
+            </text>;
 
-    // Рендерим через универсальный компонент
-    <partial name="_BackgroundClasses" model="backgroundModel" />
+        // Создаем модель для BackgroundClasses
+        var backgroundModel = new BackgroundClassesModel
+        {
+            Settings = settings,
+            ComponentId = separator.Key,
+            Prefix = "separator-bg",
+            BaseClass = customClass ?? "",
+            AdditionalClasses = "",
+            Tag = "div",
+            ContainerClass = "",
+            Content = contentFunc
+        };
+
+        // Рендерим через универсальный компонент
+        <partial name="_BackgroundClasses" model="backgroundModel" />
+    }
 }

@@ -580,3 +580,639 @@ picture img,
   background: transparent;
 }
 /* ===== VIDEO ===== */
+
+/* ===== MENU ===== */
+/* ============================================
+   Базовые стили для меню сайта
+   ============================================ */
+
+/* Контейнер шапки */
+.site-header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ============================================
+   Стили для логотипа
+   ============================================ */
+
+.logo-container {
+  flex-shrink: 0;
+  min-width: 120px;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  transition: transform 0.3s ease;
+}
+
+.logo-link:hover {
+  transform: scale(1.05);
+}
+
+/* Стили для изображения логотипа */
+.logo-image {
+  max-height: 60px;
+  width: auto;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+/* Стили для текстового логотипа (когда нет изображения) */
+.logo-text {
+  font-weight: 900;
+  font-size: 28px;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(45deg, #007bff, #6610f2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: "Roboto", sans-serif;
+  line-height: 1;
+  padding: 5px 0;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   Стили для меню сайта
+   ============================================ */
+
+.site-nav,
+.landing-nav {
+  flex-grow: 1;
+  margin: 0 40px;
+}
+
+.site-menu,
+.landing-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 30px;
+  justify-content: center;
+}
+
+.menu-item,
+.landing-menu-item {
+  position: relative;
+}
+
+.menu-link,
+.landing-menu-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 8px 0;
+  position: relative;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.menu-link:hover,
+.landing-menu-link:hover {
+  color: #007bff;
+}
+
+/* Подчеркивание при наведении */
+.menu-link::after,
+.landing-menu-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #007bff;
+  transition: width 0.3s ease;
+}
+
+.menu-link:hover::after,
+.landing-menu-link:hover::after {
+  width: 100%;
+}
+
+/* Активный пункт меню */
+.menu-link.active,
+.landing-menu-link.active {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.menu-link.active::after,
+.landing-menu-link.active::after {
+  width: 100%;
+}
+
+/* ============================================
+   Дополнительные элементы
+   ============================================ */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  flex-shrink: 0;
+}
+
+/* Телефон */
+.header-phone {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.header-phone:hover {
+  color: #007bff;
+}
+
+.phone-icon {
+  font-size: 22px;
+}
+
+.phone-text {
+  font-size: 14px;
+}
+
+/* Кнопка */
+.header-button {
+  background: linear-gradient(45deg, #007bff, #6610f2);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+  white-space: nowrap;
+}
+
+.header-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+}
+
+.header-button:active {
+  transform: translateY(0);
+}
+
+/* Личный кабинет */
+.lk-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.lk-link:hover {
+  color: #007bff;
+}
+
+.lk-link .material-symbols-outlined {
+  font-size: 22px;
+}
+
+.lk-text {
+  font-size: 14px;
+}
+
+/* Выбор языка */
+.language-selector {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.language-selector:hover {
+  background-color: #f5f5f5;
+}
+
+.current-language {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.language-selector .material-symbols-outlined {
+  font-size: 20px;
+  color: #666;
+}
+
+/* Кнопка мобильного меню */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+  background-color: #f5f5f5;
+}
+
+.mobile-menu-toggle .material-symbols-outlined {
+  font-size: 28px;
+  color: #333;
+}
+
+/* ============================================
+   Мобильное меню
+   ============================================ */
+
+/* Оверлей */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+  display: flex;
+  opacity: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Контейнер мобильного меню */
+.mobile-menu-container {
+  background-color: white;
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding: 40px 30px;
+  position: relative;
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu-overlay.active .mobile-menu-container {
+  transform: translateY(0);
+}
+
+/* Кнопка закрытия */
+.mobile-menu-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.mobile-menu-close:hover {
+  background-color: #f5f5f5;
+}
+
+.mobile-menu-close .material-symbols-outlined {
+  font-size: 24px;
+  color: #333;
+}
+
+/* Мобильное меню - список */
+.mobile-site-menu,
+.mobile-landing-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+}
+
+.mobile-menu-item,
+.mobile-landing-item {
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.mobile-menu-item:last-child,
+.mobile-landing-item:last-child {
+  border-bottom: none;
+}
+
+.mobile-menu-link,
+.mobile-landing-link {
+  display: block;
+  padding: 16px 0;
+  text-decoration: none;
+  color: #333;
+  font-size: 18px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.mobile-menu-link:hover,
+.mobile-landing-link:hover {
+  color: #007bff;
+}
+
+/* Дополнительные элементы в мобильном меню */
+.mobile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.mobile-phone,
+.mobile-lk {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #333;
+  padding: 14px 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.mobile-phone:hover,
+.mobile-lk:hover {
+  background-color: #e9ecef;
+  color: #007bff;
+  transform: translateX(5px);
+}
+
+.mobile-phone .material-symbols-outlined,
+.mobile-lk .material-symbols-outlined {
+  font-size: 22px;
+}
+
+/* ============================================
+   Адаптивность
+   ============================================ */
+
+/* Планшеты (768px - 1024px) */
+@media (max-width: 1024px) {
+  .header-container {
+    padding: 12px 15px;
+  }
+
+  .logo-text {
+    font-size: 24px;
+    letter-spacing: 1px;
+  }
+
+  .logo-image {
+    max-height: 50px;
+  }
+
+  .site-menu,
+  .landing-menu {
+    gap: 20px;
+  }
+
+  .menu-link,
+  .landing-menu-link {
+    font-size: 15px;
+  }
+
+  .header-actions {
+    gap: 20px;
+  }
+
+  .header-button {
+    padding: 8px 20px;
+    font-size: 13px;
+  }
+}
+
+/* Мобильные устройства (до 768px) */
+@media (max-width: 768px) {
+  .header-container {
+    padding: 10px 15px;
+  }
+
+  .logo-text {
+    font-size: 22px;
+    letter-spacing: 0;
+  }
+
+  .logo-image {
+    max-height: 45px;
+  }
+
+  /* Скрываем десктопное меню и некоторые элементы */
+  .site-nav,
+  .landing-nav,
+  .header-phone .phone-text,
+  .lk-link .lk-text,
+  .language-selector,
+  .header-button {
+    display: none;
+  }
+
+  /* Показываем кнопку мобильного меню */
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  /* Увеличиваем иконки в мобильном меню */
+  .mobile-menu-container {
+    padding: 30px 20px;
+  }
+
+  .mobile-menu-link,
+  .mobile-landing-link {
+    font-size: 17px;
+    padding: 14px 0;
+  }
+}
+
+/* Маленькие мобильные устройства (до 480px) */
+@media (max-width: 480px) {
+  .logo-text {
+    font-size: 20px;
+  }
+
+  .logo-image {
+    max-height: 40px;
+  }
+
+  .header-phone .phone-icon,
+  .lk-link .material-symbols-outlined {
+    font-size: 20px;
+  }
+
+  .header-actions {
+    gap: 15px;
+  }
+
+  .mobile-menu-container {
+    width: 95%;
+    padding: 25px 15px;
+  }
+
+  .mobile-menu-link,
+  .mobile-landing-link {
+    font-size: 16px;
+  }
+
+  .mobile-phone,
+  .mobile-lk {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+}
+
+/* Очень маленькие устройства (до 360px) */
+@media (max-width: 360px) {
+  .logo-text {
+    font-size: 18px;
+  }
+
+  .mobile-menu-toggle {
+    padding: 6px;
+  }
+
+  .mobile-menu-toggle .material-symbols-outlined {
+    font-size: 24px;
+  }
+}
+
+/* ============================================
+   Дополнительные эффекты
+   ============================================ */
+
+/* Эффект при прокрутке */
+.site-header.scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 0;
+}
+
+.site-header.scrolled .header-container {
+  padding: 10px 20px;
+}
+
+.site-header.scrolled .logo-image {
+  max-height: 50px;
+}
+
+.site-header.scrolled .logo-text {
+  font-size: 24px;
+}
+
+/* Анимация появления меню */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.site-header {
+  animation: fadeInDown 0.5s ease;
+}
+
+/* Подсветка активного пункта меню для лендинга */
+.landing-menu-link.active-section {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.landing-menu-link.active-section::after {
+  width: 100%;
+}
+
+/* ============================================
+   Утилитарные классы
+   ============================================ */
+
+/* Скрыть элемент */
+.hidden {
+  display: none !important;
+}
+
+/* Показать элемент */
+.visible {
+  display: block !important;
+}
+
+/* Флекс утилиты */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Отступы */
+.mt-10 {
+  margin-top: 10px;
+}
+.mt-20 {
+  margin-top: 20px;
+}
+.mb-10 {
+  margin-bottom: 10px;
+}
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+/* Плавающие элементы */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+/* ===== End MENU ===== */

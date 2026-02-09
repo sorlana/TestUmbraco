@@ -1,0 +1,52 @@
+{
+  "$schema": "../../umbraco-package-schema.json",
+  "name": "Menu ID Picker",
+  "version": "1.0.0",
+  "extensions": [
+    {
+      "type": "propertyEditorUi",
+      "alias": "My.MenuIdPicker",
+      "name": "Menu ID Picker",
+      "element": "/App_Plugins/MenuIdPicker/menu-id-picker.js",
+      "elementName": "menu-id-picker",
+      "meta": {
+        "label": "Menu ID Picker",
+        "propertyEditorSchemaAlias": "Umbraco.TextBox",
+        "group": "pickers",
+        "icon": "icon-sitemap",
+        "settings": {
+          "properties": [
+            {
+              "label": "Menu Content",
+              "alias": "menuContentId",
+              "description": "Select the content item containing the menu block list",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.ContentPicker",
+              "config": {
+                "multiPicker": false,
+                "ignoreUserStartNodes": false
+              }
+            },
+            {
+              "label": "Menu Property Alias",
+              "alias": "menuPropertyAlias",
+              "description": "Enter the alias of the block list property",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+            },
+            {
+              "label": "Include Empty Option",
+              "alias": "includeEmptyOption",
+              "description": "Show empty option in dropdown",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.Toggle"
+            },
+            {
+              "label": "Empty Option Text",
+              "alias": "emptyOptionText",
+              "description": "Text for empty option",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

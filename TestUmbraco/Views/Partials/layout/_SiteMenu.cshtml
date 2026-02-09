@@ -1,0 +1,235 @@
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models.Blocks;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@model IPublishedContent
+
+@{
+    // Получаем страницу как BlockGrid
+    var blockGridPage = Model as ContentModels.BlockGrid;
+    
+    // Общие свойства
+    var logo = blockGridPage?.Value<IPublishedContent>("logo");
+    var showLanguage = blockGridPage?.Value<bool>("showLanquage") ?? false;
+    var showLk = blockGridPage?.Value<bool>("showLk") ?? false;
+    var buttonName = blockGridPage?.Value<string>("buttonName");
+    var showTel = blockGridPage?.Value<bool>("showTel") ?? false;
+    
+    // Для меню сайта (фильтруем пункт Home)
+    var menuItems = blockGridPage?.Value<IEnumerable<IPublishedContent>>("menu");
+    var filteredMenuItems = menuItems?.Where(item => 
+        !item.Name.Equals("Home", StringComparison.OrdinalIgnoreCase) &&
+        !item.Name.Equals("Главная", StringComparison.OrdinalIgnoreCase)
+    ).ToList();
+    var hasMenu = filteredMenuItems != null && filteredMenuItems.Any();
+    
+    // Для меню лендинга
+    var menuLandingItems = blockGridPage?.Value<BlockListModel>("menuLanding");
+    var hasMenuLanding = menuLandingItems != null && menuLandingItems.Any();
+    
+    // Данные для JS
+    var menuLandingData = new List<object>();
+    if (hasMenuLanding)
+    {
+        foreach (var blockItem in menuLandingItems)
+        {
+            var nameItem = blockItem.Content.Value<string>("nameItem");
+            var idItem = blockItem.Content.Value<string>("idItem");
+            var show = blockItem.Content.Value<bool>("show");
+            
+            if (!string.IsNullOrEmpty(nameItem) && !string.IsNullOrEmpty(idItem))
+            {
+                menuLandingData.Add(new
+                {
+                    name = nameItem,
+                    id = idItem,
+                    show = show
+                });
+            }
+        }
+    }
+}
+
+<header class="site-header">
+    <div class="header-container">
+        
+        <!-- Логотип -->
+        <div class="logo-container">
+            @if (logo != null)
+            {
+                <a href="/" class="logo-link">
+                    <img src="@logo.Url()" alt="@Model.Name" class="logo-image">
+                </a>
+            }
+            else
+            {
+                <!-- Адаптивная надпись LOGO жирным шрифтом -->
+                <a href="/" class="logo-link">
+                    <div class="logo-text">
+                        LOGO
+                    </div>
+                </a>
+            }
+        </div>
+
+        <!-- Основное меню -->
+        @if (hasMenu)
+        {
+            <!-- Меню для сайта (без пункта Home) -->
+            <nav class="site-nav">
+                <ul class="site-menu">
+                    @foreach (var item in filteredMenuItems)
+                    {
+                        <li class="menu-item">
+                            <a href="@item.Url()" class="menu-link">@item.Name</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+        else if (hasMenuLanding)
+        {
+            <!-- Меню для лендинга (без пункта Home) -->
+            <nav class="landing-nav">
+                <ul class="landing-menu">
+                    @foreach (var blockItem in menuLandingItems)
+                    {
+                        var nameItem = blockItem.Content.Value<string>("nameItem");
+                        var idItem = blockItem.Content.Value<string>("idItem");
+                        var show = blockItem.Content.Value<bool>("show");
+                        
+                        // Пропускаем пункт "Home" в меню лендинга
+                        var isHomeItem = nameItem?.Equals("Home", StringComparison.OrdinalIgnoreCase) == true ||
+                                        nameItem?.Equals("Главная", StringComparison.OrdinalIgnoreCase) == true ||
+                                        idItem?.Equals("home", StringComparison.OrdinalIgnoreCase) == true ||
+                                        idItem?.Equals("главная", StringComparison.OrdinalIgnoreCase) == true;
+                        
+                        @if (!isHomeItem && show && !string.IsNullOrEmpty(nameItem) && !string.IsNullOrEmpty(idItem))
+                        {
+                            <li class="landing-menu-item">
+                                <a href="#@idItem" class="landing-menu-link" data-section="@idItem">
+                                    @nameItem
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </nav>
+        }
+
+        <!-- Дополнительные элементы -->
+        <div class="header-actions">
+            
+            <!-- Телефон -->
+            @if (showTel)
+            {
+                <div class="header-phone">
+                    <span class="material-symbols-outlined phone-icon">call</span>
+                    <span class="phone-text">Контакты</span>
+                </div>
+            }
+            
+            <!-- Кнопка -->
+            @if (!string.IsNullOrEmpty(buttonName))
+            {
+                <button class="header-button">
+                    @buttonName
+                </button>
+            }
+            
+            <!-- Личный кабинет -->
+            @if (showLk)
+            {
+                <a href="/account" class="lk-link">
+                    <span class="material-symbols-outlined">person</span>
+                    <span class="lk-text">Войти</span>
+                </a>
+            }
+            
+            <!-- Язык -->
+            @if (showLanguage)
+            {
+                <div class="language-selector">
+                    <span class="current-language">RU</span>
+                    <span class="material-symbols-outlined">arrow_drop_down</span>
+                </div>
+            }
+            
+            <!-- Мобильное меню кнопка -->
+            <button class="mobile-menu-toggle" aria-label="Меню">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Мобильное меню (скрыто по умолчанию) -->
+<div class="mobile-menu-overlay">
+    <div class="mobile-menu-container">
+        <button class="mobile-menu-close" aria-label="Закрыть меню">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        
+        @if (hasMenu)
+        {
+            <ul class="mobile-site-menu">
+                @foreach (var item in filteredMenuItems)
+                {
+                    <li class="mobile-menu-item">
+                        <a href="@item.Url()" class="mobile-menu-link">@item.Name</a>
+                    </li>
+                }
+            </ul>
+        }
+        else if (hasMenuLanding)
+        {
+            <ul class="mobile-landing-menu">
+                @foreach (var blockItem in menuLandingItems)
+                {
+                    var nameItem = blockItem.Content.Value<string>("nameItem");
+                    var idItem = blockItem.Content.Value<string>("idItem");
+                    var show = blockItem.Content.Value<bool>("show");
+                    
+                    // Пропускаем пункт "Home" в мобильном меню лендинга
+                    var isHomeItem = nameItem?.Equals("Home", StringComparison.OrdinalIgnoreCase) == true ||
+                                    nameItem?.Equals("Главная", StringComparison.OrdinalIgnoreCase) == true ||
+                                    idItem?.Equals("home", StringComparison.OrdinalIgnoreCase) == true ||
+                                    idItem?.Equals("главная", StringComparison.OrdinalIgnoreCase) == true;
+                    
+                    @if (!isHomeItem && show && !string.IsNullOrEmpty(nameItem) && !string.IsNullOrEmpty(idItem))
+                    {
+                        <li class="mobile-landing-item">
+                            <a href="#@idItem" class="mobile-landing-link">@nameItem</a>
+                        </li>
+                    }
+                }
+            </ul>
+        }
+        
+        <!-- Дополнительные элементы в мобильном меню -->
+        <div class="mobile-actions">
+            @if (showTel)
+            {
+                <a href="tel:" class="mobile-phone">
+                    <span class="material-symbols-outlined">call</span>
+                    Позвонить
+                </a>
+            }
+            
+            @if (showLk)
+            {
+                <a href="/account" class="mobile-lk">
+                    <span class="material-symbols-outlined">person</span>
+                    Личный кабинет
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Данные для JavaScript -->
+@if (hasMenuLanding)
+{
+    <script type="application/json" id="menu-landing-data">
+        @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(menuLandingData))
+    </script>
+}

@@ -1,0 +1,55 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@using TestUmbraco.Models
+@using TestUmbraco.Services
+@model dynamic
+@inject IUmbracoBackgroundService BackgroundService
+
+@{
+    var item = Model.Item as BlockGridItem;
+    var colTag = Model.ColTag as string;
+    var itemColumnClass = Model.ItemColumnClass as string;
+    var classRow = Model.ClassRow as string;
+    var containerClass = Model.ContainerClass as string;
+    var componentAlias = Model.ComponentAlias as string;
+    
+    // Получаем фоновые классы
+    var backgroundResult = await BackgroundService.ProcessBackground(
+        item.Settings, 
+        item.Content.Key,
+        $"{componentAlias}-bg");
+    
+    var backgroundClass = backgroundResult?.CssClass ?? "";
+    var finalClass = $"{itemColumnClass} {classRow} {backgroundClass}".Trim();
+}
+
+<@colTag class="@finalClass">
+    @if (backgroundResult?.Type == BackgroundType.Video && !string.IsNullOrEmpty(backgroundResult.VideoId))
+    {
+        <div class="video-container">
+            <iframe class="video-bg-iframe" 
+                    src="https://player.vimeo.com/video/@backgroundResult.VideoId?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" 
+                    frameborder="0" 
+                    allow="autoplay; fullscreen" 
+                    allowfullscreen>
+            </iframe>
+            
+            @if (backgroundResult.UseVideoPlaceholder && !string.IsNullOrEmpty(backgroundResult.VideoPlaceholder))
+            {
+                <div class="video-placeholder-mobile" 
+                     style="background-image: url('@backgroundResult.VideoPlaceholder');">
+                </div>
+            }
+        </div>
+    }
+    
+    @if (!string.IsNullOrWhiteSpace(containerClass))
+    {
+        <div class="@containerClass.Trim()">
+            @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item, new ViewDataDictionary(ViewData) { { "ApplyBackgroundToParent", true } })
+        </div>
+    }
+    else
+    {
+        @await Html.PartialAsync($"blockgrid/Components/{componentAlias}", item, new ViewDataDictionary(ViewData) { { "ApplyBackgroundToParent", true } })
+    }
+</@colTag>

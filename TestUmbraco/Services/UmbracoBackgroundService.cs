@@ -66,34 +66,25 @@ namespace TestUmbraco.Services
             
             var trimmedValue = bgValue.Trim();
             
-            // DEBUG: Log the actual value and its bytes for encoding analysis
-            _loggingService.LogInformation($"ProcessBackgroundType - Input: '{trimmedValue}' (Length: {trimmedValue.Length})");
-            _loggingService.LogInformation($"Bytes: {string.Join(" ", Encoding.UTF8.GetBytes(trimmedValue).Select(b => b.ToString("X2")))}");
-            
             // Поддержка как русских, так и английских значений
             if (trimmedValue == "Изображение" || trimmedValue == "Image" || trimmedValue == "хГНАПЮФЕМХЕ")
             {
-                _loggingService.LogInformation("Matched: Image background");
                 result = await ProcessImageBackground(settings, componentId, prefix);
             }
             else if (trimmedValue == "Цвет" || trimmedValue == "Color" || trimmedValue == "жБЕР")
             {
-                _loggingService.LogInformation("Matched: Color background");
                 result = await ProcessColorBackground(settings, componentId, prefix);
             }
             else if (trimmedValue == "Градиент" || trimmedValue == "Gradient" || trimmedValue == "цПЮДХЕМР")
             {
-                _loggingService.LogInformation("Matched: Gradient background");
                 result = await ProcessGradientBackground(settings, componentId, prefix);
             }
             else if (trimmedValue == "Видео" || trimmedValue == "Video" || trimmedValue == "бХДЕН")
             {
-                _loggingService.LogInformation("Matched: Video background");
                 result = await ProcessVideoBackground(settings, componentId, prefix);
             }
             else
             {
-                _loggingService.LogInformation($"NO MATCH - Creating empty result. Value was: '{trimmedValue}'");
                 result = new BackgroundResult();
             }
             
@@ -208,9 +199,11 @@ namespace TestUmbraco.Services
             if (settings.HasProperty("video") && settings.HasValue("video"))
             {
                 var videoUrl = settings.Value<string>("video");
+                
                 if (!string.IsNullOrWhiteSpace(videoUrl))
                 {
                     var videoId = ExtractVimeoVideoId(videoUrl);
+                    
                     if (!string.IsNullOrEmpty(videoId))
                     {
                         result.VideoId = videoId;
@@ -235,7 +228,7 @@ namespace TestUmbraco.Services
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: -2;
     pointer-events: none;
 }}
 
@@ -249,11 +242,11 @@ namespace TestUmbraco.Services
     height: 56.25vw;
     transform: translate(-50%, -50%);
     border: 0;
-    z-index: 0;
+    z-index: -2;
     pointer-events: none;
 }}
 
-.{videoClass}.lazy-video .video-placeholder {{
+.{videoClass}.lazy-video .video-placeholder-mobile {{
     background-size: cover;
     background-position: center;
     position: absolute;
@@ -261,7 +254,24 @@ namespace TestUmbraco.Services
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -2;
+    display: none;
+}}
+
+/* На мобильных и планшетах (до 1024px) показываем placeholder вместо видео */
+@media (max-width: 1024px) {{
+    .{videoClass}.lazy-video .video-bg-iframe {{
+        display: none;
+    }}
+    
+    .{videoClass}.lazy-video .video-placeholder-mobile {{
+        display: block;
+    }}
+}}
+
+/* Overlay должен быть над видео, но под контентом */
+.{videoClass}.lazy-video::before {{
+    z-index: -1 !important;
 }}";
                         
                         await _staticCssGenerator.AddInlineStyleAsync(css, "video");
@@ -297,13 +307,13 @@ namespace TestUmbraco.Services
             
             var cssBuilder = new StringBuilder();
             
-            // Добавляем основу: оверлей должен быть под контентом, а не поверх
+            // Добавляем основу: оверлей должен быть под контентом, но над фоном/видео
             cssBuilder.Append($@"
 .{overlayClass} {{
     position: relative;
 }}
 
-/* Оверлей под контентом - не перекрывает */
+/* Оверлей над фоном/видео, но под контентом */
 .{overlayClass}::before {{
     content: '';
     position: absolute;
@@ -311,7 +321,7 @@ namespace TestUmbraco.Services
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: -1;
     pointer-events: none;
 }}");
             
@@ -394,18 +404,16 @@ namespace TestUmbraco.Services
             // Добавляем стили для правильного позиционирования контента над оверлеем
             cssBuilder.Append($@"
 /* Позиционируем контент над оверлеем */
-.{overlayClass} > .cmt,
+.{overlayClass} > .container,
 .{overlayClass} > [class*=""container""] {{
     position: relative;
-    z-index: 2;
+    z-index: 1;
 }}
 
-/* Картинки и карточки */
-.{overlayClass} .image-wrapper,
-.{overlayClass} .card,
-.{overlayClass} img {{
+/* Все прямые дочерние элементы, кроме video-container */
+.{overlayClass} > *:not(.video-container) {{
     position: relative;
-    z-index: 2 !important;
+    z-index: 1;
 }}");
             
             await _staticCssGenerator.AddInlineStyleAsync(cssBuilder.ToString(), "overlay");
@@ -540,11 +548,23 @@ namespace TestUmbraco.Services
             if (string.IsNullOrWhiteSpace(url))
                 return null;
             
+            // Если это уже просто ID (только цифры), возвращаем как есть
+            if (System.Text.RegularExpressions.Regex.IsMatch(url.Trim(), @"^\d+$"))
+            {
+                return url.Trim();
+            }
+            
+            // Иначе пытаемся извлечь из URL
             url = url.Split('?')[0];
             var regex = new Regex(@"vimeo\.com/(?:.*/)?(\d+)");
             var match = regex.Match(url);
             
-            return match.Success && match.Groups.Count > 1 ? match.Groups[1].Value : null;
+            if (match.Success && match.Groups.Count > 1)
+            {
+                return match.Groups[1].Value;
+            }
+            
+            return null;
         }
 
         private string ComputeHash(string input)

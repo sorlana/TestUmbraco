@@ -7,6 +7,9 @@
     var content = Model.Content;
     var settings = Model.Settings;
     
+    // Проверяем, нужно ли применять фон к родителю
+    var applyBackgroundToParent = ViewData["ApplyBackgroundToParent"] as bool? ?? false;
+    
     // Получаем значение свойства "Class"
     var customClass = content.Value<string>("Class");
     
@@ -16,36 +19,56 @@
 
 @if (!string.IsNullOrWhiteSpace(videoContent))
 {
-    // Создаем функцию для контента с видео
-    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
-        @<text>
-            <div class="video-container">
-                <div class="video-embed">
-                    <div class="video-embed-wrapper">
-                        <iframe src="https://player.vimeo.com/video/@videoContent" 
-                                frameborder="0" 
-                                allow="autoplay; fullscreen; picture-in-picture" 
-                                allowfullscreen
-                                loading="lazy">
-                        </iframe>
-                    </div>
+    @if (applyBackgroundToParent)
+    {
+        @* Фон применяется к родительскому элементу, рендерим только контент без обертки *@
+        <div class="video-container video-component">
+            <div class="video-embed">
+                <div class="video-embed-wrapper">
+                    <iframe src="https://player.vimeo.com/video/@videoContent" 
+                            frameborder="0" 
+                            allow="autoplay; fullscreen; picture-in-picture" 
+                            allowfullscreen
+                            loading="lazy">
+                    </iframe>
                 </div>
             </div>
-        </text>;
-
-    // Создаем модель для BackgroundClasses
-    var backgroundModel = new BackgroundClassesModel
+        </div>
+    }
+    else
     {
-        Settings = settings,
-        ComponentId = content.Key,
-        Prefix = "video-bg",
-        BaseClass = customClass ?? "",
-        AdditionalClasses = "video-component",
-        Tag = "div",
-        ContainerClass = "video-wrapper",
-        Content = contentFunc
-    };
+        @* Обычный рендеринг с фоном *@
+        // Создаем функцию для контента с видео
+        Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
+            @<text>
+                <div class="video-container">
+                    <div class="video-embed">
+                        <div class="video-embed-wrapper">
+                            <iframe src="https://player.vimeo.com/video/@videoContent" 
+                                    frameborder="0" 
+                                    allow="autoplay; fullscreen; picture-in-picture" 
+                                    allowfullscreen
+                                    loading="lazy">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </text>;
 
-    // Рендерим через универсальный компонент
-    <partial name="_BackgroundClasses" model="backgroundModel" />
+        // Создаем модель для BackgroundClasses
+        var backgroundModel = new BackgroundClassesModel
+        {
+            Settings = settings,
+            ComponentId = content.Key,
+            Prefix = "video-bg",
+            BaseClass = customClass ?? "",
+            AdditionalClasses = "video-component",
+            Tag = "div",
+            ContainerClass = "video-wrapper",
+            Content = contentFunc
+        };
+
+        // Рендерим через универсальный компонент
+        <partial name="_BackgroundClasses" model="backgroundModel" />
+    }
 }
