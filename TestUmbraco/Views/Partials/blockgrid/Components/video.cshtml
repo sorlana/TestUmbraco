@@ -10,11 +10,8 @@
     // Получаем значение свойства "Class"
     var customClass = content.Value<string>("Class");
     
-    // Получаем видео-контент (ссылка на Vimeo)
+    // Получаем видео-контент (ID видео Vimeo)
     var videoContent = content.Value<string>("videoContent");
-    
-    // Получаем изображение-заглушку
-    var videoPlaceholder = content.Value<IPublishedContent>("videoPlaceholder");
 }
 
 @if (!string.IsNullOrWhiteSpace(videoContent))
@@ -23,24 +20,15 @@
     Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? contentFunc = 
         @<text>
             <div class="video-container">
-                @if (videoPlaceholder != null)
-                {
-                    <div class="video-placeholder">
-                        <img src="@videoPlaceholder.Url()" alt="Video placeholder" class="video-preview" />
-                        <button class="video-play-button" type="button" aria-label="Play video">
-                            <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M8 5v14l11-7z"></path>
-                            </svg>
-                        </button>
+                <div class="video-embed">
+                    <div class="video-embed-wrapper">
+                        <iframe src="https://player.vimeo.com/video/@videoContent" 
+                                frameborder="0" 
+                                allow="autoplay; fullscreen; picture-in-picture" 
+                                allowfullscreen
+                                loading="lazy">
+                        </iframe>
                     </div>
-                }
-                
-                <div class="video-embed" data-vimeo-id="@videoContent" hidden>
-                    <iframe src="https://player.vimeo.com/video/@videoContent" 
-                            frameborder="0" 
-                            allow="autoplay; fullscreen; picture-in-picture" 
-                            allowfullscreen>
-                    </iframe>
                 </div>
             </div>
         </text>;
@@ -60,5 +48,4 @@
 
     // Рендерим через универсальный компонент
     <partial name="_BackgroundClasses" model="backgroundModel" />
-    
-    }
+}

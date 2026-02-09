@@ -1,9 +1,9 @@
-/*=====FONT=====*/
+/* ===== FONT ===== */
 /*@charset "UTF-8";*/
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@100;200;300;400;500;600;800;900;1000&display=swap");
-/*=====End FONT=====*/
+/* ===== End FONT ===== */
 
-/*=====ALL=====*/
+/* =====ALL===== */
 html,
 body {
   padding: 0;
@@ -41,9 +41,9 @@ body {
   margin: 0 auto;
   width: 92%;
 }
-/*=====End ALL=====*/
+/* ===== End ALL ===== */
 
-/*=======TYPOGRAPHY==========*/
+/* ======= TYPOGRAPHY ========== */
 
 h2 {
   font-size: 3rem;
@@ -67,9 +67,9 @@ p {
     font-size: 1em;
   }
 }
-/*=====End TYPOGRAPHY=====*/
+/* ===== End TYPOGRAPHY ===== */
 
-/*=====SCROLLBAR=====*/
+/* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar-button {
   background-image: url("");
   background-repeat: no-repeat;
@@ -104,9 +104,9 @@ p {
   border-radius: 0.165rem;
 }
 
-/*=====End SCROLLBAR=====*/
+/* ===== End SCROLLBAR ===== */
 
-/*=====BUTTON UP=====*/
+/* ===== BUTTON UP ===== */
 #button-up {
   display: none;
   width: 2.585rem;
@@ -171,9 +171,9 @@ p {
     transform: translateY(0);
   }
 }
-/*=====End BUTTON UP=====*/
+/* ===== End BUTTON UP ===== */
 
-/*=====GRID=====*/
+/* =====GRID===== */
 /* Базовые стили сетки */
 
 .row {
@@ -226,9 +226,9 @@ p {
   width: 100%;
 }
 
-/*=====End GRID=====*/
+/* ===== End GRID ===== */
 
-/*=====IMG=====*/
+/* ===== IMG ===== */
 /* Обязательные стили для компонента изображения */
 .optimized-image-wrapper {
   position: relative;
@@ -533,3 +533,50 @@ picture img,
 }
 
 /* ===== END IMG ===== */
+
+/* ===== VIDEO ===== */
+/* Видео компонент - адаптивная обертка */
+.video-component .video-container {
+  width: 100%;
+}
+
+/* Контейнер для встроенного видео */
+.video-embed {
+  width: 100%;
+}
+
+/* Обертка для адаптивного соотношения сторон 16:9 */
+.video-embed-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 соотношение */
+  height: 0;
+  overflow: hidden;
+}
+
+/* Адаптивный iframe */
+.video-embed-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Дополнительные стили для лучшего отображения */
+.video-wrapper {
+  width: 100%;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+  .video-embed-wrapper {
+    padding-bottom: 75%; /* 4:3 для мобильных, если нужно */
+  }
+}
+
+/* Опционально: стили для загрузки */
+.video-embed-wrapper iframe[loading="lazy"] {
+  background: transparent;
+}
+/* ===== VIDEO ===== */

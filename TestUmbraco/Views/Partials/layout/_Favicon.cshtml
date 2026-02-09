@@ -1,0 +1,172 @@
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@using Umbraco.Cms.Core.Models.Blocks;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@model IPublishedContent
+
+@{
+    IPublishedContent favicon = null;
+    
+    // Расширенная диагностика
+    var debugInfo = new System.Text.StringBuilder();
+    debugInfo.AppendLine($"<!-- Favicon Debug -->");
+    debugInfo.AppendLine($"<!-- Model Type: {@Model?.GetType().Name} -->");
+    debugInfo.AppendLine($"<!-- Model Name: {@Model?.Name} -->");
+    debugInfo.AppendLine($"<!-- Model ContentType Alias: {@Model?.ContentType.Alias} -->");
+    
+    if (Model is ContentModels.BlockGrid blockGridPage)
+    {
+        debugInfo.AppendLine($"<!-- This is a BlockGrid page -->");
+        
+        // 1. Выводим ВСЕ свойства самой страницы
+        debugInfo.AppendLine($"<!-- === ALL PROPERTIES ON PAGE === -->");
+        foreach (var prop in Model.Properties)
+        {
+            debugInfo.AppendLine($"<!-- Property: '{prop.Alias}' (Type: {prop.PropertyType?.EditorAlias}) -->");
+        }
+        
+        // 2. Проверяем свойство на самой странице
+        debugInfo.AppendLine($"<!-- === CHECKING PAGE PROPERTY 'favicon' === -->");
+        debugInfo.AppendLine($"<!-- Page has 'favicon' property: {blockGridPage.HasProperty("favicon")} -->");
+        
+        if (blockGridPage.HasProperty("favicon"))
+        {
+            favicon = blockGridPage.Value<IPublishedContent>("favicon");
+            debugInfo.AppendLine($"<!-- Found favicon on PAGE: {favicon?.Url() ?? "NULL"} -->");
+            debugInfo.AppendLine($"<!-- Favicon found in: PAGE ITSELF -->");
+        }
+        
+        // 3. Проверяем свойство в блоке BlockGrid
+        if (favicon == null)
+        {
+            debugInfo.AppendLine($"<!-- === CHECKING BLOCKGRID PROPERTIES === -->");
+            var blockGrid = blockGridPage.Value<BlockGridModel>("content");
+            debugInfo.AppendLine($"<!-- BlockGrid from 'content': {blockGrid?.Count() ?? 0} blocks -->");
+            
+            if (blockGrid != null && blockGrid.Any())
+            {
+                int blockIndex = 0;
+                foreach (var block in blockGrid)
+                {
+                    debugInfo.AppendLine($"<!-- --- BLOCK #{blockIndex}: {block.Content.ContentType.Alias} --- -->");
+                    
+                    // Выводим все свойства этого блока
+                    debugInfo.AppendLine($"<!-- All properties in this block: -->");
+                    foreach (var prop in block.Content.Properties)
+                    {
+                        debugInfo.AppendLine($"<!--   - '{prop.Alias}' (Type: {prop.PropertyType?.EditorAlias}) -->");
+                    }
+                    
+                    // Проверяем свойство favicon в основном содержимом блока
+                    debugInfo.AppendLine($"<!-- Checking 'favicon' in block content: {block.Content.HasProperty("favicon")} -->");
+                    if (block.Content.HasProperty("favicon"))
+                    {
+                        var blockFavicon = block.Content.Value<IPublishedContent>("favicon");
+                        debugInfo.AppendLine($"<!-- Favicon in BLOCK CONTENT: {blockFavicon?.Url() ?? "NULL"} -->");
+                        
+                        if (blockFavicon != null)
+                        {
+                            favicon = blockFavicon;
+                            debugInfo.AppendLine($"<!-- Favicon found in: BLOCK CONTENT (block: {block.Content.ContentType.Alias}) -->");
+                            break;
+                        }
+                    }
+                    
+                    // Проверяем свойство favicon в настройках блока
+                    if (block.Settings != null)
+                    {
+                        debugInfo.AppendLine($"<!-- Block has Settings: YES -->");
+                        debugInfo.AppendLine($"<!-- All properties in block settings: -->");
+                        foreach (var prop in block.Settings.Properties)
+                        {
+                            debugInfo.AppendLine($"<!--   - '{prop.Alias}' (Type: {prop.PropertyType?.EditorAlias}) -->");
+                        }
+                        
+                        debugInfo.AppendLine($"<!-- Checking 'favicon' in block settings: {block.Settings.HasProperty("favicon")} -->");
+                        if (block.Settings.HasProperty("favicon"))
+                        {
+                            var settingsFavicon = block.Settings.Value<IPublishedContent>("favicon");
+                            debugInfo.AppendLine($"<!-- Favicon in BLOCK SETTINGS: {settingsFavicon?.Url() ?? "NULL"} -->");
+                            
+                            if (settingsFavicon != null)
+                            {
+                                favicon = settingsFavicon;
+                                debugInfo.AppendLine($"<!-- Favicon found in: BLOCK SETTINGS (block: {block.Content.ContentType.Alias}) -->");
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        debugInfo.AppendLine($"<!-- Block has Settings: NO -->");
+                    }
+                    
+                    blockIndex++;
+                }
+            }
+        }
+    }
+    else
+    {
+        debugInfo.AppendLine($"<!-- This is NOT a BlockGrid page -->");
+        
+        // Если это не BlockGrid, показываем все свойства
+        debugInfo.AppendLine($"<!-- All properties on this page: -->");
+        foreach (var prop in Model.Properties)
+        {
+            debugInfo.AppendLine($"<!-- Property: '{prop.Alias}' (Type: {prop.PropertyType?.EditorAlias}) -->");
+            if (prop.Alias == "favicon")
+            {
+                var pageFavicon = Model.Value<IPublishedContent>("favicon");
+                debugInfo.AppendLine($"<!-- Found 'favicon' property: {pageFavicon?.Url() ?? "NULL"} -->");
+            }
+        }
+    }
+    
+    // Итоговый результат
+    debugInfo.AppendLine($"<!-- === FINAL RESULT === -->");
+    if (favicon != null)
+    {
+        debugInfo.AppendLine($"<!-- Favicon FOUND: {favicon.Url()} -->");
+        debugInfo.AppendLine($"<!-- Favicon Name: {favicon.Name} -->");
+        debugInfo.AppendLine($"<!-- Favicon Type: {favicon.ContentType.Alias} -->");
+    }
+    else
+    {
+        debugInfo.AppendLine($"<!-- Favicon NOT FOUND -->");
+    }
+}
+
+@Html.Raw(debugInfo.ToString())
+
+<!-- Favicon -->
+@if (favicon != null)
+{
+    var faviconUrl = favicon.Url();
+    
+    if (!string.IsNullOrEmpty(faviconUrl))
+    {
+        // Проверяем расширение без Path.GetExtension
+        var isSvg = faviconUrl.EndsWith(".svg", StringComparison.OrdinalIgnoreCase) || 
+                    faviconUrl.Contains(".svg?", StringComparison.OrdinalIgnoreCase);
+        
+        if (isSvg)
+        {
+            <!-- SVG для современных браузеров -->
+            <link rel="icon" type="image/svg+xml" href="@faviconUrl" sizes="any">
+            <!-- PNG для совместимости -->
+            <link rel="icon" href="@faviconUrl?format=png&width=32&height=32" type="image/png" sizes="32x32">
+            <link rel="icon" href="@faviconUrl?format=png&width=16&height=16" type="image/png" sizes="16x16">
+            <link rel="apple-touch-icon" href="@faviconUrl?format=png&width=180&height=180">
+        }
+        else
+        {
+            <!-- Для других форматов (ICO, PNG) -->
+            <link rel="icon" href="@faviconUrl">
+        }
+    }
+}
+else
+{
+    <!-- Fallback favicon -->
+    <link href="~/favicon.ico" rel="icon">
+}

@@ -4,14 +4,15 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
 
 @{
-    var content = Model.Content;
+    // Приводим контент к правильному типу
+    var separator = Model.Content;
     var settings = Model.Settings;
     
     // Получаем значение свойства "Class"
-    var customClass = content.Value<string>("Class");
+    var customClass = separator.Value<string>("Class");
     
     // Получаем изображение
-    var image = content.Value<IPublishedContent>("BgImg");
+    var image = separator.Value<IPublishedContent>("BgImg");
 }
 
 @if (image != null)
@@ -26,11 +27,11 @@
     var backgroundModel = new BackgroundClassesModel
     {
         Settings = settings,
-        ComponentId = content.Key,
-        Prefix = "separator-bg", // Изменил префикс, так как это разделитель, а не цитата
+        ComponentId = separator.Key,
+        Prefix = "separator-bg",
         BaseClass = customClass ?? "",
         AdditionalClasses = "",
-        Tag = "div", // Изменил на div, так как это не цитата
+        Tag = "div",
         ContainerClass = "",
         Content = contentFunc
     };
