@@ -12017,3 +12017,231 @@
     position: relative;
     z-index: 2 !important;
 }
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-f2ce39be */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей под контентом - не перекрывает */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Картинки и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-f2ce39be */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей под контентом - не перекрывает */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Картинки и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* min-h-400 */
+.min-h-400 { min-height: 400px; }
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-f2ce39be */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей под контентом - не перекрывает */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.30;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .cmt,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Картинки и карточки */
+.overlay-b5855bba30164526ab003da00af8dda9 .image-wrapper,
+.overlay-b5855bba30164526ab003da00af8dda9 .card,
+.overlay-b5855bba30164526ab003da00af8dda9 img {
+    position: relative;
+    z-index: 2 !important;
+}
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 400px;
+}

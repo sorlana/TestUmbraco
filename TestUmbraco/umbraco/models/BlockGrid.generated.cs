@@ -109,5 +109,13 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[ImplementPropertyType("showLk")]
 		public virtual bool ShowLk => this.Value<bool>(_publishedValueFallback, "showLk");
+
+		///<summary>
+		/// Заголовок страницы
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("titleHomePage")]
+		public virtual string TitleHomePage => this.Value<string>(_publishedValueFallback, "titleHomePage");
 	}
 }

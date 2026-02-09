@@ -1,0 +1,20 @@
+@using Umbraco.Cms.Web.Common.PublishedModels;
+@using ContentModels = Umbraco.Cms.Web.Common.PublishedModels;
+@model IPublishedContent
+
+@{
+    bool showButtonUp = false;
+    
+    // Получаем значение свойства showButtonUp
+    if (Model is ContentModels.BlockGrid blockGridPage && blockGridPage.HasProperty("showButtonUp"))
+    {
+        showButtonUp = blockGridPage.Value<bool>("showButtonUp");
+    }
+}
+
+@if (showButtonUp)
+{
+    <div id="button-up">
+        <span class="material-symbols-outlined">keyboard_double_arrow_up</span>
+    </div>
+}
