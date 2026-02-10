@@ -29,11 +29,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://player.vimeo.com">
     <link rel="preconnect" href="https://i.vimeocdn.com">  
-    <!-- Background CSS -->
     
+    <!-- CSS FILES: ТОЛЬКО 3 ФАЙЛА -->
+    <!-- 1. backgrounds.css - динамически генерируемые фоны -->
     <link rel="stylesheet" href="~/css/backgrounds.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/images.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/lazy-load.css" asp-append-version="true" />
+    <!-- 2. style.css - все статические стили сайта -->
     <link rel="stylesheet" href="@Url.Content("~/css/style.css")" media="screen"/>
     
     <!-- Остальные стили и скрипты -->
@@ -81,17 +81,13 @@
     }
 
     <!-- Скрипт для кнопки "Наверх" -->
-    <script src="~/js/button-up.js" asp-append-version="true"></script>
-    
     <!-- Скрипт для меню (только если нужно) -->
-    @if (hasMenu || hasMenuLanding)
-    {
-        <script src="~/js/site-menu.js" asp-append-version="true"></script>
-    }
-
+    <!-- Background Config и все скрипты -->
+    
+    <!-- ВАЖНО: Сначала загружаем конфиг, потом скрипты -->
     <partial name="_BackgroundConfig" />
-    <script src="~/js/lazy-load.js" asp-append-version="true"></script>
-    <script src="~/js/video-placeholders.js" asp-append-version="true"></script>
-    <script src="~/js/lazy-backgrounds.js" asp-append-version="true"></script>
+    
+    <!-- JS FILE: ТОЛЬКО 1 ФАЙЛ -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

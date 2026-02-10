@@ -3,24 +3,29 @@
 
 @{
     var content = Model.Content;
+    var nameItem = content.HasValue("nameItem") ? content.Value<string>("nameItem") : "";
+    var idItem = content.HasValue("idItem") ? content.Value<string>("idItem") : "";
 }
 
-<div class="menu-item-landing">
-    @if (content.HasValue("title"))
+<div class="menu-item-landing" style="padding: 10px; border: 1px solid #ddd; margin: 5px 0; background: #f9f9f9;">
+    @if (!string.IsNullOrWhiteSpace(nameItem))
     {
-        <h3>@content.Value("title")</h3>
-    }
-    
-    @if (content.HasValue("description"))
-    {
-        <div class="description">
-            @Html.Raw(content.Value("description"))
+        <div style="margin-bottom: 5px;">
+            <strong>Name:</strong> @nameItem
         </div>
     }
     
-    @if (content.HasValue("link"))
+    @if (!string.IsNullOrWhiteSpace(idItem))
     {
-        var link = content.Value("link");
-        <a href="@link" class="btn btn-primary">Подробнее</a>
+        <div style="margin-bottom: 5px;">
+            <strong>ID:</strong> @idItem
+        </div>
+    }
+    
+    @if (string.IsNullOrWhiteSpace(nameItem) && string.IsNullOrWhiteSpace(idItem))
+    {
+        <div style="color: #999; font-style: italic;">
+            Нет данных. Заполните поля nameItem и idItem.
+        </div>
     }
 </div>
