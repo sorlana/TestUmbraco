@@ -1,0 +1,101 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@using TestUmbraco.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+    
+    var gridContent = content.Value<BlockGridModel>("content");
+    
+    var sectionClass = "";
+    var containerClass = "";
+    
+    if (settings != null)
+    {
+        sectionClass = settings.Value<string>("sectionClass") ?? "";
+        containerClass = settings.Value<string>("containerClass") ?? "";
+    }
+    
+    if (string.IsNullOrWhiteSpace(sectionClass))
+    {
+        sectionClass = content.Value<string>("sectionClass") ?? "";
+    }
+    
+    if (string.IsNullOrWhiteSpace(containerClass))
+    {
+        containerClass = content.Value<string>("containerClass") ?? "";
+    }
+    
+    var classRow = content.Value<string>("classRow") ?? "";
+    var bootstrap = content.Value<string>("bootstrap") ?? "";
+    var typeBlock = content.Value<bool>("typeBlock");
+    
+    var rowTag = typeBlock ? "ul" : "div";
+    var colTag = typeBlock ? "li" : "div";
+}
+
+@{
+    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? rowContentFunc = 
+        @<text>
+            @if (gridContent != null && gridContent.Any())
+            {
+                foreach (var item in gridContent)
+                {
+                    var componentAlias = item.Content.ContentType.Alias;
+                    
+                    string itemColumnClass = "";
+                    
+                    if (!string.IsNullOrWhiteSpace(bootstrap))
+                    {
+                        if (int.TryParse(bootstrap, out int columnsPerRow) && columnsPerRow > 0 && columnsPerRow <= 12)
+                        {
+                            int columnSize = 12 / columnsPerRow;
+                            itemColumnClass = $"col-{columnSize}";
+                        }
+                        else
+                        {
+                            itemColumnClass = $"col-{item.ColumnSpan}";
+                        }
+                    }
+                    else
+                    {
+                        itemColumnClass = $"col-{item.ColumnSpan}";
+                    }
+                    
+                    @Html.Raw($"<{colTag} class=\"{itemColumnClass} {classRow.Trim()}\">")
+                        @if (!string.IsNullOrWhiteSpace(containerClass))
+                        {
+                            <div class="@containerClass.Trim()">
+                                @await Html.PartialAsync($"~/Views/Partials/blockpreview/Components/{componentAlias}.cshtml", item)
+                            </div>
+                        }
+                        else
+                        {
+                            @await Html.PartialAsync($"~/Views/Partials/blockpreview/Components/{componentAlias}.cshtml", item)
+                        }
+                    @Html.Raw($"</{colTag}>")
+                }
+            }
+            else
+            {
+                @Html.Raw($"<{colTag} class=\"col-12\">")
+                    <p style="color: orange;">GridColumn: No content configured.</p>
+                @Html.Raw($"</{colTag}>")
+            }
+        </text>;
+
+    var backgroundModel = new BackgroundClassesModel
+    {
+        Settings = settings,
+        ComponentId = content.Key,
+        Prefix = "gridcolumn-bg",
+        BaseClass = "row",
+        AdditionalClasses = "",
+        Tag = rowTag,
+        ContainerClass = "",
+        Content = rowContentFunc
+    };
+
+    <partial name="_BackgroundClassesPreview" model="backgroundModel" />
+}

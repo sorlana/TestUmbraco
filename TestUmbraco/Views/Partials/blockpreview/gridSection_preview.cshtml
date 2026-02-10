@@ -1,0 +1,78 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@using TestUmbraco.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    var content = (IPublishedElement?)Model.Content;
+    var settings = (IPublishedElement?)Model.Settings;
+    
+    // Получаем вложенный BlockGrid из свойства "rows"
+    var gridRows = content?.Value<BlockGridModel>("rows");
+    
+    var sectionClass = "";
+    var containerClass = "";
+    var idSection = "";
+    
+    if (settings != null)
+    {
+        sectionClass = settings.Value<string>("sectionClass") ?? "";
+        containerClass = settings.Value<string>("containerClass") ?? "";
+        idSection = settings.Value<string>("idSection") ?? "";
+    }
+    
+    if (string.IsNullOrWhiteSpace(sectionClass))
+    {
+        sectionClass = content?.Value<string>("sectionClass") ?? "";
+    }
+    
+    if (string.IsNullOrWhiteSpace(containerClass))
+    {
+        containerClass = content?.Value<string>("containerClass") ?? "";
+    }
+    
+    if (string.IsNullOrWhiteSpace(idSection))
+    {
+        idSection = content?.Value<string>("idSection") ?? "";
+    }
+}
+
+@if (gridRows != null && gridRows.Any())
+{
+    // Создаем функцию для контента section (container)
+    Func<object, Microsoft.AspNetCore.Html.IHtmlContent>? sectionContentFunc = 
+        @<text>
+            <div class="container @containerClass.Trim()">
+                @foreach (var gridRow in gridRows)
+                {
+                    @await Html.PartialAsync($"~/Views/Partials/blockpreview/Components/{gridRow.Content.ContentType.Alias}.cshtml", gridRow)
+                }
+            </div>
+        </text>;
+
+    // Создаем модель для BackgroundClasses - используем preview версию
+    var backgroundModel = new BackgroundClassesModel
+    {
+        Settings = settings,
+        ComponentId = content?.Key,
+        Prefix = "gridsection-bg",
+        BaseClass = sectionClass.Trim(),
+        AdditionalClasses = "",
+        Tag = "section",
+        ContainerClass = "",
+        ElementId = idSection.Trim(),
+        Content = sectionContentFunc
+    };
+
+    // Рендерим section через preview версию с inline стилями
+    <partial name="_BackgroundClassesPreview" model="backgroundModel" />
+}
+else
+{
+    <section class="@sectionClass.Trim()" style="border: 2px solid red; padding: 20px; margin: 10px;">
+        <div class="container @containerClass.Trim()">
+            <p style="color: red;">
+                <strong>GridSection Error:</strong> No rows configured.
+            </p>
+        </div>
+    </section>
+}

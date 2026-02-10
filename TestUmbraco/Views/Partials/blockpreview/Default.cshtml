@@ -1,0 +1,116 @@
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<IPublishedElement>
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.PublishedContent
+
+<div style="
+    padding: 12px;
+    margin: 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: Arial, sans-serif;
+    ">
+    
+    @{
+        // В Umbraco 17 используем ItemType вместо Name для IPublishedContentType
+        var contentType = Model.ContentType;
+        var alias = contentType.Alias;
+        
+        // Получаем название типа контента через его алиас
+        var name = GetContentTypeName(alias);
+        
+        // Попробуем получить заголовок разными способами
+        var title = Model.Value<string>("title") 
+                   ?? Model.Value<string>("heading") 
+                   ?? Model.Value<string>("header")
+                   ?? Model.Value<string>("name")
+                   ?? name;
+        
+        var text = Model.Value<string>("text") 
+                  ?? Model.Value<string>("bodyText") 
+                  ?? Model.Value<string>("description")
+                  ?? Model.Value<string>("content");
+    }
+    
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+        <div style="
+            width: 32px;
+            height: 32px;
+            background: #3544b1;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            ">
+            @if (!string.IsNullOrEmpty(alias))
+            {
+                @alias.Substring(0, Math.Min(1, alias.Length)).ToUpper()
+            }
+        </div>
+        <div>
+            <div style="font-weight: bold; color: #3544b1; font-size: 14px;">
+                @title
+            </div>
+            <div style="font-size: 11px; color: #666;">
+                @alias
+            </div>
+        </div>
+    </div>
+    
+    @if (!string.IsNullOrEmpty(text))
+    {
+        var cleanText = System.Text.RegularExpressions.Regex.Replace(text, "<.*?>", " ");
+        var previewText = cleanText.Length > 100 ? cleanText.Substring(0, 100) + "..." : cleanText;
+        
+        <div style="
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 4px;
+            border-left: 3px solid #3544b1;
+            ">
+            @previewText
+        </div>
+    }
+    
+    @if (Model.Value("image") != null || Model.Value("media") != null || Model.Value("picture") != null)
+    {
+        <div style="margin-top: 8px; font-size: 12px; color: #666; display: flex; align-items: center; gap: 5px;">
+            <span style="font-size: 14px;">🖼️</span>
+            <span>Изображение</span>
+        </div>
+    }
+</div>
+
+@functions {
+    private string GetContentTypeName(string alias)
+    {
+        // Преобразуем alias в читаемое имя
+        if (string.IsNullOrEmpty(alias))
+            return "Блок";
+            
+        // Убираем "Block" из конца
+        var name = alias.Replace("Block", "");
+        
+        // Разделяем CamelCase на слова
+        name = System.Text.RegularExpressions.Regex.Replace(
+            name, 
+            "(\\B[A-Z])", 
+            " $1"
+        );
+        
+        // Делаем первую букву заглавной
+        if (!string.IsNullOrEmpty(name))
+        {
+            name = char.ToUpper(name[0]) + name.Substring(1);
+        }
+        
+        return name;
+    }
+}

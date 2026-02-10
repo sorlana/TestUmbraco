@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
+    <!-- ВЕРНИТЕ ОБРАТНО net10.0 - это правильно! -->
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <CompressionEnabled>false</CompressionEnabled>
     
     <!-- Для SourceCodeAuto должно быть true -->
     <RazorCompileOnBuild>true</RazorCompileOnBuild>
@@ -43,6 +43,8 @@
 
     <PackageReference Include="Umbraco.Cms.Persistence.SqlServer" Version="17.1.0" />
 
+    <PackageReference Include="Umbraco.Community.BlockPreview" Version="5.2.1" />
+
     <PackageReference Include="Umbraco.Community.WysiwgUmbracoCommunityExtensions" Version="17.0.0" />
 
     <PackageReference Include="uSync" Version="17.0.2" />
@@ -53,6 +55,7 @@
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.14.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
 
+    <!-- Оставьте только ОДИН Umbraco.Cms -->
     <PackageReference Include="Umbraco.Cms" Version="17.1.0" />
 
     <PackageReference Include="Vokseverk.ColorSelector" Version="6.0.0" />

@@ -1,0 +1,11 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockListModel>
+
+@if (Model?.Any() == true)
+{
+    foreach (var item in Model)
+    {
+        var contentAlias = item.Content.ContentType.Alias;
+        await Html.PartialAsync($"~/Views/Partials/blocklist/Components/{contentAlias}.cshtml", item);
+    }
+}

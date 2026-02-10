@@ -1,0 +1,239 @@
+/* =========================================== */
+/* BACKOFFICE PREVIEW STYLES - ULTRA PRIORITY  */
+/* Исправленные стили для Block Preview       */
+/* =========================================== */
+
+/* ============================================ */
+/* OVERLAY - МАКСИМАЛЬНЫЙ ПРИОРИТЕТ             */
+/* ============================================ */
+
+/* КОНКРЕТНЫЕ классы overlay - ВСЕ свойства */
+/* БЕЗ видео: z-index: 0 (над фоном, под контентом) */
+/* С видео: z-index: -1 (над видео, под контентом) - см. секцию ВИДЕО ФОН */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  visibility: visible !important;
+  background-color: #2b00ff !important;
+  opacity: 0.30 !important;
+}
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  visibility: visible !important;
+  background-color: #2b00ff !important;
+  opacity: 0.65 !important;
+}
+
+/* Общее правило для ВСЕХ overlay - только z-index */
+[class^="overlay-"]::before,
+[class*=" overlay-"]::before {
+  z-index: 0 !important;
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  visibility: visible !important;
+}
+
+/* Контейнеры overlay */
+.overlay-b5855bba30164526ab003da00af8dda9,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2,
+[class^="overlay-"],
+[class*=" overlay-"] {
+  position: relative !important;
+}
+
+/* Контент над overlay */
+[class^="overlay-"] > *,
+[class*=" overlay-"] > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* ============================================ */
+/* ВИДЕО ФОН С OVERLAY                          */
+/* Правильная структура z-index:                */
+/* Видео: -2, Overlay: -1, Контент: 1           */
+/* ============================================ */
+
+/* Конкретный класс видео */
+.bg-video-cfcec231.lazy-video .video-container {
+  z-index: -2 !important;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+  z-index: -2 !important;
+}
+
+.bg-video-cfcec231.lazy-video .video-placeholder {
+  z-index: -2 !important;
+}
+
+/* Overlay для конкретного видео класса - МЕЖДУ видео и контентом */
+.bg-video-cfcec231.lazy-video.overlay-b5855bba30164526ab003da00af8dda9::before,
+.bg-video-cfcec231.lazy-video.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+  z-index: -1 !important;
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  visibility: visible !important;
+}
+
+/* Общие правила для ВСЕХ видео фонов */
+[class^="bg-video-"] .video-container,
+[class*=" bg-video-"] .video-container,
+.lazy-video .video-container {
+  z-index: -2 !important;
+}
+
+[class^="bg-video-"] .video-bg-iframe,
+[class*=" bg-video-"] .video-bg-iframe,
+.lazy-video .video-bg-iframe {
+  z-index: -2 !important;
+}
+
+[class^="bg-video-"] .video-placeholder,
+[class*=" bg-video-"] .video-placeholder,
+.lazy-video .video-placeholder {
+  z-index: -2 !important;
+}
+
+/* Если есть И bg-video И overlay класс - overlay МЕЖДУ видео и контентом */
+[class^="bg-video-"][class*="overlay-"]::before,
+[class*=" bg-video-"][class*="overlay-"]::before {
+  z-index: -1 !important;
+}
+
+/* ============================================ */
+/* BACKOFFICE: PLACEHOLDER ВМЕСТО ВИДЕО         */
+/* ============================================ */
+
+/* В backoffice placeholder всегда видим и не исчезает */
+.umb-block-grid__layout-item .video-placeholder,
+.umb-block-list__item .video-placeholder {
+  opacity: 1 !important;
+  display: block !important;
+  transition: none !important;
+}
+
+/* В backoffice iframe скрыт */
+.umb-block-grid__layout-item .video-bg-iframe,
+.umb-block-list__item .video-bg-iframe {
+  display: none !important;
+}
+
+/* ============================================ */
+/* ЦВЕТНЫЕ И ГРАДИЕНТНЫЕ ФОНЫ                   */
+/* ============================================ */
+
+[class^="bg-color-"],
+[class*=" bg-color-"],
+[class^="bg-gradient-"],
+[class*=" bg-gradient-"],
+[class^="bg-media-"],
+[class*=" bg-media-"] {
+  position: relative !important;
+  display: block !important;
+}
+
+/* ============================================ */
+/* ОБЩИЕ ПРАВИЛА                                */
+/* ============================================ */
+
+[class^="bg-"]::before,
+[class*=" bg-"]::before,
+[class^="bg-"]::after,
+[class*=" bg-"]::after {
+  z-index: 0 !important;
+}
+
+/* Контент над фонами */
+[class^="bg-"] > *,
+[class*=" bg-"] > * {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* ============================================ */
+/* UMBRACO КОНТЕЙНЕРЫ                           */
+/* ============================================ */
+
+.umb-block-grid__layout-item,
+.umb-block-grid__area-container,
+.umb-block-grid__block,
+.umb-block-list__item,
+.umb-block-list__block {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* ============================================ */
+/* МАКСИМАЛЬНАЯ СПЕЦИФИЧНОСТЬ                   */
+/* ============================================ */
+
+section.overlay-b5855bba30164526ab003da00af8dda9::before,
+div.overlay-b5855bba30164526ab003da00af8dda9::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: 0 !important;
+  visibility: visible !important;
+  background-color: #2b00ff !important;
+  opacity: 0.30 !important;
+}
+
+section.overlay-95f866a456324d2fa89fe3ae8632b6a2::before,
+div.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  z-index: 0 !important;
+  visibility: visible !important;
+  background-color: #2b00ff !important;
+  opacity: 0.65 !important;
+}
+
+section[class^="overlay-"]::before,
+div[class^="overlay-"]::before,
+section[class*=" overlay-"]::before,
+div[class*=" overlay-"]::before {
+  z-index: 0 !important;
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  visibility: visible !important;
+}
+
+section[class^="overlay-"] > *,
+div[class^="overlay-"] > *,
+section[class*=" overlay-"] > *,
+div[class*=" overlay-"] > * {
+  z-index: 1 !important;
+  position: relative !important;
+}

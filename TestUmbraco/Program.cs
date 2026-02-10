@@ -7,6 +7,7 @@ using reCAPTCHA.AspNetCore;
 using TestUmbraco.Services;
 using TestUmbraco.Helpers;
 using TestUmbraco.Models.Configuration;
+using Umbraco.Community.BlockPreview.Extensions; // Добавьте эту строку
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,7 +35,8 @@ builder.Services.AddResponseCompression(options =>
 builder.Services.AddDomain(builder.Configuration);
 builder.Services.AddServices();
 
-// 6. Umbraco
+
+// 7. Umbraco
 builder.Services.AddUmbraco(builder.Environment, builder.Configuration)
     .AddBackOffice()
     .AddWebsite()
@@ -42,7 +44,7 @@ builder.Services.AddUmbraco(builder.Environment, builder.Configuration)
     .AddComposers()
     .Build();
 
-// 7. Дополнительные сервисы
+// 8. Дополнительные сервисы
 builder.Services.AddRecaptcha(builder.Configuration.GetSection("RecaptchaSettings"));
 builder.Services.AddNotyf(config => 
 {
@@ -51,7 +53,7 @@ builder.Services.AddNotyf(config =>
     config.Position = NotyfPosition.BottomRight;
 });
 
-// 8. Настройка кэширования статических файлов
+// 9. Настройка кэширования статических файлов
 builder.Services.Configure<StaticFileOptions>(options =>
 {
     options.OnPrepareResponse = ctx =>

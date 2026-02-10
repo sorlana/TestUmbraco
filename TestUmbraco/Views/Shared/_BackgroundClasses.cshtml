@@ -62,10 +62,21 @@ else
 
 @if (backgroundResult?.Type == BackgroundType.Video && !string.IsNullOrEmpty(backgroundResult.VideoId))
 {
-    <div class="video-container">
-        @* Видео для десктопа *@
+    var videoId = Guid.NewGuid().ToString("N");
+    <div class="video-container" data-video-container="@videoId">
+        @* Placeholder/poster для быстрой загрузки *@
+        @if (backgroundResult.UseVideoPlaceholder && !string.IsNullOrEmpty(backgroundResult.VideoPlaceholder))
+        {
+            <div class="video-placeholder" 
+                 data-video-placeholder="@videoId"
+                 style="background-image: url('@backgroundResult.VideoPlaceholder'); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: -2;">
+            </div>
+        }
+        
+        @* Видео для десктопа с lazy loading *@
         <iframe class="video-bg-iframe" 
-                src="https://player.vimeo.com/video/@backgroundResult.VideoId?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1" 
+                data-video-iframe="@videoId"
+                data-src="https://player.vimeo.com/video/@backgroundResult.VideoId?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1"
                 frameborder="0" 
                 allow="autoplay; fullscreen" 
                 allowfullscreen>
@@ -79,6 +90,65 @@ else
             </div>
         }
     </div>
+    
+    @* JavaScript для lazy loading видео *@
+    <script>
+        (function() {
+            var videoId = '@videoId';
+            var container = document.querySelector('[data-video-container="' + videoId + '"]');
+            if (!container) return;
+            
+            var iframe = container.querySelector('[data-video-iframe="' + videoId + '"]');
+            var placeholder = container.querySelector('[data-video-placeholder="' + videoId + '"]');
+            
+            if (!iframe) return;
+            
+            // Проверяем, находимся ли мы в iframe (backoffice)
+            var isInIframe = window.self !== window.top;
+            
+            if (isInIframe) {
+                // В backoffice НЕ загружаем видео, показываем только placeholder
+                iframe.style.display = 'none';
+                if (placeholder) {
+                    placeholder.style.opacity = '1';
+                    placeholder.style.display = 'block';
+                }
+                return;
+            }
+            
+            // На фронтенде загружаем видео
+            function loadVideo() {
+                iframe.src = iframe.getAttribute('data-src');
+                
+                if (placeholder) {
+                    iframe.addEventListener('load', function() {
+                        setTimeout(function() {
+                            placeholder.style.opacity = '0';
+                        }, 500);
+                    });
+                }
+            }
+            
+            // Используем IntersectionObserver для lazy loading
+            if ('IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            loadVideo();
+                            observer.unobserve(container);
+                        }
+                    });
+                }, { 
+                    rootMargin: '200px',
+                    threshold: 0.01 
+                });
+                
+                observer.observe(container);
+            } else {
+                loadVideo();
+            }
+        })();
+    </script>
 }
 
 @if (!string.IsNullOrWhiteSpace(containerClass))

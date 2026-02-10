@@ -1,0 +1,7 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    // Для preview просто рендерим основной компонент
+    await Html.PartialAsync("blockgrid/Components/separator", Model);
+}

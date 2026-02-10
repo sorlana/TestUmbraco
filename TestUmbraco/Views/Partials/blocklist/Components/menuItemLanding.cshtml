@@ -1,0 +1,26 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockListItem>
+
+@{
+    var content = Model.Content;
+}
+
+<div class="menu-item-landing">
+    @if (content.HasValue("title"))
+    {
+        <h3>@content.Value("title")</h3>
+    }
+    
+    @if (content.HasValue("description"))
+    {
+        <div class="description">
+            @Html.Raw(content.Value("description"))
+        </div>
+    }
+    
+    @if (content.HasValue("link"))
+    {
+        var link = content.Value("link");
+        <a href="@link" class="btn btn-primary">Подробнее</a>
+    }
+</div>
