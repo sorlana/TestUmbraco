@@ -64,7 +64,7 @@ else
 {
     var videoId = Guid.NewGuid().ToString("N");
     <div class="video-container" data-video-container="@videoId">
-        @* Placeholder/poster для быстрой загрузки *@
+        @* Единый placeholder для десктопа и мобильных *@
         @if (backgroundResult.UseVideoPlaceholder && !string.IsNullOrEmpty(backgroundResult.VideoPlaceholder))
         {
             <div class="video-placeholder" 
@@ -81,14 +81,6 @@ else
                 allow="autoplay; fullscreen" 
                 allowfullscreen>
         </iframe>
-        
-        @* Placeholder для мобильных устройств *@
-        @if (backgroundResult.UseVideoPlaceholder && !string.IsNullOrEmpty(backgroundResult.VideoPlaceholder))
-        {
-            <div class="video-placeholder-mobile" 
-                 data-bg-image="@backgroundResult.VideoPlaceholder">
-            </div>
-        }
     </div>
     
     @* JavaScript для lazy loading видео *@
@@ -112,16 +104,6 @@ else
                 placeholder.classList.add('video-placeholder-active');
             }
             
-            // Устанавливаем background-image для mobile placeholder
-            var mobilePlaceholder = container.querySelector('.video-placeholder-mobile');
-            if (mobilePlaceholder) {
-                var mobileBgImage = mobilePlaceholder.getAttribute('data-bg-image');
-                if (mobileBgImage) {
-                    mobilePlaceholder.style.backgroundImage = 'url(' + mobileBgImage + ')';
-                }
-                mobilePlaceholder.classList.add('video-placeholder-mobile-active');
-            }
-            
             // Проверяем, находимся ли мы в iframe (backoffice)
             var isInIframe = window.self !== window.top;
             
@@ -136,14 +118,48 @@ else
             
             // На фронтенде загружаем видео
             function loadVideo() {
-                iframe.src = iframe.getAttribute('data-src');
+                var dataSrc = iframe.getAttribute('data-src');
+                console.log('[Video Debug] Loading video:', videoId, 'src:', dataSrc);
+                iframe.src = dataSrc;
+                
+                // Проверяем видимость iframe
+                var iframeStyles = window.getComputedStyle(iframe);
+                console.log('[Video Debug] Iframe styles:', {
+                    display: iframeStyles.display,
+                    zIndex: iframeStyles.zIndex,
+                    opacity: iframeStyles.opacity,
+                    visibility: iframeStyles.visibility
+                });
                 
                 if (placeholder) {
-                    iframe.addEventListener('load', function() {
-                        setTimeout(function() {
-                            placeholder.classList.add('video-placeholder-hidden');
-                        }, 500);
-                    });
+                    // Слушаем сообщения от Vimeo Player API
+                    var messageHandler = function(event) {
+                        if (event.origin !== 'https://player.vimeo.com') return;
+                        
+                        try {
+                            var data = JSON.parse(event.data);
+                            console.log('[Video Debug] Vimeo event:', data.event);
+                            // Скрываем placeholder когда видео начало воспроизводиться
+                            if (data.event === 'ready' || data.event === 'play' || data.event === 'playProgress') {
+                                console.log('[Video Debug] Hiding placeholder after event:', data.event);
+                                setTimeout(function() {
+                                    placeholder.classList.add('video-placeholder-hidden');
+                                    window.removeEventListener('message', messageHandler);
+                                }, 1000);
+                            }
+                        } catch (e) {
+                            // Игнорируем ошибки парсинга
+                        }
+                    };
+                    
+                    window.addEventListener('message', messageHandler);
+                    
+                    // Fallback: скрываем через 5 секунд если не получили событие от Vimeo
+                    setTimeout(function() {
+                        console.log('[Video Debug] Fallback: hiding placeholder after 5s');
+                        placeholder.classList.add('video-placeholder-hidden');
+                        window.removeEventListener('message', messageHandler);
+                    }, 5000);
                 }
             }
             

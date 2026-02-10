@@ -11,13 +11,16 @@ namespace TestUmbraco.Controllers
     public class MediaCacheController : ControllerBase
     {
         private readonly IMediaCacheService _mediaCacheService;
+        private readonly IStaticCssGeneratorService _staticCssGenerator;
         private readonly ILoggingService _loggingService;
 
         public MediaCacheController(
             IMediaCacheService mediaCacheService,
+            IStaticCssGeneratorService staticCssGenerator,
             ILoggingService loggingService)
         {
             _mediaCacheService = mediaCacheService;
+            _staticCssGenerator = staticCssGenerator;
             _loggingService = loggingService;
         }
 
@@ -77,6 +80,26 @@ namespace TestUmbraco.Controllers
             catch (Exception ex)
             {
                 _loggingService.LogError<MediaCacheController>("Error clearing all media cache", ex);
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("regenerate-css")]
+        public async Task<IActionResult> RegenerateCss()
+        {
+            try
+            {
+                await _staticCssGenerator.GenerateBackgroundCssFileAsync();
+                
+                return Ok(new 
+                { 
+                    success = true, 
+                    message = "CSS file regenerated successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                _loggingService.LogError<MediaCacheController>("Error regenerating CSS", ex);
                 return StatusCode(500, new { success = false, message = ex.Message });
             }
         }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using Umbraco.Cms.Core.Services;
@@ -14,6 +15,7 @@ namespace TestUmbraco.Services
         private readonly IMediaService _mediaService;
         private readonly IMediaCacheService _mediaCacheService;
         private readonly ILoggingService _loggingService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _cssFilePath;
         private readonly ConcurrentDictionary<string, string> _styleCache = new();
         private readonly object _fileLock = new();
@@ -22,12 +24,14 @@ namespace TestUmbraco.Services
             IWebHostEnvironment env,
             IMediaService mediaService,
             IMediaCacheService mediaCacheService,
-            ILoggingService loggingService)
+            ILoggingService loggingService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _env = env;
             _mediaService = mediaService;
             _mediaCacheService = mediaCacheService;
             _loggingService = loggingService;
+            _httpContextAccessor = httpContextAccessor;
             
             // Путь к статическому CSS файлу
             _cssFilePath = Path.Combine(_env.WebRootPath, "css", "backgrounds.css");
@@ -94,7 +98,7 @@ namespace TestUmbraco.Services
                     cssBuilder.AppendLine("  left: 0;");
                     cssBuilder.AppendLine("  width: 100%;");
                     cssBuilder.AppendLine("  height: 100%;");
-                    cssBuilder.AppendLine("  z-index: 0;");
+                    cssBuilder.AppendLine("  z-index: -2;");
                     cssBuilder.AppendLine("  pointer-events: none;");
                     cssBuilder.AppendLine("}");
                     cssBuilder.AppendLine();
@@ -109,7 +113,7 @@ namespace TestUmbraco.Services
                     cssBuilder.AppendLine("  height: 56.25vw;");
                     cssBuilder.AppendLine("  transform: translate(-50%, -50%);");
                     cssBuilder.AppendLine("  border: 0;");
-                    cssBuilder.AppendLine("  z-index: 0;");
+                    cssBuilder.AppendLine("  z-index: -1;");
                     cssBuilder.AppendLine("  pointer-events: none;");
                     cssBuilder.AppendLine("}");
                     cssBuilder.AppendLine();
@@ -122,7 +126,46 @@ namespace TestUmbraco.Services
                     cssBuilder.AppendLine("  left: 0;");
                     cssBuilder.AppendLine("  width: 100%;");
                     cssBuilder.AppendLine("  height: 100%;");
-                    cssBuilder.AppendLine("  z-index: -1;");
+                    cssBuilder.AppendLine("  z-index: -2;");
+                    cssBuilder.AppendLine("  transition: opacity 0.5s ease-in-out;");
+                    cssBuilder.AppendLine("  opacity: 0;");
+                    cssBuilder.AppendLine("}");
+                    cssBuilder.AppendLine();
+                    
+                    cssBuilder.AppendLine("/* Активный placeholder - показываем */");
+                    cssBuilder.AppendLine(".lazy-video .video-placeholder-active {");
+                    cssBuilder.AppendLine("  opacity: 1;");
+                    cssBuilder.AppendLine("}");
+                    cssBuilder.AppendLine();
+                    
+                    cssBuilder.AppendLine("/* Скрытый placeholder после загрузки видео */");
+                    cssBuilder.AppendLine(".lazy-video .video-placeholder-hidden {");
+                    cssBuilder.AppendLine("  opacity: 0;");
+                    cssBuilder.AppendLine("}");
+                    cssBuilder.AppendLine();
+                    
+                    cssBuilder.AppendLine("/* Видимый placeholder в backoffice */");
+                    cssBuilder.AppendLine(".lazy-video .video-placeholder-visible {");
+                    cssBuilder.AppendLine("  opacity: 1 !important;");
+                    cssBuilder.AppendLine("  display: block !important;");
+                    cssBuilder.AppendLine("}");
+                    cssBuilder.AppendLine();
+                    
+                    cssBuilder.AppendLine("/* Скрытое видео в backoffice */");
+                    cssBuilder.AppendLine(".video-hidden {");
+                    cssBuilder.AppendLine("  display: none !important;");
+                    cssBuilder.AppendLine("}");
+                    cssBuilder.AppendLine();
+                    
+                    cssBuilder.AppendLine("/* На мобильных устройствах placeholder всегда видим */");
+                    cssBuilder.AppendLine("@media (max-width: 1024px) {");
+                    cssBuilder.AppendLine("  .lazy-video .video-placeholder {");
+                    cssBuilder.AppendLine("    opacity: 1 !important;");
+                    cssBuilder.AppendLine("  }");
+                    cssBuilder.AppendLine("  ");
+                    cssBuilder.AppendLine("  .lazy-video .video-bg-iframe {");
+                    cssBuilder.AppendLine("    display: none;");
+                    cssBuilder.AppendLine("  }");
                     cssBuilder.AppendLine("}");
                     cssBuilder.AppendLine();
                     
@@ -396,12 +439,14 @@ namespace TestUmbraco.Services
                                 RegexOptions.Singleline);
                             
                             content = content.Replace(sectionMatch.Value, updatedSectionContent);
+                            _loggingService.LogInformation<StaticCssGeneratorService>($"Updated CSS section: {sectionId} in {sectionName}");
                         }
                         else
                         {
                             // Добавляем новую подсекцию в конец секции
                             var updatedSectionContent = sectionContent.TrimEnd() + $"\n\n/* {sectionId} */\n{css}\n";
                             content = content.Replace(sectionMatch.Value, updatedSectionContent);
+                            _loggingService.LogInformation<StaticCssGeneratorService>($"Added new CSS section: {sectionId} in {sectionName}");
                         }
                     }
                     else
@@ -413,9 +458,15 @@ namespace TestUmbraco.Services
                                        $"\n/* {sectionId} */\n{css}\n";
                         
                         content += newSection;
+                        _loggingService.LogInformation<StaticCssGeneratorService>($"Created new section: {sectionName} with {sectionId}");
                     }
                     
                     System.IO.File.WriteAllText(_cssFilePath, content, Encoding.UTF8);
+                    _loggingService.LogInformation<StaticCssGeneratorService>($"CSS file updated: {_cssFilePath}");
+                    
+                    // Добавляем timestamp в конец файла чтобы изменить его hash для cache busting
+                    var timestamp = $"\n/* Updated: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} UTC */\n";
+                    System.IO.File.AppendAllText(_cssFilePath, timestamp, Encoding.UTF8);
                 }
                 catch (Exception ex)
                 {

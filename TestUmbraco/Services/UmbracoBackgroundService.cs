@@ -235,36 +235,13 @@ namespace TestUmbraco.Services
     height: 56.25vw;
     transform: translate(-50%, -50%);
     border: 0;
-    z-index: -2;
+    z-index: -1;
     pointer-events: none;
-}}
-
-.{videoClass}.lazy-video .video-placeholder-mobile {{
-    background-size: cover;
-    background-position: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    display: none;
-}}
-
-/* На мобильных и планшетах (до 1024px) показываем placeholder вместо видео */
-@media (max-width: 1024px) {{
-    .{videoClass}.lazy-video .video-bg-iframe {{
-        display: none;
-    }}
-    
-    .{videoClass}.lazy-video .video-placeholder-mobile {{
-        display: block;
-    }}
 }}
 
 /* Overlay должен быть над видео, но под контентом */
 .{videoClass}.lazy-video::before {{
-    z-index: -1 !important;
+    z-index: 0 !important;
 }}";
                         
                         await _staticCssGenerator.AddInlineStyleAsync(css, "video");
@@ -301,12 +278,24 @@ namespace TestUmbraco.Services
             var cssBuilder = new StringBuilder();
             
             // Определяем z-index в зависимости от типа фона
-            // Если есть видео: z-index: -1 (между видео и контентом)
+            // Если есть видео: z-index: 0 (над видео, но под контентом)
             // Если фоновое изображение/цвет/градиент: z-index: 1 (над фоном, под контентом)
             var bgType = settings.Value<string>("bg")?.Trim();
             var hasVideo = bgType == "Видео" || bgType == "Video" || bgType == "бХДЕН";
-            var overlayZIndex = hasVideo ? -1 : 1;
+            var overlayZIndex = hasVideo ? 0 : 1;
             var contentZIndex = hasVideo ? 1 : 2;
+            
+            _loggingService.LogInformation<UmbracoBackgroundService>(
+                $"AddOverlayStyles: componentId={componentId}, bgType={bgType}, hasVideo={hasVideo}, overlayZIndex={overlayZIndex}");
+            
+            // Отладка: выводим все свойства settings
+            if (settings != null)
+            {
+                var props = settings.Properties.Select(p => 
+                    $"{p.Alias}={p.GetValue()}").ToList();
+                _loggingService.LogInformation<UmbracoBackgroundService>(
+                    $"Settings properties: {string.Join(", ", props)}");
+            }
             
             // Добавляем основу: оверлей должен быть под контентом, но над фоном/видео
             cssBuilder.Append($@"
@@ -392,14 +381,67 @@ namespace TestUmbraco.Services
             }
             
             // Прозрачность оверлея
-            if (settings.HasProperty("opacityOverlay") && settings.HasValue("opacityOverlay"))
+            _loggingService.LogInformation<UmbracoBackgroundService>(
+                $"Checking opacity: HasProperty(opacityOverlay)={settings.HasProperty("opacityOverlay")}, HasValue={settings.HasValue("opacityOverlay")}");
+            
+            if (settings.HasProperty("opacityOverlay"))
             {
-                var opacityValue = settings.Value<decimal>("opacityOverlay");
-                var opacity = opacityValue / 100.0m;
-                cssBuilder.Append($@"
+                // Логируем сырое значение
+                var rawValue = settings.Value("opacityOverlay");
+                _loggingService.LogInformation<UmbracoBackgroundService>(
+                    $"Overlay opacity RAW: value={rawValue}, type={rawValue?.GetType().Name ?? "null"}");
+                
+                // Пробуем разные типы данных
+                int opacityValue = 0;
+                
+                try
+                {
+                    opacityValue = settings.Value<int>("opacityOverlay");
+                }
+                catch
+                {
+                    try
+                    {
+                        opacityValue = (int)settings.Value<decimal>("opacityOverlay");
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            var strValue = settings.Value<string>("opacityOverlay");
+                            int.TryParse(strValue, out opacityValue);
+                        }
+                        catch
+                        {
+                            opacityValue = 0;
+                        }
+                    }
+                }
+                
+                // Если значение 0, НЕ генерируем opacity вообще
+                // Это позволит использовать старые значения из CSS
+                if (opacityValue > 0)
+                {
+                    var opacity = opacityValue / 100.0m;
+                    
+                    _loggingService.LogInformation<UmbracoBackgroundService>(
+                        $"Overlay opacity: opacityValue={opacityValue}, opacity={opacity}, overlayClass={overlayClass}");
+                    
+                    cssBuilder.Append($@"
 .{overlayClass}::before {{
     opacity: {opacity.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)};
 }}");
+                }
+                else
+                {
+                    _loggingService.LogWarning<UmbracoBackgroundService>(
+                        $"Overlay opacity is 0, skipping opacity generation for {overlayClass}");
+                }
+            }
+            else
+            {
+                _loggingService.LogWarning<UmbracoBackgroundService>(
+                    $"Overlay opacity NOT found: HasProperty={settings.HasProperty("opacityOverlay")}, overlayClass={overlayClass}");
             }
             
             // Добавляем стили для правильного позиционирования контента над оверлеем

@@ -98,10 +98,12 @@ app.UseStaticFiles(new StaticFileOptions
         var path = ctx.File.Name;
         if (path.Contains("backgrounds.css", StringComparison.OrdinalIgnoreCase))
         {
-            // Для backgrounds.css используем "immutable" - файл не меняется, пока не изменится его имя
+            // Для backgrounds.css отключаем кеш - файл часто обновляется
             ctx.Context.Response.Headers.Append(
                 "Cache-Control",
-                "public, max-age=604800, immutable");
+                "no-cache, no-store, must-revalidate");
+            ctx.Context.Response.Headers.Append("Pragma", "no-cache");
+            ctx.Context.Response.Headers.Append("Expires", "0");
         }
     }
 });
