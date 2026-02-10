@@ -3,6 +3,14 @@
 /* Исправленные стили для Block Preview       */
 /* =========================================== */
 
+/* КРИТИЧНО: Переопределяем z-index: -1 из backgrounds.css */
+.overlay-b5855bba30164526ab003da00af8dda9::before,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before,
+[class^="overlay-"]::before,
+[class*=" overlay-"]::before {
+  z-index: 1 !important;
+}
+
 /* ============================================ */
 /* OVERLAY - МАКСИМАЛЬНЫЙ ПРИОРИТЕТ             */
 /* ============================================ */
@@ -10,7 +18,9 @@
 /* КОНКРЕТНЫЕ классы overlay - ВСЕ свойства */
 /* БЕЗ видео: z-index: 0 (над фоном, под контентом) */
 /* С видео: z-index: -1 (над видео, под контентом) - см. секцию ВИДЕО ФОН */
-.overlay-b5855bba30164526ab003da00af8dda9::before {
+
+/* Overlay БЕЗ видео - z-index: 1 (НАД фоновым изображением) */
+.overlay-b5855bba30164526ab003da00af8dda9:not([class*="bg-video"])::before {
   content: '' !important;
   display: block !important;
   position: absolute !important;
@@ -20,14 +30,14 @@
   bottom: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  z-index: 0 !important;
+  z-index: 1 !important;
   pointer-events: none !important;
   visibility: visible !important;
   background-color: #2b00ff !important;
   opacity: 0.30 !important;
 }
 
-.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+.overlay-95f866a456324d2fa89fe3ae8632b6a2:not([class*="bg-video"])::before {
   content: '' !important;
   display: block !important;
   position: absolute !important;
@@ -37,7 +47,7 @@
   bottom: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  z-index: 0 !important;
+  z-index: 1 !important;
   pointer-events: none !important;
   visibility: visible !important;
   background-color: #2b00ff !important;
@@ -47,11 +57,17 @@
 /* Общее правило для ВСЕХ overlay - только z-index */
 [class^="overlay-"]::before,
 [class*=" overlay-"]::before {
-  z-index: 0 !important;
+  z-index: 1 !important;
   content: '' !important;
   display: block !important;
   position: absolute !important;
   visibility: visible !important;
+}
+
+/* КРИТИЧНО: Переопределяем z-index из backgrounds.css */
+.overlay-b5855bba30164526ab003da00af8dda9::before,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+  z-index: 1 !important;
 }
 
 /* Контейнеры overlay */
@@ -66,7 +82,7 @@
 [class^="overlay-"] > *,
 [class*=" overlay-"] > * {
   position: relative !important;
-  z-index: 1 !important;
+  z-index: 2 !important;
 }
 
 /* ============================================ */
@@ -90,7 +106,9 @@
 
 /* Overlay для конкретного видео класса - МЕЖДУ видео и контентом */
 .bg-video-cfcec231.lazy-video.overlay-b5855bba30164526ab003da00af8dda9::before,
-.bg-video-cfcec231.lazy-video.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+.bg-video-cfcec231.lazy-video.overlay-95f866a456324d2fa89fe3ae8632b6a2::before,
+.bg-video-cfcec231.overlay-b5855bba30164526ab003da00af8dda9::before,
+.bg-video-cfcec231.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
   z-index: -1 !important;
   content: '' !important;
   display: block !important;
@@ -103,6 +121,16 @@
   height: 100% !important;
   pointer-events: none !important;
   visibility: visible !important;
+  background-color: #2b00ff !important;
+}
+
+/* Opacity для overlay с видео */
+.bg-video-cfcec231.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+  opacity: 0.65 !important;
+}
+
+.bg-video-cfcec231.overlay-b5855bba30164526ab003da00af8dda9::before {
+  opacity: 0.30 !important;
 }
 
 /* Общие правила для ВСЕХ видео фонов */
@@ -128,6 +156,12 @@
 [class^="bg-video-"][class*="overlay-"]::before,
 [class*=" bg-video-"][class*="overlay-"]::before {
   z-index: -1 !important;
+}
+
+/* Секции с видео и overlay должны иметь position: relative */
+[class^="bg-video-"][class*="overlay-"],
+[class*=" bg-video-"][class*="overlay-"] {
+  position: relative !important;
 }
 
 /* ============================================ */
@@ -177,7 +211,7 @@
 [class^="bg-"] > *,
 [class*=" bg-"] > * {
   position: relative !important;
-  z-index: 1 !important;
+  z-index: 2 !important;
 }
 
 /* ============================================ */
@@ -197,23 +231,23 @@
 /* МАКСИМАЛЬНАЯ СПЕЦИФИЧНОСТЬ                   */
 /* ============================================ */
 
-section.overlay-b5855bba30164526ab003da00af8dda9::before,
-div.overlay-b5855bba30164526ab003da00af8dda9::before {
+section.overlay-b5855bba30164526ab003da00af8dda9:not([class*="bg-video"])::before,
+div.overlay-b5855bba30164526ab003da00af8dda9:not([class*="bg-video"])::before {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  z-index: 0 !important;
+  z-index: 1 !important;
   visibility: visible !important;
   background-color: #2b00ff !important;
   opacity: 0.30 !important;
 }
 
-section.overlay-95f866a456324d2fa89fe3ae8632b6a2::before,
-div.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+section.overlay-95f866a456324d2fa89fe3ae8632b6a2:not([class*="bg-video"])::before,
+div.overlay-95f866a456324d2fa89fe3ae8632b6a2:not([class*="bg-video"])::before {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  z-index: 0 !important;
+  z-index: 1 !important;
   visibility: visible !important;
   background-color: #2b00ff !important;
   opacity: 0.65 !important;
@@ -234,6 +268,6 @@ section[class^="overlay-"] > *,
 div[class^="overlay-"] > *,
 section[class*=" overlay-"] > *,
 div[class*=" overlay-"] > * {
-  z-index: 1 !important;
+  z-index: 2 !important;
   position: relative !important;
 }

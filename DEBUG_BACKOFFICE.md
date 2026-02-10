@@ -9,10 +9,12 @@
 - ✅ Overlay отображаются с правильным цветом и прозрачностью
 - ✅ Overlay НАД видео фоном (между видео и контентом)
 - ✅ `backoffice-preview.css` загружается и применяется
-- ✅ Lazy loading видео с placeholder для быстрой загрузки
-- ✅ Плавный переход от placeholder к видео
+- ✅ Lazy loading видео с placeholder для быстрой загрузки (только на фронтенде)
+- ✅ Плавный переход от placeholder к видео (только на фронтенде)
 - ✅ Lazy loading для фоновых изображений с shimmer эффектом
 - ✅ Lazy loading для обычных изображений с плавным появлением
+- ✅ Высота секций по содержимому (убран min-height: 400px)
+- ✅ TextInverse - изменение цвета всего текста в блоке
 
 ## Как это работает
 
@@ -310,6 +312,12 @@ DevTools → Elements → выберите элемент → Styles → про�
 - Если placeholder не настроен, добавьте изображение в поле "videoPlaceholder" в Umbraco
 - На фронтенде placeholder скрывается после загрузки видео
 
+### 9. Overlay не виден (opacity: 0.00)
+- **Проблема**: Тип данных был `int` вместо `decimal`
+- **Решение**: Изменен на `settings.Value<decimal>("opacityOverlay")`
+- Проверьте в Umbraco что поле "Opacity Overlay" имеет значение (например, 30, 50, 65)
+- Если значение не установлено, overlay будет без opacity (полностью непрозрачный)
+
 ### 8. Изображения не lazy load
 - Проверьте что `lazy-load.js` загружен
 - Проверьте что изображения имеют `data-src` или `data-bg`
@@ -326,3 +334,332 @@ DevTools → Elements → выберите элемент → Styles → про�
 - Placeholder обеспечивает мгновенную визуальную обратную связь
 - Shimmer эффект показывает процесс загрузки
 - Плавные переходы улучшают UX
+- **Высота секций по содержимому** - убран min-height: 400px
+- **TextInverse генерируется в backgrounds.css** - НЕТ inline стилей в HTML
+- **Hash классов НЕ включает minHeight** - overlay работают после изменений
+- **ВСЕ inline стили убраны из HTML** - background-image устанавливается через JavaScript из data-атрибутов
+- **Новые файлы**: `images.css` для стилей изображений, `video-placeholders.js` для установки background-image
+
+
+## ПРОБЛЕМА: Overlay не отображается в секции portfolio
+
+### Симптомы
+- HTML: `<section id="portfolio" class="bg-video-cfcec231 lazy-video overlay-95f866a456324d2fa89fe3ae8632b6a2" style="display: block;">`
+- CSS существует в `backgrounds.css`:
+  ```css
+  .overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+      background-color: #2b00ff;
+      opacity: 0.65;
+  }
+  ```
+- CSS существует в `backoffice-preview.css`:
+  ```css
+  .overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+      background-color: #2b00ff !important;
+      opacity: 0.65 !important;
+      z-index: 0 !important;
+  }
+  ```
+- Но overlay НЕ виден в браузере
+
+### Возможные причины
+
+1. **Inline style `style="display: block;"`**
+   - Источник: Старая версия `site-menu.js` (уже исправлена)
+   - Решение: Очистить кэш браузера (Ctrl+Shift+R)
+   - Новая версия использует класс `.section-hidden`
+
+2. **Z-index конфликт с видео**
+   - Видео: `z-index: -2`
+   - Overlay: `z-index: -1` (для видео) или `z-index: 0` (без видео)
+   - Контент: `z-index: 1`
+   - Проверить: Применяется ли правило `.bg-video-cfcec231.lazy-video.overlay-95f866a456324d2fa89fe3ae8632b6a2::before { z-index: -1 !important; }`
+
+3. **CSS не загружается**
+   - Проверить в DevTools → Network: `backoffice-preview.css` загружен?
+   - Проверить порядок загрузки: `backgrounds.css` → `backoffice-preview.css`
+
+4. **CSS перезаписывается**
+   - Проверить в DevTools → Elements → Styles: правила перечеркнуты?
+   - Проверить специфичность селекторов
+
+5. **Элемент не имеет высоты**
+   - Если секция пустая или контент не создает высоту, overlay не будет виден
+   - Проверить: есть ли контент в секции?
+
+### Диагностика
+
+Откройте DevTools Console и выполните:
+
+```javascript
+// 1. Проверка элемента
+const section = document.getElementById('portfolio');
+console.log('Section:', section);
+console.log('Classes:', section.className);
+console.log('Height:', section.offsetHeight);
+
+// 2. Проверка overlay стилей
+const overlayStyles = window.getComputedStyle(section, '::before');
+console.log('Overlay z-index:', overlayStyles.zIndex);
+console.log('Overlay background:', overlayStyles.backgroundColor);
+console.log('Overlay opacity:', overlayStyles.opacity);
+console.log('Overlay content:', overlayStyles.content);
+console.log('Overlay display:', overlayStyles.display);
+console.log('Overlay position:', overlayStyles.position);
+
+// 3. Проверка видео
+const videoContainer = section.querySelector('.video-container');
+if (videoContainer) {
+    const videoStyles = window.getComputedStyle(videoContainer);
+    console.log('Video z-index:', videoStyles.zIndex);
+}
+
+// 4. Проверка контента
+const container = section.querySelector('.container');
+if (container) {
+    const containerStyles = window.getComputedStyle(container);
+    console.log('Content z-index:', containerStyles.zIndex);
+    console.log('Content position:', containerStyles.position);
+}
+```
+
+### Решение
+
+1. **Очистить кэш браузера**: Ctrl+Shift+R
+2. **Проверить загрузку CSS**: DevTools → Network → `backoffice-preview.css`
+3. **Проверить применение стилей**: DevTools → Elements → выбрать `<section id="portfolio">` → Styles
+4. **Проверить z-index**: Overlay должен быть `-1` (с видео) или `0` (без видео)
+5. **Проверить высоту секции**: Если высота 0, overlay не будет виден
+
+### Inline стили - СТАТУС
+
+**Убраны:**
+- ✅ `style="display: none;"` → класс `.section-hidden`
+- ✅ Inline стили в `_Image.cshtml` → классы в `images.css`
+- ✅ Inline стили для video placeholder opacity → классы
+
+**Остались (допустимо):**
+- ⚠️ `style="background-image: url(...);"` для video placeholders
+  - Устанавливается через JavaScript из `data-bg-image`
+  - Допустимо, т.к. URL динамический из Umbraco
+  - Альтернатива: генерировать CSS классы для каждого изображения (избыточно)
+
+**Проблемные:**
+- ❌ `style="display: block;"` на секциях
+  - Источник: Старая версия `site-menu.js` в кэше браузера
+  - Исправлено в коде, но браузер использует кэшированную версию
+  - Решение: Очистить кэш (Ctrl+Shift+R)
+
+
+## ИСПРАВЛЕНИЯ - 2026-02-10
+
+### 1. Убран `style="display: block;"` из секций
+- **Файл**: `TestUmbraco/wwwroot/js/site-menu.js`
+- **Изменение**: Используется класс `.section-hidden` вместо inline стиля
+- **Статус**: ✅ Исправлено (может требовать очистки кэша браузера)
+
+### 2. Background-image для video placeholders
+- **Файл**: `TestUmbraco/Views/Shared/_BackgroundClasses.cshtml`
+- **Изменение**: Background-image устанавливается через JavaScript из `data-bg-image`
+- **Статус**: ✅ Допустимо (динамический контент из Umbraco)
+- **Причина**: URL изображения динамический, генерация CSS класса для каждого изображения избыточна
+
+### 3. Overlay не отображается в секции portfolio
+- **Файл**: `TestUmbraco/wwwroot/css/backoffice-preview.css`
+- **Проблема**: Overlay с видео не имел background-color и opacity в специфичном правиле
+- **Изменения**:
+  1. Добавлен `background-color: #2b00ff !important;` в правило для overlay с видео
+  2. Добавлены отдельные правила для opacity каждого overlay:
+     ```css
+     .bg-video-cfcec231.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+       opacity: 0.65 !important;
+     }
+     ```
+  3. Добавлено правило для position: relative на секциях с видео и overlay:
+     ```css
+     [class^="bg-video-"][class*="overlay-"],
+     [class*=" bg-video-"][class*="overlay-"] {
+       position: relative !important;
+     }
+     ```
+  4. Добавлены селекторы без `.lazy-video` для большей совместимости
+- **Статус**: ✅ Исправлено
+
+### Итоговый статус inline стилей
+
+**Полностью убраны:**
+- ✅ `style="display: none;"` → `.section-hidden`
+- ✅ Inline стили в изображениях → `images.css`
+- ✅ Inline стили для opacity placeholder → CSS классы
+
+**Допустимые (динамический контент):**
+- ⚠️ `style="background-image: url(...);"` для video placeholders
+  - Устанавливается JS из `data-bg-image`
+  - URL динамический из Umbraco
+  - Альтернатива (генерация CSS) избыточна
+
+**Требуют очистки кэша:**
+- 🔄 `style="display: block;"` - исправлено в коде, но может быть в кэше браузера
+- **Решение**: Ctrl+Shift+R (жесткая перезагрузка)
+
+### Проверка после исправлений
+
+1. **Очистить кэш браузера**: Ctrl+Shift+R
+2. **Проверить overlay в DevTools Console**:
+   ```javascript
+   const section = document.getElementById('portfolio');
+   const styles = window.getComputedStyle(section, '::before');
+   console.log('Background:', styles.backgroundColor); // rgb(43, 0, 255)
+   console.log('Opacity:', styles.opacity); // 0.65
+   console.log('Z-index:', styles.zIndex); // -1
+   ```
+3. **Проверить отсутствие inline стилей**:
+   ```javascript
+   const sections = document.querySelectorAll('section[style]');
+   console.log('Sections with inline styles:', sections.length); // Должно быть 0
+   ```
+
+
+## ИСПРАВЛЕНИЕ: Overlay не отображается в секции about
+
+### Проблема
+- Секция about имеет класс `overlay-b5855bba30164526ab003da00af8dda9` и фон `bg-media-...` (изображение)
+- Overlay не отображается, хотя CSS существует
+
+### Причина
+- Правила для overlay были написаны БЕЗ учета наличия/отсутствия видео
+- Правила с `.bg-video-cfcec231.overlay-b5855bba30164526ab003da00af8dda9` имели высокую специфичность
+- Но для секции БЕЗ видео нужен отдельный селектор с `:not([class*="bg-video"])`
+
+### Решение
+Добавлены селекторы с `:not([class*="bg-video"])` для overlay БЕЗ видео:
+
+```css
+/* Overlay БЕЗ видео - z-index: 0 */
+.overlay-b5855bba30164526ab003da00af8dda9:not([class*="bg-video"])::before {
+  z-index: 0 !important;
+  background-color: #2b00ff !important;
+  opacity: 0.30 !important;
+}
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2:not([class*="bg-video"])::before {
+  z-index: 0 !important;
+  background-color: #2b00ff !important;
+  opacity: 0.65 !important;
+}
+```
+
+### Z-index структура
+- **БЕЗ видео**: Фон (auto) → Overlay (0) → Контент (1)
+- **С видео**: Видео (-2) → Overlay (-1) → Контент (1)
+
+### Проверка
+```javascript
+const about = document.getElementById('about');
+const styles = window.getComputedStyle(about, '::before');
+console.log('Background:', styles.backgroundColor); // rgb(43, 0, 255)
+console.log('Opacity:', styles.opacity); // 0.30
+console.log('Z-index:', styles.zIndex); // 0
+```
+
+Очистить кэш: **Ctrl+Shift+R**
+
+
+## ИСПРАВЛЕНИЕ: Overlay за изображением в секции about
+
+### Проблема
+- Overlay отображается, но находится ЗА фоновым изображением
+- Фоновое изображение устанавливается через `background-image` (z-index: auto)
+- Overlay с `z-index: 0` находится в том же слое
+
+### Решение
+Изменена структура z-index для overlay БЕЗ видео:
+
+**Старая структура:**
+- Фон (auto) → Overlay (0) → Контент (1)
+
+**Новая структура:**
+- Фон (auto) → Overlay (1) → Контент (2)
+
+```css
+/* Overlay БЕЗ видео - НАД фоновым изображением */
+.overlay-b5855bba30164526ab003da00af8dda9:not([class*="bg-video"])::before {
+  z-index: 1 !important;
+}
+
+/* Контент НАД overlay */
+[class^="overlay-"] > * {
+  z-index: 2 !important;
+}
+```
+
+### Итоговая структура z-index
+
+**С фоновым изображением (about):**
+- background-image: auto
+- overlay::before: 1
+- контент: 2
+
+**С видео (portfolio):**
+- video: -2
+- overlay::before: -1
+- контент: 2
+
+Очистить кэш: **Ctrl+Shift+R**
+
+
+## КРИТИЧЕСКАЯ ПРОБЛЕМА: z-index: -1 из backgrounds.css
+
+### Проблема
+В `backgrounds.css` есть правило:
+```css
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    z-index: -1;
+}
+```
+
+Это правило перезаписывает наши `z-index: 1 !important` из `backoffice-preview.css`, потому что загружается ПОСЛЕ.
+
+### Решение
+Добавлено правило в НАЧАЛО `backoffice-preview.css` с максимальным приоритетом:
+
+```css
+/* КРИТИЧНО: Переопределяем z-index: -1 из backgrounds.css */
+.overlay-b5855bba30164526ab003da00af8dda9::before,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before,
+[class^="overlay-"]::before,
+[class*=" overlay-"]::before {
+  z-index: 1 !important;
+}
+```
+
+Это правило должно быть в НАЧАЛЕ файла, чтобы применяться первым и перезаписывать все последующие.
+
+Очистить кэш: **Ctrl+Shift+R**
+
+
+## ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ: Правильная генерация z-index в backgrounds.css
+
+### Корень проблемы
+`UmbracoBackgroundService.cs` генерировал `z-index: -1` для ВСЕХ overlay, независимо от типа фона.
+
+### Решение
+Изменен метод `AddOverlayStyles`:
+- Определяет тип фона (видео или нет)
+- Генерирует правильный z-index:
+  - **С видео**: `z-index: -1` (между видео и контентом), контент `z-index: 1`
+  - **Без видео**: `z-index: 1` (над фоном), контент `z-index: 2`
+
+```csharp
+var bgType = settings.Value<string>("bg")?.Trim();
+var hasVideo = bgType == "Видео" || bgType == "Video" || bgType == "бХДЕН";
+var overlayZIndex = hasVideo ? -1 : 1;
+var contentZIndex = hasVideo ? 1 : 2;
+```
+
+### Результат
+Теперь `backgrounds.css` генерируется с правильными z-index:
+- about (изображение): overlay `z-index: 1`, контент `z-index: 2`
+- portfolio (видео): overlay `z-index: -1`, контент `z-index: 1`
+
+**Больше НЕ нужен** `backoffice-preview.css` для переопределения z-index!

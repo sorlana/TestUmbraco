@@ -1,6 +1,8 @@
 ﻿@using Umbraco.Cms.Core.Models.Blocks
 @using TestUmbraco.Models
+@using TestUmbraco.Services
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@inject IStaticCssGeneratorService StaticCssGenerator
 
 @{
     var content = (IPublishedElement?)Model.Content;
@@ -12,12 +14,19 @@
     var sectionClass = "";
     var containerClass = "";
     var idSection = "";
+    var textInverseColor = "";
     
     if (settings != null)
     {
         sectionClass = settings.Value<string>("sectionClass") ?? "";
         containerClass = settings.Value<string>("containerClass") ?? "";
         idSection = settings.Value<string>("idSection") ?? "";
+        
+        // Получаем цвет для textInverse
+        if (settings.HasProperty("textInverse") && settings.HasValue("textInverse"))
+        {
+            textInverseColor = settings.Value<string>("textInverse") ?? "";
+        }
     }
     
     if (string.IsNullOrWhiteSpace(sectionClass))
@@ -33,6 +42,35 @@
     if (string.IsNullOrWhiteSpace(idSection))
     {
         idSection = content?.Value<string>("idSection") ?? "";
+    }
+    
+    // Добавляем класс для textInverse если задан цвет
+    if (!string.IsNullOrWhiteSpace(textInverseColor))
+    {
+        var textInverseClass = $"text-inverse-{content?.Key:N}";
+        sectionClass += $" {textInverseClass}";
+        
+        // Генерируем CSS для textInverse через сервис
+        var textInverseCss = $@"
+.{textInverseClass},
+.{textInverseClass} *,
+.{textInverseClass} h1,
+.{textInverseClass} h2,
+.{textInverseClass} h3,
+.{textInverseClass} h4,
+.{textInverseClass} h5,
+.{textInverseClass} h6,
+.{textInverseClass} p,
+.{textInverseClass} span,
+.{textInverseClass} a,
+.{textInverseClass} li,
+.{textInverseClass} td,
+.{textInverseClass} th {{
+    color: {textInverseColor} !important;
+}}";
+        
+        // Добавляем через сервис в backgrounds.css
+        await StaticCssGenerator.AddInlineStyleAsync(textInverseCss, "textinverse");
     }
 }
 

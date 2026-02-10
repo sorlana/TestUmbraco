@@ -17,7 +17,12 @@ function toggleLandingSections() {
             if (!isHomeSection) {
                 const section = document.getElementById(item.id);
                 if (section) {
-                    section.style.display = item.show ? 'block' : 'none';
+                    // Используем классы вместо inline стилей
+                    if (item.show) {
+                        section.classList.remove('section-hidden');
+                    } else {
+                        section.classList.add('section-hidden');
+                    }
                 }
             }
         });

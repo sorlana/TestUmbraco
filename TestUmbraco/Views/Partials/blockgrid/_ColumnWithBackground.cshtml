@@ -36,7 +36,7 @@
             @if (backgroundResult.UseVideoPlaceholder && !string.IsNullOrEmpty(backgroundResult.VideoPlaceholder))
             {
                 <div class="video-placeholder-mobile" 
-                     style="background-image: url('@backgroundResult.VideoPlaceholder');">
+                     data-bg-image="@backgroundResult.VideoPlaceholder">
                 </div>
             }
         </div>

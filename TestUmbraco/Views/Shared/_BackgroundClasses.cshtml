@@ -69,7 +69,7 @@ else
         {
             <div class="video-placeholder" 
                  data-video-placeholder="@videoId"
-                 style="background-image: url('@backgroundResult.VideoPlaceholder'); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: -2;">
+                 data-bg-image="@backgroundResult.VideoPlaceholder">
             </div>
         }
         
@@ -86,7 +86,7 @@ else
         @if (backgroundResult.UseVideoPlaceholder && !string.IsNullOrEmpty(backgroundResult.VideoPlaceholder))
         {
             <div class="video-placeholder-mobile" 
-                 style="background-image: url('@backgroundResult.VideoPlaceholder');">
+                 data-bg-image="@backgroundResult.VideoPlaceholder">
             </div>
         }
     </div>
@@ -103,15 +103,33 @@ else
             
             if (!iframe) return;
             
+            // Устанавливаем background-image для placeholder из data-атрибута
+            if (placeholder) {
+                var bgImage = placeholder.getAttribute('data-bg-image');
+                if (bgImage) {
+                    placeholder.style.backgroundImage = 'url(' + bgImage + ')';
+                }
+                placeholder.classList.add('video-placeholder-active');
+            }
+            
+            // Устанавливаем background-image для mobile placeholder
+            var mobilePlaceholder = container.querySelector('.video-placeholder-mobile');
+            if (mobilePlaceholder) {
+                var mobileBgImage = mobilePlaceholder.getAttribute('data-bg-image');
+                if (mobileBgImage) {
+                    mobilePlaceholder.style.backgroundImage = 'url(' + mobileBgImage + ')';
+                }
+                mobilePlaceholder.classList.add('video-placeholder-mobile-active');
+            }
+            
             // Проверяем, находимся ли мы в iframe (backoffice)
             var isInIframe = window.self !== window.top;
             
             if (isInIframe) {
                 // В backoffice НЕ загружаем видео, показываем только placeholder
-                iframe.style.display = 'none';
+                iframe.classList.add('video-hidden');
                 if (placeholder) {
-                    placeholder.style.opacity = '1';
-                    placeholder.style.display = 'block';
+                    placeholder.classList.add('video-placeholder-visible');
                 }
                 return;
             }
@@ -123,7 +141,7 @@ else
                 if (placeholder) {
                     iframe.addEventListener('load', function() {
                         setTimeout(function() {
-                            placeholder.style.opacity = '0';
+                            placeholder.classList.add('video-placeholder-hidden');
                         }, 500);
                     });
                 }

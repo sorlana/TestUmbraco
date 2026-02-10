@@ -125,13 +125,7 @@ namespace TestUmbraco.Services
                     result.HasBackground = true;
                     result.IsLazyLoaded = true;
                     
-                    // Добавляем минимальную высоту
-                    if (minHeight > 0)
-                    {
-                        var minHeightClass = $"min-h-{minHeight}";
-                        await _staticCssGenerator.AddInlineStyleAsync($"min-height: {minHeight}px;", "minheight");
-                        result.CssClass += $" {minHeightClass}";
-                    }
+                    // Минимальную высоту НЕ добавляем - высота по содержимому
                 }
             }
             
@@ -147,7 +141,7 @@ namespace TestUmbraco.Services
                 var color = settings.Value<string>("color");
                 if (!string.IsNullOrWhiteSpace(color))
                 {
-                    var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                    var minHeight = 0; // Убираем min-height
                     
                     // Генерация класса с цветом
                     var className = await _staticCssGenerator.GetOrAddColorClassAsync(color, minHeight);
@@ -178,7 +172,7 @@ namespace TestUmbraco.Services
                         direction = ConvertDirectionToCss(settings.Value<string>("direction") ?? "");
                     }
                     
-                    var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                    var minHeight = 0; // Убираем min-height
                     
                     // Генерация класса с градиентом
                     var className = await _staticCssGenerator.GetOrAddGradientClassAsync(
@@ -208,17 +202,16 @@ namespace TestUmbraco.Services
                     {
                         result.VideoId = videoId;
                         
-                        var minHeight = settings.HasValue("minHeight") ? settings.Value<int>("minHeight") : 400;
+                        // Убираем min-height
                         
                         // Генерация уникального класса для видео
                         var videoHash = ComputeHash(videoUrl);
                         var videoClass = $"bg-video-{videoHash}";
                         
-                        // Добавляем стили в CSS
+                        // Добавляем стили в CSS (без min-height)
                         var css = $@"
 .{videoClass}.lazy-video {{
     position: relative;
-    min-height: {minHeight}px;
     overflow: hidden;
 }}
 
@@ -307,6 +300,14 @@ namespace TestUmbraco.Services
             
             var cssBuilder = new StringBuilder();
             
+            // Определяем z-index в зависимости от типа фона
+            // Если есть видео: z-index: -1 (между видео и контентом)
+            // Если фоновое изображение/цвет/градиент: z-index: 1 (над фоном, под контентом)
+            var bgType = settings.Value<string>("bg")?.Trim();
+            var hasVideo = bgType == "Видео" || bgType == "Video" || bgType == "бХДЕН";
+            var overlayZIndex = hasVideo ? -1 : 1;
+            var contentZIndex = hasVideo ? 1 : 2;
+            
             // Добавляем основу: оверлей должен быть под контентом, но над фоном/видео
             cssBuilder.Append($@"
 .{overlayClass} {{
@@ -321,7 +322,7 @@ namespace TestUmbraco.Services
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: {overlayZIndex};
     pointer-events: none;
 }}");
             
@@ -393,8 +394,8 @@ namespace TestUmbraco.Services
             // Прозрачность оверлея
             if (settings.HasProperty("opacityOverlay") && settings.HasValue("opacityOverlay"))
             {
-                var opacityValue = settings.Value<int>("opacityOverlay");
-                var opacity = opacityValue / 100.0;
+                var opacityValue = settings.Value<decimal>("opacityOverlay");
+                var opacity = opacityValue / 100.0m;
                 cssBuilder.Append($@"
 .{overlayClass}::before {{
     opacity: {opacity.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)};
@@ -407,13 +408,13 @@ namespace TestUmbraco.Services
 .{overlayClass} > .container,
 .{overlayClass} > [class*=""container""] {{
     position: relative;
-    z-index: 1;
+    z-index: {contentZIndex};
 }}
 
 /* Все прямые дочерние элементы, кроме video-container */
 .{overlayClass} > *:not(.video-container) {{
     position: relative;
-    z-index: 1;
+    z-index: {contentZIndex};
 }}");
             
             await _staticCssGenerator.AddInlineStyleAsync(cssBuilder.ToString(), "overlay");

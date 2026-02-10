@@ -84,7 +84,6 @@ namespace TestUmbraco.Services
                     cssBuilder.AppendLine("/* === VIDEO BACKGROUND CLASSES === */");
                     cssBuilder.AppendLine(".lazy-video {");
                     cssBuilder.AppendLine("  position: relative;");
-                    cssBuilder.AppendLine("  min-height: 400px;");
                     cssBuilder.AppendLine("  overflow: hidden;");
                     cssBuilder.AppendLine("}");
                     cssBuilder.AppendLine();
@@ -283,19 +282,18 @@ namespace TestUmbraco.Services
             return className;
         }
 
-        public async Task<string> GetOrAddMediaClassAsync(Guid mediaKey, string className, int minHeight = 400, string size = "cover", string position = "center")
+        public async Task<string> GetOrAddMediaClassAsync(Guid mediaKey, string className, int minHeight = 0, string size = "cover", string position = "center")
         {
             var url = await _mediaCacheService.GetCachedMediaUrlAsync(mediaKey);
             if (string.IsNullOrEmpty(url)) return string.Empty;
             
-            // Генерируем CSS
+            // Генерируем CSS (без min-height)
             var css = $@"
 .{className} {{
     background-image: url('{url}');
     background-size: {size};
     background-position: {position};
     background-repeat: no-repeat;
-    min-height: {minHeight}px;
 }}";
             
             // Добавляем в файл
@@ -305,15 +303,14 @@ namespace TestUmbraco.Services
             return className;
         }
 
-        public async Task<string> GetOrAddColorClassAsync(string colorValue, int minHeight = 400)
+        public async Task<string> GetOrAddColorClassAsync(string colorValue, int minHeight = 0)
         {
-            var hash = ComputeHash($"color:{colorValue}:{minHeight}");
+            var hash = ComputeHash($"color:{colorValue}");
             var className = $"bg-color-{hash}";
             
             var css = $@"
 .{className} {{
     background-color: {colorValue};
-    min-height: {minHeight}px;
     position: relative;
 }}";
             
@@ -322,15 +319,14 @@ namespace TestUmbraco.Services
             return className;
         }
 
-        public async Task<string> GetOrAddGradientClassAsync(string colorStart, string colorEnd, string direction = "to bottom", int minHeight = 400)
+        public async Task<string> GetOrAddGradientClassAsync(string colorStart, string colorEnd, string direction = "to bottom", int minHeight = 0)
         {
-            var hash = ComputeHash($"gradient:{colorStart}:{colorEnd}:{direction}:{minHeight}");
+            var hash = ComputeHash($"gradient:{colorStart}:{colorEnd}:{direction}");
             var className = $"bg-gradient-{hash}";
             
             var css = $@"
 .{className} {{
     background: linear-gradient({direction}, {colorStart}, {colorEnd});
-    min-height: {minHeight}px;
     position: relative;
 }}";
             
