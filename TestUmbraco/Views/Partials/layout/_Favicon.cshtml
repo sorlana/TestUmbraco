@@ -3,7 +3,7 @@
 @model IPublishedContent
 
 @{
-    IPublishedContent favicon = null;
+    IPublishedContent? favicon = null;
     
     if (Model is ContentModels.BlockGrid blockGridPage && blockGridPage.HasProperty("favicon"))
     {
@@ -13,7 +13,7 @@
 
 @if (favicon != null)
 {
-    var faviconUrl = favicon.Url();
+    var faviconUrl = favicon.Url() ?? string.Empty;
     
     if (!string.IsNullOrEmpty(faviconUrl))
     {

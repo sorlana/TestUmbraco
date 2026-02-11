@@ -318,7 +318,7 @@ namespace TestUmbraco.Services
             // Настраиваем тип оверлея
             if (overlayBgValue == "Цвет" || overlayBgValue == "Color" || overlayBgValue == "жБЕР")
             {
-                if (settings.HasProperty("colorOverlay") && settings.HasValue("colorOverlay"))
+                if (settings != null && settings.HasProperty("colorOverlay") && settings.HasValue("colorOverlay"))
                 {
                     var color = settings.Value<string>("colorOverlay");
                     if (!string.IsNullOrWhiteSpace(color))
@@ -332,7 +332,7 @@ namespace TestUmbraco.Services
             }
             else if (overlayBgValue == "Изображение" || overlayBgValue == "Image" || overlayBgValue == "хГНАПЮФЕМХЕ")
             {
-                if (settings.HasProperty("imageOverlay") && settings.HasValue("imageOverlay"))
+                if (settings != null && settings.HasProperty("imageOverlay") && settings.HasValue("imageOverlay"))
                 {
                     var image = settings.Value<IPublishedContent>("imageOverlay");
                     if (image != null)
@@ -353,7 +353,7 @@ namespace TestUmbraco.Services
             }
             else if (overlayBgValue == "Градиент" || overlayBgValue == "Gradient" || overlayBgValue == "цПЮДХЕМР")
             {
-                if (settings.HasProperty("colorStartOverlay") && settings.HasValue("colorStartOverlay") &&
+                if (settings != null && settings.HasProperty("colorStartOverlay") && settings.HasValue("colorStartOverlay") &&
                     settings.HasProperty("colorEndOverlay") && settings.HasValue("colorEndOverlay"))
                 {
                     var colorStart = settings.Value<string>("colorStartOverlay");
@@ -382,9 +382,9 @@ namespace TestUmbraco.Services
             
             // Прозрачность оверлея
             _loggingService.LogInformation<UmbracoBackgroundService>(
-                $"Checking opacity: HasProperty(opacityOverlay)={settings.HasProperty("opacityOverlay")}, HasValue={settings.HasValue("opacityOverlay")}");
+                $"Checking opacity: HasProperty(opacityOverlay)={settings?.HasProperty("opacityOverlay")}, HasValue={settings?.HasValue("opacityOverlay")}");
             
-            if (settings.HasProperty("opacityOverlay"))
+            if (settings != null && settings.HasProperty("opacityOverlay"))
             {
                 // Логируем сырое значение
                 var rawValue = settings.Value("opacityOverlay");

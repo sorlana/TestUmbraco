@@ -11710,3 +11710,3145 @@
 }
 
 /* Updated: 2026-02-11 06:44:40.323 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 10:38:48.922 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-1597caa4 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 10:38:49.011 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-5640d1e7 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 10:38:49.081 UTC */
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-fc9bf3a6 */
+
+.bg-color-fc9bf3a6 {
+    background-color: #030303;
+    position: relative;
+}
+
+/* Updated: 2026-02-11 10:38:49.159 UTC */
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-fc9bf3a6 */
+
+.bg-color-fc9bf3a6 {
+    background-color: #030303;
+    position: relative;
+}
+
+/* Updated: 2026-02-11 10:38:49.685 UTC */
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-2041d553 */
+
+.bg-color-2041d553 {
+    background-color: #2b00ff;
+    position: relative;
+}
+
+/* Updated: 2026-02-11 10:38:49.861 UTC */
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-fc9bf3a6 */
+
+.bg-color-fc9bf3a6 {
+    background-color: #030303;
+    position: relative;
+}
+
+/* Updated: 2026-02-11 10:42:08.788 UTC */
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-2041d553 */
+
+.bg-color-2041d553 {
+    background-color: #2b00ff;
+    position: relative;
+}
+
+/* Updated: 2026-02-11 10:42:08.864 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 10:44:47.251 UTC */
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-fc9bf3a6 */
+
+.bg-color-fc9bf3a6 {
+    background-color: #030303;
+    position: relative;
+}
+
+/* Updated: 2026-02-11 10:44:47.322 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 10:44:51.932 UTC */
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-fc9bf3a6 */
+
+.bg-color-fc9bf3a6 {
+    background-color: #030303;
+    position: relative;
+}
+
+/* Updated: 2026-02-11 10:44:52.002 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 10:44:57.912 UTC */
+
+
+/* =========================================== */
+/* COLOR BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* bg-color-fc9bf3a6 */
+
+.bg-color-fc9bf3a6 {
+    background-color: #030303;
+    position: relative;
+}
+
+/* Updated: 2026-02-11 10:44:57.987 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 10:45:07.908 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:19:39.656 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:19:39.821 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:19:39.885 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:19:39.958 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 12:19:40.092 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:19:40.153 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:19:54.380 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-1597caa4 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:19:54.495 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-5640d1e7 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:19:54.568 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:20:35.000 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:23:22.850 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:23:22.910 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 12:23:23.001 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:23:23.073 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-1597caa4 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:23:23.142 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-5640d1e7 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:23:23.215 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:25:13.440 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:25:13.514 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:25:13.594 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:27:49.948 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:27:50.023 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:27:50.092 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 12:27:50.151 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-5640d1e7 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:27:50.231 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-1597caa4 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:27:50.297 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:35:42.559 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:35:42.634 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:35:42.712 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 12:35:42.826 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-5640d1e7 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:35:42.903 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-1597caa4 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:35:43.037 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:36:23.906 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:36:24.037 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:36:24.109 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:47:31.961 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:47:32.086 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:47:32.149 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:47:32.219 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 12:47:32.337 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:47:32.407 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:51:55.027 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:51:55.139 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:51:55.201 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:51:55.316 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 12:51:55.398 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:51:55.479 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:52:18.290 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:54:28.176 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:54:28.287 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:54:28.336 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:54:28.396 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 12:54:28.486 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:54:28.548 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:54:31.025 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:54:35.724 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:56:55.602 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 12:56:55.760 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 12:56:55.819 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 12:56:55.892 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 12:56:55.997 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 12:56:56.035 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 13:03:48.000 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 13:03:48.133 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 13:03:48.238 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 13:03:48.385 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 13:03:48.466 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 13:03:48.676 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 13:03:58.629 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 13:04:06.906 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 13:21:08.140 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 13:21:08.290 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 13:21:08.357 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 13:21:08.438 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 13:21:08.690 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 13:21:08.751 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 13:25:17.857 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 13:25:17.976 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 13:25:18.038 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 13:25:18.109 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 13:25:18.228 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 13:25:18.275 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 13:25:31.254 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-5640d1e7 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 13:25:31.309 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-1597caa4 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 13:25:31.385 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 13:25:52.833 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-db4ac5f6 */
+
+.text-inverse-b5855bba30164526ab003da00af8dda9,
+.text-inverse-b5855bba30164526ab003da00af8dda9 *,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h1,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h2,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h3,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h4,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h5,
+.text-inverse-b5855bba30164526ab003da00af8dda9 h6,
+.text-inverse-b5855bba30164526ab003da00af8dda9 p,
+.text-inverse-b5855bba30164526ab003da00af8dda9 span,
+.text-inverse-b5855bba30164526ab003da00af8dda9 a,
+.text-inverse-b5855bba30164526ab003da00af8dda9 li,
+.text-inverse-b5855bba30164526ab003da00af8dda9 td,
+.text-inverse-b5855bba30164526ab003da00af8dda9 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 13:40:26.303 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 13:40:26.431 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-18478a7b */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    opacity: 0.26;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+
+/* Updated: 2026-02-11 13:40:26.512 UTC */
+
+
+/* =========================================== */
+/* CUSTOM INLINE STYLES                     */
+/* =========================================== */
+
+/* textinverse-896d053e */
+
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 *,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h1,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h2,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h3,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h4,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h5,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 h6,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 p,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 span,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 a,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 li,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 td,
+.text-inverse-95f866a456324d2fa89fe3ae8632b6a2 th {
+    color: #ffffff !important;
+}
+
+/* Updated: 2026-02-11 13:40:26.636 UTC */
+
+
+/* =========================================== */
+/* VIDEO BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* video-0599a7b2 */
+
+.bg-video-cfcec231.lazy-video {
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-video-cfcec231.lazy-video .video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+.bg-video-cfcec231.lazy-video .video-bg-iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 177.77777778vh;
+    min-width: 100%;
+    min-height: 100%;
+    height: 56.25vw;
+    transform: translate(-50%, -50%);
+    border: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Overlay должен быть над видео, но под контентом */
+.bg-video-cfcec231.lazy-video::before {
+    z-index: 0 !important;
+}
+
+/* Updated: 2026-02-11 13:40:26.682 UTC */
+
+
+/* =========================================== */
+/* OVERLAY STYLES                           */
+/* =========================================== */
+
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Updated: 2026-02-11 13:40:26.754 UTC */
+
+
+/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-11 13:40:35.056 UTC */

@@ -1,0 +1,70 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    var content = Model.Content;
+    if (content?.ContentType.Alias != "link") return;
+
+    var linkUrl = content.Value<string>("linkUrl");
+    if (string.IsNullOrWhiteSpace(linkUrl)) return;
+
+    var text = content.Value<string>("textLink") ?? linkUrl;
+    var showAsButton = content.Value<bool>("showAsButton");
+
+    // ---------- Иконка: прямое получение (MediaWithCrops → IPublishedContent) ----------
+    var iconMedia = content.Value<IPublishedContent>("iconImage");
+    var iconMediaUrl = iconMedia?.Url();
+
+    // ---------- Позиция иконки (поддержка русских/английских значений и True/False) ----------
+    var iconPositionRaw = content.Value<string>("iconPosition");
+    var iconPosition = iconPositionRaw?.Trim().ToLowerInvariant();
+
+    if (iconPosition == "true") iconPosition = "слева";
+    else if (iconPosition == "false") iconPosition = "справа";
+
+    var isLeft = iconPosition == "слева" || iconPosition == "left";
+    var isRight = iconPosition == "справа" || iconPosition == "right";
+
+    if (!isLeft && !isRight) isLeft = true; // по умолчанию
+
+    // ---------- Классы для кнопки ----------
+    var cssClasses = new List<string>();
+    if (showAsButton)
+    {
+        cssClasses.Add("btn");
+        cssClasses.Add("btn-primary");
+    }
+
+    var anchorAttributes = new Dictionary<string, object> { { "href", linkUrl } };
+    if (cssClasses.Any()) anchorAttributes.Add("class", string.Join(" ", cssClasses));
+
+    var currentHost = HttpContextAccessor.HttpContext?.Request.Host.Value;
+    if (linkUrl.StartsWith("http") && !linkUrl.Contains(currentHost ?? ""))
+    {
+        anchorAttributes.Add("target", "_blank");
+        anchorAttributes.Add("rel", "noopener");
+    }
+}
+
+<a @Html.Raw(string.Join(" ", anchorAttributes.Select(attr => $"{attr.Key}=\"{attr.Value}\"")))>
+    @if (iconMedia != null)
+    {
+        @if (isLeft)
+        {
+            <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
+        }
+        <span>@text</span>
+        @if (isRight)
+        {
+            <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
+        }
+    }
+    else
+    {
+        <span>@text</span>
+    }
+</a>

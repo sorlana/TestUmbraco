@@ -50,7 +50,7 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		// properties
 
 		///<summary>
-		/// Разделитель
+		/// Разделитель изображение
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
@@ -58,7 +58,7 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual global::Umbraco.Cms.Core.Models.MediaWithCrops BgImg => this.Value<global::Umbraco.Cms.Core.Models.MediaWithCrops>(_publishedValueFallback, "bgImg");
 
 		///<summary>
-		/// Класс
+		/// Анимация
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
@@ -73,11 +73,10 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual int Height => this.Value<int>(_publishedValueFallback, "height");
 
 		///<summary>
-		/// Семантический тег
+		/// Разделитель линия
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
-		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("tag")]
-		public virtual string Tag => this.Value<string>(_publishedValueFallback, "tag");
+		[ImplementPropertyType("showLine")]
+		public virtual bool ShowLine => this.Value<bool>(_publishedValueFallback, "showLine");
 	}
 }

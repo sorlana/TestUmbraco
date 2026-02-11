@@ -13,10 +13,10 @@
     var componentAlias = Model.ComponentAlias as string;
     
     // Получаем фоновые классы
-    var backgroundResult = await BackgroundService.ProcessBackground(
+    var backgroundResult = item != null ? await BackgroundService.ProcessBackground(
         item.Settings, 
         item.Content.Key,
-        $"{componentAlias}-bg");
+        $"{componentAlias}-bg") : null;
     
     var backgroundClass = backgroundResult?.CssClass ?? "";
     var finalClass = $"{itemColumnClass} {classRow} {backgroundClass}".Trim();

@@ -72,7 +72,7 @@
         </div>
 
         <!-- Основное меню -->
-        @if (hasMenu)
+        @if (hasMenu && filteredMenuItems != null)
         {
             <!-- Меню для сайта (без пункта Home) -->
             <nav class="site-nav">
@@ -91,7 +91,9 @@
             <!-- Меню для лендинга (без пункта Home) -->
             <nav class="landing-nav">
                 <ul class="landing-menu">
-                    @foreach (var blockItem in menuLandingItems)
+                    @if (menuLandingItems != null)
+                    {
+                        @foreach (var blockItem in menuLandingItems)
                     {
                         var nameItem = blockItem.Content.Value<string>("nameItem");
                         var idItem = blockItem.Content.Value<string>("idItem");
@@ -111,6 +113,7 @@
                                 </a>
                             </li>
                         }
+                    }
                     }
                 </ul>
             </nav>
@@ -169,7 +172,7 @@
             <span class="material-symbols-outlined">close</span>
         </button>
         
-        @if (hasMenu)
+        @if (hasMenu && filteredMenuItems != null)
         {
             <ul class="mobile-site-menu">
                 @foreach (var item in filteredMenuItems)
@@ -180,7 +183,7 @@
                 }
             </ul>
         }
-        else if (hasMenuLanding)
+        else if (hasMenuLanding && menuLandingItems != null)
         {
             <ul class="mobile-landing-menu">
                 @foreach (var blockItem in menuLandingItems)

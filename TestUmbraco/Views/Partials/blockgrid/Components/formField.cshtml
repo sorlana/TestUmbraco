@@ -12,9 +12,9 @@
     // Получаем настройки label из ViewData (переданные из FormBuilderBlock)
     var labelShow = true;
     
-    if (ViewData.ContainsKey("labelShow"))
+    if (ViewData.ContainsKey("labelShow") && ViewData["labelShow"] is bool labelShowValue)
     {
-        labelShow = (bool)ViewData["labelShow"];
+        labelShow = labelShowValue;
     }
 }
 

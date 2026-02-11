@@ -17,7 +17,7 @@
     // Дополнительные свойства карточки
     var cardTitle = content.Value<string>("title") ?? string.Empty;
     var cardText = content.Value<string>("text") ?? string.Empty;
-    var link = content.Value<Link>("link");
+    var linkUrl = content.Value<string>("link");
     
     // Alt текст для изображения
     var altText = content.Value<string>("altText") ?? image?.Name ?? string.Empty;
@@ -38,7 +38,7 @@
     @if (image != null)
     {
         // Подготавливаем данные для передачи в _Image.cshtml
-        var viewData = new ViewDataDictionary(ViewData)
+        var viewData = new ViewDataDictionary<IPublishedContent>(ViewData, image)
         {
             { "CssClass", imageClass },
             { "CropAlias", cropAlias },
@@ -78,7 +78,7 @@
         </div>
     }
     
-    @if (!string.IsNullOrEmpty(cardTitle) || !string.IsNullOrEmpty(cardText) || link != null)
+    @if (!string.IsNullOrEmpty(cardTitle) || !string.IsNullOrEmpty(cardText) || !string.IsNullOrEmpty(linkUrl))
     {
         <div class="card-body">
             @if (!string.IsNullOrEmpty(cardTitle))
@@ -93,12 +93,11 @@
                 </div>
             }
             
-            @if (link != null)
+            @if (!string.IsNullOrEmpty(linkUrl))
             {
-                <a href="@link.Url" 
-                   target="@link.Target" 
+                <a href="@linkUrl" 
                    class="btn btn-primary card-link">
-                    @(link.Name ?? "Подробнее")
+                    Подробнее
                 </a>
             }
         </div>
@@ -120,7 +119,7 @@ else
             @if (image != null)
             {
                 // Подготавливаем данные для передачи в _Image.cshtml
-                var viewData = new ViewDataDictionary(ViewData)
+                var viewData = new ViewDataDictionary<IPublishedContent>(ViewData, image)
                 {
                     { "CssClass", imageClass },
                     { "CropAlias", cropAlias },
@@ -160,7 +159,7 @@ else
                 </div>
             }
             
-            @if (!string.IsNullOrEmpty(cardTitle) || !string.IsNullOrEmpty(cardText) || link != null)
+            @if (!string.IsNullOrEmpty(cardTitle) || !string.IsNullOrEmpty(cardText) || !string.IsNullOrEmpty(linkUrl))
             {
                 <div class="card-body">
                     @if (!string.IsNullOrEmpty(cardTitle))
@@ -175,12 +174,11 @@ else
                         </div>
                     }
                     
-                    @if (link != null)
+                    @if (!string.IsNullOrEmpty(linkUrl))
                     {
-                        <a href="@link.Url" 
-                           target="@link.Target" 
+                        <a href="@linkUrl" 
                            class="btn btn-primary card-link">
-                            @(link.Name ?? "Подробнее")
+                            Подробнее
                         </a>
                     }
                 </div>

@@ -1,0 +1,123 @@
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Extensions
+@using TestUmbraco.Models
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    var content = Model.Content;
+    var settings = Model.Settings;
+
+    // ---------- Фон: применять к родителю? ----------
+    var applyBackgroundToParent = ViewData["ApplyBackgroundToParent"] as bool? ?? false;
+
+    // ---------- Свойства карточки ----------
+    var cardTitle = content.Value<string>("cardTitle");
+    var cardSummary = content.Value<string>("cardSummary");
+    var cardImage = content.Value<IPublishedContent>("cardImage");
+    var cardDate = content.Value<DateTime?>("cardDate");
+    var cardCategory = content.Value<IEnumerable<string>>("cardCategory");
+    var cardImgLink = content.Value<Link>("cardImgLink");
+    var cardLink = content.Value<Link>("cardLink");
+
+    // ---------- Свойства для обёртки и стилей ----------
+    var wrapperTag = content.Value<string>("tag") ?? "div";          // Кастомный тег (div, article, section...)
+    var customClass = content.Value<string>("Class") ?? "";         // Дополнительный CSS-класс для обёртки
+
+    // ---------- Вспомогательные флаги ----------
+    var hasImgLink = cardImgLink != null && !string.IsNullOrWhiteSpace(cardImgLink.Url);
+    var hasCardLink = cardLink != null && !string.IsNullOrWhiteSpace(cardLink.Url);
+}
+
+@* =============================================================================
+   РЕНДЕРИНГ КАРТОЧКИ (без учёта фона — только HTML карточки)
+   ============================================================================= *@
+@{
+    IHtmlContent RenderCardContent() =>
+        @<text>
+            @if (hasImgLink)
+            {
+                <a href="@cardImgLink.Url" target="@cardImgLink.Target" class="card-link-wrapper">
+                    @RenderCardInner()
+                </a>
+            }
+            else
+            {
+                @RenderCardInner()
+            }
+        </text>;
+
+    IHtmlContent RenderCardInner() =>
+        @<text>
+            <div class="card @customClass">
+                @if (cardImage != null)
+                {
+                    <img src="@cardImage.Url()" class="card-img-top" alt="@(cardTitle ?? "Card image")">
+                }
+                <div class="card-body">
+                    @if (cardDate.HasValue)
+                    {
+                        <small class="card-date text-muted">@cardDate.Value.ToString("dd MMM yyyy")</small>
+                    }
+
+                    @if (cardCategory != null && cardCategory.Any())
+                    {
+                        <div class="card-categories">
+                            @foreach (var tag in cardCategory)
+                            {
+                                <span class="badge bg-secondary me-1">@tag</span>
+                            }
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(cardTitle))
+                    {
+                        <h3 class="card-title h5">@cardTitle</h3>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(cardSummary))
+                    {
+                        <div class="card-text">
+                            @Html.Raw(cardSummary)
+                        </div>
+                    }
+
+                    @if (hasCardLink)
+                    {
+                        <a href="@cardLink.Url"
+                           target="@cardLink.Target"
+                           class="btn btn-primary mt-2"
+                           @(string.IsNullOrWhiteSpace(cardLink.Target) ? "" : "rel=noopener")>
+                            @(string.IsNullOrWhiteSpace(cardLink.Name) ? "Подробнее" : cardLink.Name)
+                        </a>
+                    }
+                </div>
+            </div>
+        </text>;
+}
+
+@* =============================================================================
+   ВЫВОД С УЧЁТОМ ФОНА (через _BackgroundClasses)
+   ============================================================================= *@
+@if (applyBackgroundToParent)
+{
+    @* Фон уже применён к родителю — рендерим только содержимое карточки *@
+    @RenderCardContent()
+}
+else
+{
+    @* Оборачиваем карточку в фоновый компонент *@
+    var backgroundModel = new BackgroundClassesModel
+    {
+        Settings = settings,
+        ComponentId = content.Key,
+        Prefix = "card-bg",
+        BaseClass = "",                 // Базовый класс фона (можно добавить отдельное поле)
+        AdditionalClasses = "",
+        Tag = wrapperTag,              // Пользовательский тег (div, article...)
+        ContainerClass = "",
+        Content = _ => RenderCardContent()
+    };
+
+    <partial name="_BackgroundClasses" model="backgroundModel" />
+}
