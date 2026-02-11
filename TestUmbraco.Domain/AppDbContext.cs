@@ -9,6 +9,7 @@ namespace TestUmbraco.Domain
 
         public DbSet<EmailRequestItem> EmailRequestItems { get; set; }
         public DbSet<CallRequestItem> CallRequestItems { get; set; }
+        public DbSet<FormSubmission> FormSubmissions { get; set; }
 
     }
 }

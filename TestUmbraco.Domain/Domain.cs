@@ -12,6 +12,7 @@ namespace TestUmbraco.Domain
         {
             services.AddDbContext<AppDbContext>(x => x.UseSqlServer(config.GetConnectionString("TestUmbracoData")));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IFormSubmissionRepository, FormSubmissionRepository>();
             return services;
         }
     }

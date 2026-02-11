@@ -1,0 +1,513 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    var content = Model.Content;
+    var formTitle = content.Value<string>("formTitle");
+    var formDescription = content.Value<string>("formDescription");
+    var formFields = content.Value<IEnumerable<BlockListItem>>("formFields");
+    var submitButtonText = content.Value<string>("submitButtonText");
+    if (string.IsNullOrEmpty(submitButtonText))
+    {
+        submitButtonText = "Отправить";
+    }
+    
+    // Email настройки
+    var emailRecipient = content.Value<string>("emailRecipient");
+    var emailSubject = content.Value<string>("emailSubject");
+    var successMessage = content.Value<string>("successMessage");
+    var approval = content.Value<string>("approval");
+    var logoMail = content.Value<IPublishedContent>("logoMail");
+    
+    // Модальное окно
+    var modalShow = content.Value<bool>("modalShow");
+    var buttonModal = content.Value<string>("buttonModal");
+    if (string.IsNullOrEmpty(buttonModal))
+    {
+        buttonModal = "Открыть форму";
+    }
+    
+    // Глобальные настройки label для всей формы
+    var globalLabelShow = true;
+    if (content.HasProperty("labelShow") && content.HasValue("labelShow"))
+    {
+        globalLabelShow = content.Value<bool>("labelShow");
+    }
+    
+    var formId = Model.Content.Key.GetHashCode(); // Using hash of block Key as form identifier
+    var reCaptchaSiteKey = Configuration["RecaptchaSettings:SiteKey"];
+}
+
+<div class="form-builder-block" data-form-id="@formId">
+    @if (modalShow)
+    {
+        <!-- Кнопка для открытия модального окна -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formModal-@formId">
+            @buttonModal
+        </button>
+        
+        <!-- Модальное окно -->
+        <div class="modal fade" id="formModal-@formId" tabindex="-1" aria-labelledby="formModalLabel-@formId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="formModalLabel-@formId">@formTitle</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @if (!string.IsNullOrEmpty(formDescription))
+                        {
+                            <p class="form-description">@formDescription</p>
+                        }
+                        
+                        @* Форма внутри модального окна *@
+                        <form id="form-@formId" class="form-builder" method="post" action="@Url.SurfaceAction("SubmitForm", "FormBuilder")" novalidate data-ajax="true">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="FormId" value="@formId" />
+                            <input type="hidden" name="FormTitle" value="@formTitle" />
+                            <input type="hidden" name="EmailRecipient" value="@emailRecipient" />
+                            <input type="hidden" name="EmailSubject" value="@emailSubject" />
+                            <input type="hidden" name="SuccessMessage" value="@successMessage" />
+                            <input type="hidden" name="LogoMailUrl" value="@(logoMail?.Url() ?? "")" />
+                            <input type="hidden" name="ReCaptchaToken" id="recaptcha-token-@formId" />
+                            
+                            <!-- Сообщения об успехе/ошибке -->
+                            <div id="form-message-@formId" class="form-message" style="display:none; padding: 15px; margin-bottom: 20px; border-radius: 4px; font-size: 14px;"></div>
+                            
+                            @if (formFields != null && formFields.Any())
+                            {
+                                foreach (var block in formFields)
+                                {
+                                    var contentType = block.Content.ContentType.Alias;
+                                    
+                                    if (contentType == "formColumn")
+                                    {
+                                        // Рендерим колонку с полями в ряд
+                                        var columnsCount = block.Content.Value<string>("formColumn");
+                                        var columnFields = block.Content.Value<IEnumerable<BlockListItem>>("formFields");
+                                        
+                                        // Если не указано, используем 2 по умолчанию
+                                        if (string.IsNullOrEmpty(columnsCount))
+                                        {
+                                            columnsCount = "2";
+                                        }
+                                        
+                                        // Вычисляем размер каждого поля внутри колонки
+                                        var cols = int.Parse(columnsCount);
+                                        var bootstrapSize = 12 / cols;
+                                        var fieldColumnSize = $"col-md-{bootstrapSize}";
+                                        
+                                        // Создаем row для полей внутри FormColumn
+                                        <div class="row">
+                                            @if (columnFields != null && columnFields.Any())
+                                            {
+                                                foreach (var fieldBlock in columnFields)
+                                                {
+                                                    var fieldViewData = new ViewDataDictionary(ViewData)
+                                                    {
+                                                        ["labelShow"] = globalLabelShow
+                                                    };
+                                                    
+                                                    <div class="@fieldColumnSize">
+                                                        @await Html.PartialAsync("~/Views/Partials/blockgrid/Components/formField.cshtml", fieldBlock, fieldViewData)
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        var fieldViewData = new ViewDataDictionary(ViewData)
+                                        {
+                                            ["labelShow"] = globalLabelShow
+                                        };
+                                        
+                                        // Рендерим обычное поле без группировки
+                                        @await Html.PartialAsync("~/Views/Partials/blockgrid/Components/formField.cshtml", block, fieldViewData)
+                                    }
+                                }
+                            }
+                            
+                            <div class="g-recaptcha" data-sitekey="@reCaptchaSiteKey" data-size="invisible"></div>
+                            
+                            <button type="submit" class="btn btn-primary">@submitButtonText</button>
+                        </form>
+                        
+                        @if (!string.IsNullOrEmpty(approval))
+                        {
+                            <div class="form-approval" style="margin-top: 15px; font-size: 12px; color: #666;">
+                                @Html.Raw(approval)
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Обычная форма без модального окна -->
+        @if (!string.IsNullOrEmpty(formTitle))
+        {
+            <h2 class="form-title">@formTitle</h2>
+        }
+        
+        @if (!string.IsNullOrEmpty(formDescription))
+        {
+            <p class="form-description">@formDescription</p>
+        }
+        
+        <form id="form-@formId" class="form-builder" method="post" action="@Url.SurfaceAction("SubmitForm", "FormBuilder")" novalidate data-ajax="true">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="FormId" value="@formId" />
+            <input type="hidden" name="FormTitle" value="@formTitle" />
+            <input type="hidden" name="EmailRecipient" value="@emailRecipient" />
+            <input type="hidden" name="EmailSubject" value="@emailSubject" />
+            <input type="hidden" name="SuccessMessage" value="@successMessage" />
+            <input type="hidden" name="LogoMailUrl" value="@(logoMail?.Url() ?? "")" />
+            <input type="hidden" name="ReCaptchaToken" id="recaptcha-token-@formId" />
+            
+            <!-- Сообщения об успехе/ошибке -->
+            <div id="form-message-@formId" class="form-message" style="display:none; padding: 15px; margin-bottom: 20px; border-radius: 4px; font-size: 14px;"></div>
+            
+            @if (formFields != null && formFields.Any())
+            {
+                foreach (var block in formFields)
+                {
+                    var contentType = block.Content.ContentType.Alias;
+                    
+                    if (contentType == "formColumn")
+                    {
+                        // Рендерим колонку с полями в ряд
+                        var columnsCount = block.Content.Value<string>("formColumn");
+                        var columnFields = block.Content.Value<IEnumerable<BlockListItem>>("formFields");
+                        
+                        // Если не указано, используем 2 по умолчанию
+                        if (string.IsNullOrEmpty(columnsCount))
+                        {
+                            columnsCount = "2";
+                        }
+                        
+                        // Вычисляем размер каждого поля внутри колонки
+                        var cols = int.Parse(columnsCount);
+                        var bootstrapSize = 12 / cols;
+                        var fieldColumnSize = $"col-md-{bootstrapSize}";
+                        
+                        // Создаем row для полей внутри FormColumn
+                        <div class="row">
+                            @if (columnFields != null && columnFields.Any())
+                            {
+                                foreach (var fieldBlock in columnFields)
+                                {
+                                    var fieldViewData = new ViewDataDictionary(ViewData)
+                                    {
+                                        ["labelShow"] = globalLabelShow
+                                    };
+                                    
+                                    <div class="@fieldColumnSize">
+                                        @await Html.PartialAsync("~/Views/Partials/blockgrid/Components/formField.cshtml", fieldBlock, fieldViewData)
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        var fieldViewData = new ViewDataDictionary(ViewData)
+                        {
+                            ["labelShow"] = globalLabelShow
+                        };
+                        
+                        // Рендерим обычное поле без группировки
+                        @await Html.PartialAsync("~/Views/Partials/blockgrid/Components/formField.cshtml", block, fieldViewData)
+                    }
+                }
+            }
+            
+            <div class="g-recaptcha" data-sitekey="@reCaptchaSiteKey" data-size="invisible"></div>
+            
+            <button type="submit" class="btn btn-primary">@submitButtonText</button>
+        </form>
+        
+        @if (!string.IsNullOrEmpty(approval))
+        {
+            <div class="form-approval" style="margin-top: 15px; font-size: 12px; color: #666;">
+                @Html.Raw(approval)
+            </div>
+        }
+    }
+    
+    <!-- Bootstrap 5 для всех форм -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/imask@7.1.3/dist/imask.min.js"></script>
+    <script>
+    // Inline script для формы @formId
+    (function() {
+        'use strict';
+        
+        let form = null;
+        
+        function initForm() {
+            console.log('Initializing form @formId');
+            
+            @if (modalShow)
+            {
+                <text>
+                // Для модального окна - ждем когда модалка откроется
+                const modalElement = document.getElementById('formModal-@formId');
+                if (modalElement) {
+                    modalElement.addEventListener('shown.bs.modal', function() {
+                        console.log('Modal shown, initializing form');
+                        form = document.getElementById('form-@formId');
+                        if (form) {
+                            attachFormHandlers();
+                        }
+                    });
+                }
+                </text>
+            }
+            else
+            {
+                <text>
+                // Для обычной формы - инициализируем сразу
+                form = document.getElementById('form-@formId');
+                if (!form) {
+                    console.error('Form not found: form-@formId');
+                    return;
+                }
+                console.log('Form found, attaching event listener');
+                attachFormHandlers();
+                </text>
+            }
+        }
+        
+        function attachFormHandlers() {
+            if (!form) return;
+            
+            console.log('Attaching form handlers');
+            
+            form.addEventListener('submit', async function(e) {
+                console.log('Submit event triggered');
+                e.preventDefault();
+                e.stopPropagation();
+                
+                hideFormMessage();
+                
+                if (!validateForm()) {
+                    console.log('Validation failed');
+                    const errorFields = form.querySelectorAll('.is-invalid');
+                    const errorMessages = Array.from(errorFields).map(field => {
+                        const formGroup = field.closest('.form-group');
+                        const label = formGroup ? formGroup.querySelector('label') : null;
+                        return label ? label.textContent.replace('*', '').trim() : 'Поле';
+                    });
+                    
+                    const message = errorMessages.length > 0 
+                        ? 'Пожалуйста, заполните корректно следующие поля: ' + errorMessages.join(', ')
+                        : 'Пожалуйста, проверьте правильность заполнения полей';
+                    
+                    showFormMessage(message, 'error');
+                    return false;
+                }
+                
+                console.log('Validation passed');
+                
+                try {
+                    document.getElementById('recaptcha-token-@formId').value = 'test-token';
+                    console.log('reCAPTCHA skipped for testing');
+                } catch (error) {
+                    console.error('reCAPTCHA error:', error);
+                    showFormMessage('Ошибка проверки reCAPTCHA. Попробуйте еще раз.', 'error');
+                    return false;
+                }
+                
+                await submitForm();
+                return false;
+            });
+            
+            const fields = form.querySelectorAll('input, textarea, select');
+            fields.forEach(field => {
+                field.addEventListener('blur', () => validateField(field));
+                field.addEventListener('input', () => clearFieldError(field));
+            });
+            
+            applyInputMasks();
+        }
+        
+        function applyInputMasks() {
+            if (!form || typeof IMask === 'undefined') return;
+            
+            const telFields = form.querySelectorAll('input[type="tel"]');
+            telFields.forEach(field => {
+                IMask(field, {
+                    mask: '+{7} (000) 000-00-00',
+                    lazy: false,
+                    placeholderChar: '_'
+                });
+            });
+        }
+        
+        function validateForm() {
+            if (!form) return false;
+            let isValid = true;
+            const fields = form.querySelectorAll('[data-required="true"]');
+            fields.forEach(field => {
+                if (!validateField(field)) isValid = false;
+            });
+            return isValid;
+        }
+        
+        function validateField(field) {
+            const isRequired = field.dataset.required === 'true';
+            const value = field.value.trim();
+            
+            if (isRequired && !value) {
+                showFieldError(field, 'Это поле обязательно для заполнения');
+                return false;
+            }
+            
+            if (field.type === 'email' && value) {
+                const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+                if (!emailRegex.test(value)) {
+                    showFieldError(field, 'Введите корректный email адрес');
+                    return false;
+                }
+            }
+            
+            if (field.type === 'tel' && value) {
+                const digitsOnly = value.replace(/\D/g, '');
+                if (digitsOnly.length < 11) {
+                    showFieldError(field, 'Введите корректный номер телефона');
+                    return false;
+                }
+            }
+            
+            clearFieldError(field);
+            return true;
+        }
+        
+        function showFieldError(field, message) {
+            const formGroup = field.closest('.form-group');
+            if (!formGroup) return;
+            const errorSpan = formGroup.querySelector('.field-error');
+            if (errorSpan) {
+                errorSpan.textContent = message;
+                errorSpan.style.display = 'block';
+                errorSpan.style.backgroundColor = '#f8d7da';
+                errorSpan.style.color = '#721c24';
+                errorSpan.style.padding = '5px 10px';
+                errorSpan.style.borderRadius = '4px';
+                errorSpan.style.marginTop = '5px';
+            }
+            field.classList.add('is-invalid');
+        }
+        
+        function clearFieldError(field) {
+            const formGroup = field.closest('.form-group');
+            if (!formGroup) return;
+            const errorSpan = formGroup.querySelector('.field-error');
+            if (errorSpan) errorSpan.style.display = 'none';
+            field.classList.remove('is-invalid');
+        }
+        
+        function showFormMessage(message, type) {
+            const messageDiv = document.getElementById('form-message-@formId');
+            console.log('Showing message:', message, type, messageDiv);
+            if (!messageDiv) return;
+            
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            
+            if (type === 'success') {
+                messageDiv.style.backgroundColor = '#d4edda';
+                messageDiv.style.color = '#155724';
+                messageDiv.style.border = '1px solid #c3e6cb';
+            } else {
+                messageDiv.style.backgroundColor = '#f8d7da';
+                messageDiv.style.color = '#721c24';
+                messageDiv.style.border = '1px solid #f5c6cb';
+            }
+        }
+        
+        function hideFormMessage() {
+            const messageDiv = document.getElementById('form-message-@formId');
+            if (messageDiv) messageDiv.style.display = 'none';
+        }
+        
+        async function submitForm() {
+            if (!form) return;
+            const formData = new FormData(form);
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            
+            console.log('Submitting form via AJAX');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Отправка...';
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                
+                console.log('Response:', response.status);
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    const result = await response.json();
+                    console.log('Result:', result);
+                    
+                    if (result.success) {
+                        showFormMessage(result.message || '@(successMessage)' || 'Форма успешно отправлена!', 'success');
+                        form.reset();
+                        
+                        // Закрыть модальное окно если форма в модалке
+                        @if (modalShow)
+                        {
+                            <text>
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('formModal-@formId'));
+                            if (modal) {
+                                setTimeout(() => modal.hide(), 2000);
+                            }
+                            </text>
+                        }
+                    } else {
+                        showFormMessage(result.message || 'Произошла ошибка при отправке формы', 'error');
+                    }
+                } else {
+                    showFormMessage('@(successMessage)' || 'Форма успешно отправлена!', 'success');
+                    form.reset();
+                    
+                    @if (modalShow)
+                    {
+                        <text>
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('formModal-@formId'));
+                        if (modal) {
+                            setTimeout(() => modal.hide(), 2000);
+                        }
+                        </text>
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showFormMessage('Произошла ошибка при отправке формы. Попробуйте еще раз.', 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            }
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initForm);
+        } else {
+            initForm();
+        }
+    })();
+    </script>
+</div>

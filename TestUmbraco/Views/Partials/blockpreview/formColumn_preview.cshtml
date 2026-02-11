@@ -1,0 +1,18 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockListItem>
+
+@{
+    var content = Model.Content;
+    var columnsCount = content.Value<string>("formColumn") ?? "?";
+    var columnFields = content.Value<IEnumerable<BlockListItem>>("formFields");
+    var fieldsCount = columnFields?.Count() ?? 0;
+}
+
+<div style="min-height: 40px; background-color: #f0f0f0; border: 1px solid #d0d0d0; border-radius: 4px; padding: 10px; display: flex; align-items: center; justify-content: space-between;">
+    <div style="font-weight: 600; color: #333;">
+        📋 Колонка (@columnsCount в ряд)
+    </div>
+    <div style="color: #666; font-size: 12px;">
+        Полей: @fieldsCount
+    </div>
+</div>

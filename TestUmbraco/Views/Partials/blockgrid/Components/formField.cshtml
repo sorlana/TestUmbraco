@@ -1,0 +1,117 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockListItem>
+
+@{
+    var field = Model.Content;
+    var fieldLabel = field.Value<string>("fieldLabel");
+    var fieldType = field.Value<string>("fieldType");
+    var fieldPlaceholder = field.Value<string>("fieldPlaceholder");
+    var isRequired = field.Value<bool>("isRequired");
+    var fieldName = $"Fields[{fieldLabel}]";
+    
+    // Получаем настройки label из ViewData (переданные из FormBuilderBlock)
+    var labelShow = true;
+    
+    if (ViewData.ContainsKey("labelShow"))
+    {
+        labelShow = (bool)ViewData["labelShow"];
+    }
+}
+
+<div class="form-group mb-3">
+    @if (labelShow)
+    {
+        <label for="@fieldName" class="form-label">
+            @fieldLabel
+            @if (isRequired)
+            {
+                <span class="required text-danger">*</span>
+            }
+        </label>
+    }
+    
+    @switch (fieldType?.ToLower())
+    {
+        case "text":
+            <input type="text" 
+                   id="@fieldName" 
+                   name="@fieldName" 
+                   class="form-control" 
+                   placeholder="@fieldPlaceholder"
+                   data-required="@isRequired.ToString().ToLower()" />
+            break;
+            
+        case "email":
+            <input type="email" 
+                   id="@fieldName" 
+                   name="@fieldName" 
+                   class="form-control" 
+                   placeholder="@fieldPlaceholder"
+                   data-required="@isRequired.ToString().ToLower()" />
+            break;
+            
+        case "phone":
+        case "tel":
+        case "телефон":
+            <input type="tel" 
+                   id="@fieldName" 
+                   name="@fieldName" 
+                   class="form-control" 
+                   placeholder="@fieldPlaceholder"
+                   data-required="@isRequired.ToString().ToLower()" />
+            break;
+            
+        case "textarea":
+        case "сообщение":
+            <textarea id="@fieldName" 
+                      name="@fieldName" 
+                      class="form-control" 
+                      placeholder="@fieldPlaceholder"
+                      rows="5"
+                      data-required="@isRequired.ToString().ToLower()"></textarea>
+            break;
+            
+        case "checkbox":
+            <div class="form-check">
+                <input type="checkbox" 
+                       id="@fieldName" 
+                       name="@fieldName" 
+                       class="form-check-input" 
+                       value="true"
+                       data-required="@isRequired.ToString().ToLower()" />
+            </div>
+            break;
+            
+        case "radio":
+            <div class="form-check">
+                <input type="radio" 
+                       id="@fieldName" 
+                       name="@fieldName" 
+                       class="form-check-input" 
+                       value="true"
+                       data-required="@isRequired.ToString().ToLower()" />
+            </div>
+            break;
+            
+        case "select":
+            <select id="@fieldName" 
+                    name="@fieldName" 
+                    class="form-control"
+                    data-required="@isRequired.ToString().ToLower()">
+                <option value="">@(!string.IsNullOrEmpty(fieldPlaceholder) ? fieldPlaceholder : "Выберите...")</option>
+            </select>
+            break;
+            
+        default:
+            <input type="text" 
+                   id="@fieldName" 
+                   name="@fieldName" 
+                   class="form-control" 
+                   placeholder="@fieldPlaceholder"
+                   data-required="@isRequired.ToString().ToLower()" />
+            <small class="text-danger">Неизвестный тип поля: "@fieldType". Используется текстовое поле.</small>
+            break;
+    }
+    
+    <span class="field-error text-danger" style="display:none;"></span>
+</div>

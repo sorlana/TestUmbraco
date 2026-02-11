@@ -1,0 +1,37 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockListItem>
+
+@{
+    var content = Model.Content;
+    var columnsCount = content.Value<string>("formColumn");
+    var columnFields = content.Value<IEnumerable<BlockListItem>>("formFields");
+    var fieldsCount = columnFields?.Count() ?? 0;
+    
+    // Если не указано количество колонок, используем 2 по умолчанию
+    if (string.IsNullOrEmpty(columnsCount))
+    {
+        columnsCount = "2";
+    }
+}
+
+<div style="min-height: 40px; background-color: #f0f0f0; border: 1px solid #d0d0d0; border-radius: 4px; padding: 10px; margin: 5px 0;">
+    <div style="font-weight: 600; color: #333; margin-bottom: 5px;">
+        📋 Колонка (@columnsCount в ряд) - Полей: @fieldsCount
+    </div>
+    @if (columnFields != null && columnFields.Any())
+    {
+        <div style="padding-left: 15px; font-size: 12px; color: #666;">
+            @foreach (var field in columnFields)
+            {
+                var fieldLabel = field.Content.Value<string>("fieldLabel") ?? "Поле";
+                <div>• @fieldLabel</div>
+            }
+        </div>
+    }
+    else
+    {
+        <div style="padding-left: 15px; font-size: 11px; color: #999; font-style: italic;">
+            Добавьте поля в колонку
+        </div>
+    }
+</div>
