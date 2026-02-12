@@ -2,7 +2,10 @@
 @using Umbraco.Cms.Core.Models.Blocks
 @using Umbraco.Extensions
 @using TestUmbraco.Models
+@using TestUmbraco.Services
+@using CoreLink = Umbraco.Cms.Core.Models.Link   @* ← разрешаем конфликт имён Link *@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@inject IStaticCssGeneratorService StaticCssGenerator
 
 @{
     var content = Model.Content;
@@ -17,83 +20,131 @@
     var cardImage = content.Value<IPublishedContent>("cardImage");
     var cardDate = content.Value<DateTime?>("cardDate");
     var cardCategory = content.Value<IEnumerable<string>>("cardCategory");
-    var cardImgLink = content.Value<Link>("cardImgLink");
-    var cardLink = content.Value<Link>("cardLink");
 
-    // ---------- Свойства для обёртки и стилей ----------
-    var wrapperTag = content.Value<string>("tag") ?? "div";          // Кастомный тег (div, article, section...)
-    var customClass = content.Value<string>("Class") ?? "";         // Дополнительный CSS-класс для обёртки
+    // ---------- Ссылки ----------
+    var cardImgLink = content.Value<CoreLink>("cardImgLink");
+    var cardLink = content.Value<CoreLink>("cardLink");
+
+    // ---------- Обёртка и стили ----------
+    var wrapperTag = content.Value<string>("tag") ?? "div";
+    var customClass = content.Value<string>("Class") ?? "";
+    
+    // ---------- Цвет текста ----------
+    var textColor = "";
+    if (content.HasProperty("textInverse") && content.HasValue("textInverse"))
+    {
+        textColor = content.Value<string>("textInverse") ?? "";
+    }
+    
+    // Применяем textColor если задан
+    if (!string.IsNullOrWhiteSpace(textColor))
+    {
+        var textColorClass = $"text-color-{content.Key:N}";
+        customClass += $" {textColorClass}";
+        
+        var textColorCss = $@"
+.{textColorClass},
+.{textColorClass} * {{
+    color: {textColor} !important;
+}}";
+        
+        await StaticCssGenerator.AddInlineStyleAsync(textColorCss, "textcolor");
+    }
 
     // ---------- Вспомогательные флаги ----------
     var hasImgLink = cardImgLink != null && !string.IsNullOrWhiteSpace(cardImgLink.Url);
     var hasCardLink = cardLink != null && !string.IsNullOrWhiteSpace(cardLink.Url);
-}
 
-@* =============================================================================
-   РЕНДЕРИНГ КАРТОЧКИ (без учёта фона — только HTML карточки)
-   ============================================================================= *@
-@{
-    IHtmlContent RenderCardContent() =>
-        @<text>
-            @if (hasImgLink)
-            {
-                <a href="@cardImgLink.Url" target="@cardImgLink.Target" class="card-link-wrapper">
-                    @RenderCardInner()
-                </a>
-            }
-            else
-            {
+    // ---------- ФОРМИРУЕМ СОДЕРЖИМОЕ КАРТОЧКИ (как делегат для _BackgroundClasses) ----------
+    Func<object, IHtmlContent> cardContent = @<text>
+        @if (hasImgLink)
+        {
+            <a href="@cardImgLink.Url" target="@cardImgLink.Target" class="card-link-wrapper">
                 @RenderCardInner()
+            </a>
+        }
+        else
+        {
+            @RenderCardInner()
+        }
+    </text>;
+
+    // Вспомогательная функция для внутренней части (чтобы не дублировать)
+    IHtmlContent RenderCardInner()
+    {
+        var sb = new System.Text.StringBuilder();
+        
+        // Отладка: добавляем комментарий
+        sb.Append($"<!-- Card Debug: hasCardLink={hasCardLink}, cardLink={(cardLink != null ? "not null" : "null")}, URL={cardLink?.Url ?? "empty"} -->");
+        
+        // Если есть ссылка-кнопка, добавляем bootstrap-scope
+        if (hasCardLink)
+        {
+            sb.Append("<div class=\"bootstrap-scope\">");
+        }
+        
+        sb.Append($"<div class=\"card {customClass}\">");
+        
+        // Изображение
+        if (cardImage != null)
+        {
+            sb.Append($"<img src=\"{cardImage.Url()}\" class=\"card-img-top\" alt=\"{cardTitle ?? "Card image"}\">");
+        }
+        
+        sb.Append("<div class=\"card-body\">");
+        
+        // Дата
+        if (cardDate.HasValue)
+        {
+            sb.Append($"<small class=\"card-date text-muted\">{cardDate.Value:dd MMM yyyy}</small>");
+        }
+        
+        // Категории
+        if (cardCategory?.Any() == true)
+        {
+            sb.Append("<div class=\"card-categories\">");
+            foreach (var cat in cardCategory)
+            {
+                sb.Append($"<span class=\"badge bg-secondary me-1\">{cat}</span>");
             }
-        </text>;
-
-    IHtmlContent RenderCardInner() =>
-        @<text>
-            <div class="card @customClass">
-                @if (cardImage != null)
-                {
-                    <img src="@cardImage.Url()" class="card-img-top" alt="@(cardTitle ?? "Card image")">
-                }
-                <div class="card-body">
-                    @if (cardDate.HasValue)
-                    {
-                        <small class="card-date text-muted">@cardDate.Value.ToString("dd MMM yyyy")</small>
-                    }
-
-                    @if (cardCategory != null && cardCategory.Any())
-                    {
-                        <div class="card-categories">
-                            @foreach (var tag in cardCategory)
-                            {
-                                <span class="badge bg-secondary me-1">@tag</span>
-                            }
-                        </div>
-                    }
-
-                    @if (!string.IsNullOrWhiteSpace(cardTitle))
-                    {
-                        <h3 class="card-title h5">@cardTitle</h3>
-                    }
-
-                    @if (!string.IsNullOrWhiteSpace(cardSummary))
-                    {
-                        <div class="card-text">
-                            @Html.Raw(cardSummary)
-                        </div>
-                    }
-
-                    @if (hasCardLink)
-                    {
-                        <a href="@cardLink.Url"
-                           target="@cardLink.Target"
-                           class="btn btn-primary mt-2"
-                           @(string.IsNullOrWhiteSpace(cardLink.Target) ? "" : "rel=noopener")>
-                            @(string.IsNullOrWhiteSpace(cardLink.Name) ? "Подробнее" : cardLink.Name)
-                        </a>
-                    }
-                </div>
-            </div>
-        </text>;
+            sb.Append("</div>");
+        }
+        
+        // Заголовок
+        if (!string.IsNullOrWhiteSpace(cardTitle))
+        {
+            sb.Append($"<h3 class=\"card-title h5\">{cardTitle}</h3>");
+        }
+        
+        // Описание
+        if (!string.IsNullOrWhiteSpace(cardSummary))
+        {
+            sb.Append($"<div class=\"card-text\">{cardSummary}</div>");
+        }
+        
+        // Ссылка
+        if (hasCardLink)
+        {
+            var linkTarget = string.IsNullOrWhiteSpace(cardLink.Target) ? "" : $" target=\"{cardLink.Target}\"";
+            var linkRel = string.IsNullOrWhiteSpace(cardLink.Target) ? "" : " rel=\"noopener\"";
+            var linkText = string.IsNullOrWhiteSpace(cardLink.Name) ? "Подробнее" : cardLink.Name;
+            sb.Append($"<a href=\"{cardLink.Url}\"{linkTarget}{linkRel} class=\"btn btn-primary mt-2\">{linkText}</a>");
+        }
+        else
+        {
+            sb.Append("<!-- No card link: hasCardLink is false -->");
+        }
+        
+        sb.Append("</div>"); // card-body
+        sb.Append("</div>"); // card
+        
+        if (hasCardLink)
+        {
+            sb.Append("</div>"); // bootstrap-scope
+        }
+        
+        return new HtmlString(sb.ToString());
+    }
 }
 
 @* =============================================================================
@@ -102,21 +153,20 @@
 @if (applyBackgroundToParent)
 {
     @* Фон уже применён к родителю — рендерим только содержимое карточки *@
-    @RenderCardContent()
+    @cardContent(null)
 }
 else
 {
-    @* Оборачиваем карточку в фоновый компонент *@
     var backgroundModel = new BackgroundClassesModel
     {
         Settings = settings,
         ComponentId = content.Key,
         Prefix = "card-bg",
-        BaseClass = "",                 // Базовый класс фона (можно добавить отдельное поле)
+        BaseClass = "",
         AdditionalClasses = "",
-        Tag = wrapperTag,              // Пользовательский тег (div, article...)
+        Tag = wrapperTag,
         ContainerClass = "",
-        Content = _ => RenderCardContent()
+        Content = cardContent   // передаём делегат
     };
 
     <partial name="_BackgroundClasses" model="backgroundModel" />

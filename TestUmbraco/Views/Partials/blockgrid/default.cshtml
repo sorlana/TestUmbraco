@@ -5,10 +5,12 @@
 {
     foreach (var item in Model)
     {
-        if (item.Content.ContentType.Alias == "gridSection")
+        var alias = item.Content.ContentType.Alias;
+        
+        @* Полноширинные компоненты (gridSection, hero) рендерятся напрямую без оберток Bootstrap grid *@
+        if (alias == "gridSection" || alias == "hero")
         {
-            @* Grid Section рендерится напрямую *@
-            @await Html.PartialAsync("blockgrid/Components/gridSection", item)
+            @await Html.PartialAsync($"blockgrid/Components/{alias}", item)
         }
         else
         {
@@ -16,7 +18,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-@item.ColumnSpan">
-                        @await Html.PartialAsync($"blockgrid/Components/{item.Content.ContentType.Alias}", item)
+                        @await Html.PartialAsync($"blockgrid/Components/{alias}", item)
                     </div>
                 </div>
             </div>

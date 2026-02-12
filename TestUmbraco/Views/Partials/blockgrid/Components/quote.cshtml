@@ -1,6 +1,8 @@
 @using Umbraco.Cms.Core.Models.Blocks
 @using TestUmbraco.Models
+@using TestUmbraco.Services
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@inject IStaticCssGeneratorService StaticCssGenerator
 
 @{
     var content = Model.Content;
@@ -16,18 +18,53 @@
     var image = content.Value<IPublishedContent>("BgImg");
     
     var quoteContent = content.Value<string>("content");
+    
+    // Получаем цвет текста из content
+    var textColor = "";
+    if (content.HasProperty("textInverse") && content.HasValue("textInverse"))
+    {
+        textColor = content.Value<string>("textInverse") ?? "";
+    }
+    
+    // Применяем textColor если задан
+    if (!string.IsNullOrWhiteSpace(textColor))
+    {
+        var textColorClass = $"text-color-{content.Key:N}";
+        customClass += $" {textColorClass}";
+        
+        var textColorCss = $@"
+.{textColorClass},
+.{textColorClass} * {{
+    color: {textColor} !important;
+}}";
+        
+        await StaticCssGenerator.AddInlineStyleAsync(textColorCss, "textcolor");
+    }
 }
 
 @if (!string.IsNullOrWhiteSpace(quoteContent))
 {
     @if (applyBackgroundToParent)
     {
-        @* Фон применяется к родительскому элементу, рендерим только контент без обертки *@
-        @if (image != null)
+        @* Фон применяется к родительскому элементу, рендерим контент с классом textColor *@
+        @if (!string.IsNullOrWhiteSpace(customClass))
         {
-            <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
+            <blockquote class="@customClass">
+                @if (image != null)
+                {
+                    <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
+                }
+                @Html.Raw(quoteContent)
+            </blockquote>
         }
-        @Html.Raw(quoteContent)
+        else
+        {
+            @if (image != null)
+            {
+                <img src="@image.Url()" alt="Quote icon" class="quote-icon" />
+            }
+            @Html.Raw(quoteContent)
+        }
     }
     else
     {

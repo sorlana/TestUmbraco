@@ -54,8 +54,40 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
-		[ImplementPropertyType("class")]
-		public virtual string Class => this.Value<string>(_publishedValueFallback, "class");
+		[ImplementPropertyType("classContact")]
+		public virtual string ClassContact => this.Value<string>(_publishedValueFallback, "classContact");
+
+		///<summary>
+		/// Анимация
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("classCopy")]
+		public virtual string ClassCopy => this.Value<string>(_publishedValueFallback, "classCopy");
+
+		///<summary>
+		/// Анимация
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("classLegal")]
+		public virtual string ClassLegal => this.Value<string>(_publishedValueFallback, "classLegal");
+
+		///<summary>
+		/// Анимация
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("classNav")]
+		public virtual string ClassNav => this.Value<string>(_publishedValueFallback, "classNav");
+
+		///<summary>
+		/// Анимация
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("classSocial")]
+		public virtual string ClassSocial => this.Value<string>(_publishedValueFallback, "classSocial");
 
 		///<summary>
 		/// Контакты
@@ -72,6 +104,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
 		[ImplementPropertyType("footerCopyright")]
 		public virtual string FooterCopyright => this.Value<string>(_publishedValueFallback, "footerCopyright");
+
+		///<summary>
+		/// Форма обратной связи
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("footerForm")]
+		public virtual global::Umbraco.Cms.Core.Models.Blocks.BlockListModel FooterForm => this.Value<global::Umbraco.Cms.Core.Models.Blocks.BlockListModel>(_publishedValueFallback, "footerForm");
 
 		///<summary>
 		/// Политика конфиденциальности

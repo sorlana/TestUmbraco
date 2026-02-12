@@ -1,0 +1,312 @@
+/* Изолированные стили Bootstrap только для форм */
+/* Применяются только к элементам внутри .bootstrap-scope */
+
+.bootstrap-scope .form-control,
+.bootstrap-scope .form-select,
+.bootstrap-scope .form-check-input,
+.bootstrap-scope .form-label,
+.bootstrap-scope .form-group,
+.bootstrap-scope .mb-3,
+.bootstrap-scope .btn,
+.bootstrap-scope .btn-primary,
+.bootstrap-scope .btn-close,
+.bootstrap-scope .modal,
+.bootstrap-scope .modal-dialog,
+.bootstrap-scope .modal-content,
+.bootstrap-scope .modal-header,
+.bootstrap-scope .modal-body,
+.bootstrap-scope .modal-title,
+.bootstrap-scope .row,
+.bootstrap-scope .col-md-6,
+.bootstrap-scope .col-md-4,
+.bootstrap-scope .col-md-3,
+.bootstrap-scope .is-invalid,
+.bootstrap-scope .text-danger {
+  /* Стили будут применяться только внутри .bootstrap-scope */
+}
+
+/* Базовые стили для form-control */
+.bootstrap-scope .form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  appearance: none;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.bootstrap-scope .form-control:focus {
+  color: #212529;
+  background-color: #fff;
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.bootstrap-scope .form-control.is-invalid {
+  border-color: #dc3545;
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+/* Стили для label */
+.bootstrap-scope .form-label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Стили для кнопок */
+.bootstrap-scope .btn {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.bootstrap-scope .btn-primary {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.bootstrap-scope .btn-primary:hover {
+  color: #fff;
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+.bootstrap-scope .btn-primary:disabled {
+  color: #fff;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  opacity: 0.65;
+}
+
+/* Стили для модального окна */
+.bootstrap-scope .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1055;
+  display: none;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+}
+
+.bootstrap-scope .modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 0.5rem;
+  pointer-events: none;
+}
+
+.bootstrap-scope .modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 1rem);
+}
+
+.bootstrap-scope .modal-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.3rem;
+  outline: 0;
+}
+
+.bootstrap-scope .modal-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+  border-top-left-radius: calc(0.3rem - 1px);
+  border-top-right-radius: calc(0.3rem - 1px);
+}
+
+.bootstrap-scope .modal-title {
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.bootstrap-scope .modal-body {
+  position: relative;
+  flex: 1 1 auto;
+  padding: 1rem;
+}
+
+.bootstrap-scope .btn-close {
+  box-sizing: content-box;
+  width: 1em;
+  height: 1em;
+  padding: 0.25em 0.25em;
+  color: #000;
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+  border: 0;
+  border-radius: 0.25rem;
+  opacity: 0.5;
+}
+
+.bootstrap-scope .btn-close:hover {
+  color: #000;
+  text-decoration: none;
+  opacity: 0.75;
+}
+
+/* Стили для grid системы */
+.bootstrap-scope .row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -0.75rem;
+  margin-left: -0.75rem;
+}
+
+.bootstrap-scope .row > * {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+}
+
+.bootstrap-scope .col-md-6 {
+  flex: 0 0 auto;
+  width: 50%;
+}
+
+.bootstrap-scope .col-md-4 {
+  flex: 0 0 auto;
+  width: 33.33333333%;
+}
+
+.bootstrap-scope .col-md-3 {
+  flex: 0 0 auto;
+  width: 25%;
+}
+
+/* Утилиты */
+.bootstrap-scope .mb-3 {
+  margin-bottom: 1rem !important;
+}
+
+.bootstrap-scope .mt-2 {
+  margin-top: 0.5rem !important;
+}
+
+.bootstrap-scope .text-danger {
+  color: #dc3545 !important;
+}
+
+.bootstrap-scope .text-muted {
+  color: #6c757d !important;
+}
+
+/* Стили для checkbox и radio */
+.bootstrap-scope .form-check {
+  display: block;
+  min-height: 1.5rem;
+  padding-left: 1.5em;
+  margin-bottom: 0.125rem;
+}
+
+.bootstrap-scope .form-check-input {
+  width: 1em;
+  height: 1em;
+  margin-top: 0.25em;
+  vertical-align: top;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  appearance: none;
+  print-color-adjust: exact;
+}
+
+.bootstrap-scope .form-check-input[type="checkbox"] {
+  border-radius: 0.25em;
+}
+
+.bootstrap-scope .form-check-input[type="radio"] {
+  border-radius: 50%;
+}
+
+.bootstrap-scope .form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.bootstrap-scope .form-check-input:checked[type="checkbox"] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+
+.bootstrap-scope .form-check-input:checked[type="radio"] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%23fff'/%3e%3c/svg%3e");
+}
+
+/* Fade эффект для модального окна */
+.bootstrap-scope .fade {
+  transition: opacity 0.15s linear;
+}
+
+.bootstrap-scope .fade:not(.show) {
+  opacity: 0;
+}
+
+.bootstrap-scope .modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  transform: translate(0, -50px);
+}
+
+.bootstrap-scope .modal.show .modal-dialog {
+  transform: none;
+}
+
+/* Backdrop для модального окна */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000;
+}
+
+.modal-backdrop.fade {
+  opacity: 0;
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+}

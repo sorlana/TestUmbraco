@@ -1,0 +1,129 @@
+@using Umbraco.Cms.Core.Models
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Extensions
+@using TestUmbraco.Models
+@using TestUmbraco.Services
+@using CoreLink = Umbraco.Cms.Core.Models.Link
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@inject IStaticCssGeneratorService StaticCssGenerator
+
+@{
+    var content = (IPublishedElement?)Model.Content;
+    var settings = (IPublishedElement?)Model.Settings;
+
+    var applyBackgroundToParent = ViewData["ApplyBackgroundToParent"] as bool? ?? false;
+
+    // ---------- Основные поля Hero ----------
+    var title = content?.Value<string>("title") ?? string.Empty;
+    var subtitle = content?.Value<string>("subtitle") ?? string.Empty;
+    var description = content?.Value<string>("description") ?? string.Empty;
+    var image = content?.Value<IPublishedContent>("image");
+    var list = content?.Value<BlockListModel>("list");
+    var form = content?.Value<BlockListModel>("form");
+    var link = content?.Value<CoreLink>("link");
+
+    // ---------- Настройки оформления ----------
+    var sectionClass = "";
+    var containerClass = "";
+    var idSection = "";
+
+    if (settings != null)
+    {
+        sectionClass = settings.Value<string>("sectionClass") ?? "";
+        containerClass = settings.Value<string>("containerClass") ?? "";
+        idSection = settings.Value<string>("idSection") ?? "";
+    }
+
+    if (string.IsNullOrWhiteSpace(sectionClass))
+    {
+        sectionClass = content?.Value<string>("sectionClass") ?? "";
+    }
+
+    if (string.IsNullOrWhiteSpace(containerClass))
+    {
+        containerClass = content?.Value<string>("containerClass") ?? "";
+    }
+
+    if (string.IsNullOrWhiteSpace(idSection))
+    {
+        idSection = content?.Value<string>("idSection") ?? "";
+    }
+
+    // ---------- Функция для рендеринга содержимого Hero ----------
+    Func<object, IHtmlContent>? heroContentFunc = @<text>
+        <div class="container @containerClass.Trim()">
+            <div class="hero-content">
+                @if (!string.IsNullOrWhiteSpace(title))
+                {
+                    <h1 class="hero-title">@title</h1>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(subtitle))
+                {
+                    <p class="hero-subtitle">@subtitle</p>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(description))
+                {
+                    <div class="hero-description">
+                        @Html.Raw(description)
+                    </div>
+                }
+
+                @if (image != null)
+                {
+                    <img src="@image.Url()" alt="@title" class="hero-image" />
+                }
+
+                @if (list != null && list.Any())
+                {
+                    <div class="hero-list">
+                        @await Html.PartialAsync("blocklist/default", list)
+                    </div>
+                }
+
+                @if (form != null && form.Any())
+                {
+                    <div class="hero-form">
+                        @await Html.PartialAsync("blocklist/default", form)
+                    </div>
+                }
+
+                @if (link != null && !string.IsNullOrWhiteSpace(link.Url))
+                {
+                    <a href="@link.Url"
+                       target="@link.Target"
+                       class="btn btn-primary hero-link"
+                       @(string.IsNullOrWhiteSpace(link.Target) ? "" : "rel=noopener")>
+                        @(string.IsNullOrWhiteSpace(link.Name) ? "Подробнее" : link.Name)
+                    </a>
+                }
+            </div>
+        </div>
+    </text>;
+}
+
+@* =============================================================================
+   ВЫВОД С УЧЁТОМ ФОНА (через _BackgroundClasses) — ТОЧНО КАК В section.cshtml
+   ============================================================================= *@
+@if (applyBackgroundToParent)
+{
+    @heroContentFunc(null)
+}
+else
+{
+    var backgroundModel = new BackgroundClassesModel
+    {
+        Settings = settings,
+        ComponentId = content?.Key,
+        Prefix = "hero-bg",
+        BaseClass = sectionClass.Trim(),
+        AdditionalClasses = "",
+        Tag = "section",               // семантический тег
+        ContainerClass = "",          // контейнер уже внутри heroContentFunc
+        ElementId = idSection.Trim(),
+        Content = heroContentFunc
+    };
+
+    <partial name="_BackgroundClasses" model="backgroundModel" />
+}

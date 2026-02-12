@@ -2,19 +2,6 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 @{
     Layout = null;
-    
-    // Проверяем, нужно ли подключать стили меню
-    var blockGridPage = Model as Umbraco.Cms.Web.Common.PublishedModels.BlockGrid;
-    var hasMenu = false;
-    var hasMenuLanding = false;
-    
-    if (blockGridPage != null)
-    {
-        var menuItems = blockGridPage.Value<IEnumerable<IPublishedContent>>("menu");
-        var menuLandingItems = blockGridPage.Value<Umbraco.Cms.Core.Models.Blocks.BlockListModel>("menuLanding");
-        hasMenu = menuItems != null && menuItems.Any();
-        hasMenuLanding = menuLandingItems != null && menuLandingItems.Any();
-    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +17,6 @@
     <link rel="preconnect" href="https://player.vimeo.com">
     <link rel="preconnect" href="https://i.vimeocdn.com">  
     
-    <!-- CSS FILES: ТОЛЬКО 3 ФАЙЛА -->
     <!-- 1. backgrounds.css - динамически генерируемые фоны -->
     <link rel="stylesheet" href="~/css/backgrounds.css" asp-append-version="true" />
     <!-- 2. style.css - все статические стили сайта -->
@@ -65,6 +51,9 @@
 
     @RenderBody()
     
+    <!-- ========== ФУТЕР ========== -->
+    @await Html.PartialAsync("~/Views/Partials/blockgrid/Components/footer.cshtml", Model)
+
     <!-- Кнопка "Наверх" через Partial View -->
     @await Html.PartialAsync("~/Views/Partials/layout/_ButtonUp.cshtml", Model)
 
@@ -80,10 +69,6 @@
         }
     }
 
-    <!-- Скрипт для кнопки "Наверх" -->
-    <!-- Скрипт для меню (только если нужно) -->
-    <!-- Background Config и все скрипты -->
-    
     <!-- ВАЖНО: Сначала загружаем конфиг, потом скрипты -->
     <partial name="_BackgroundConfig" />
     

@@ -1,0 +1,28 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockListItem>
+
+@{
+    var content = Model.Content;
+    
+    // Проверка типа документа
+    if (content?.ContentType.Alias != "footerItemContact") { return; }
+    
+    // Получаем данные
+    var icon = content.Value<IPublishedContent>("icon");
+    var text = content.Value<string>("text");
+    
+    // Если нет текста, не рендерим
+    if (string.IsNullOrWhiteSpace(text)) { return; }
+}
+
+<div class="footer-contact-item">
+    @if (icon != null)
+    {
+        <img src="@icon.Url()" alt="Contact icon" class="contact-icon" />
+    }
+    <div class="contact-text">
+        @Html.Raw(text)
+    </div>
+</div>

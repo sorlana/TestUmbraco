@@ -1,0 +1,10 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+
+@{
+    var content = Model.Content;
+    
+    // Для footer нужно передать IPublishedContent, а не BlockGridItem
+    // Поэтому рендерим напрямую с content
+    await Html.PartialAsync("blockgrid/Components/footer", content);
+}

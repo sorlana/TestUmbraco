@@ -2,7 +2,9 @@
 @using Umbraco.Cms.Core.Models.PublishedContent
 @using Umbraco.Extensions
 @using Microsoft.AspNetCore.Http
+@using TestUmbraco.Services
 @inject IHttpContextAccessor HttpContextAccessor
+@inject IStaticCssGeneratorService StaticCssGenerator
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
 
 @{
@@ -38,6 +40,28 @@
         cssClasses.Add("btn");
         cssClasses.Add("btn-primary");
     }
+    
+    // ---------- Цвет текста ----------
+    var textColor = "";
+    if (content.HasProperty("textInverse") && content.HasValue("textInverse"))
+    {
+        textColor = content.Value<string>("textInverse") ?? "";
+    }
+    
+    // Применяем textColor если задан
+    if (!string.IsNullOrWhiteSpace(textColor))
+    {
+        var textColorClass = $"text-color-{content.Key:N}";
+        cssClasses.Add(textColorClass);
+        
+        var textColorCss = $@"
+.{textColorClass},
+.{textColorClass} * {{
+    color: {textColor} !important;
+}}";
+        
+        await StaticCssGenerator.AddInlineStyleAsync(textColorCss, "textcolor");
+    }
 
     var anchorAttributes = new Dictionary<string, object> { { "href", linkUrl } };
     if (cssClasses.Any()) anchorAttributes.Add("class", string.Join(" ", cssClasses));
@@ -50,21 +74,73 @@
     }
 }
 
-<a @Html.Raw(string.Join(" ", anchorAttributes.Select(attr => $"{attr.Key}=\"{attr.Value}\"")))>
-    @if (iconMedia != null)
+@if (showAsButton)
+{
+    <div class="bootstrap-scope">
+        <a @Html.Raw(string.Join(" ", anchorAttributes.Select(attr => $"{attr.Key}=\"{attr.Value}\"")))>
+            @if (iconMedia != null)
+            {
+                @if (isLeft)
+                {
+                    <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
+                }
+                <span>@text</span>
+                @if (isRight)
+                {
+                    <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
+                }
+            }
+            else
+            {
+                <span>@text</span>
+            }
+        </a>
+    </div>
+}
+else
+{
+    @if (!string.IsNullOrWhiteSpace(textColor))
     {
-        @if (isLeft)
-        {
-            <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
-        }
-        <span>@text</span>
-        @if (isRight)
-        {
-            <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
-        }
+        <span class="@string.Join(" ", cssClasses)">
+            <a @Html.Raw(string.Join(" ", anchorAttributes.Select(attr => $"{attr.Key}=\"{attr.Value}\"")))>
+                @if (iconMedia != null)
+                {
+                    @if (isLeft)
+                    {
+                        <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
+                    }
+                    <span>@text</span>
+                    @if (isRight)
+                    {
+                        <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
+                    }
+                }
+                else
+                {
+                    <span>@text</span>
+                }
+            </a>
+        </span>
     }
     else
     {
-        <span>@text</span>
+        <a @Html.Raw(string.Join(" ", anchorAttributes.Select(attr => $"{attr.Key}=\"{attr.Value}\"")))>
+            @if (iconMedia != null)
+            {
+                @if (isLeft)
+                {
+                    <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
+                }
+                <span>@text</span>
+                @if (isRight)
+                {
+                    <img src="@iconMediaUrl" alt="" class="link-icon" width="20" height="20" />
+                }
+            }
+            else
+            {
+                <span>@text</span>
+            }
+        </a>
     }
-</a>
+}

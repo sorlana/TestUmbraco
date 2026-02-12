@@ -1,0 +1,36 @@
+@using Umbraco.Cms.Core.Models.Blocks
+@using Umbraco.Cms.Core.Models.PublishedContent
+@using Umbraco.Extensions
+@using CoreLink = Umbraco.Cms.Core.Models.Link
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockListItem>
+
+@{
+    var content = Model.Content;
+    
+    // Проверка типа документа
+    if (content?.ContentType.Alias != "footerItemSocial") { return; }
+    
+    // Получаем данные
+    var icon = content.Value<IPublishedContent>("iconSocial");
+    var links = content.Value<IEnumerable<CoreLink>>("urlSocial");
+    
+    // Если нет ссылок, не рендерим
+    if (links == null || !links.Any()) { return; }
+    
+    var firstLink = links.First();
+}
+
+<a href="@firstLink.Url" 
+   target="@firstLink.Target" 
+   class="footer-social-link"
+   @(string.IsNullOrWhiteSpace(firstLink.Target) ? "" : Html.Raw("rel=\"noopener\""))
+   title="@(firstLink.Name ?? "Social link")">
+    @if (icon != null)
+    {
+        <img src="@icon.Url()" alt="@(firstLink.Name ?? "Social icon")" class="social-icon" />
+    }
+    else
+    {
+        <span class="social-text">@(firstLink.Name ?? "Social")</span>
+    }
+</a>

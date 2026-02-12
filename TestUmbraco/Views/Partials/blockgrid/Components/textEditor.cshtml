@@ -1,6 +1,8 @@
 @using Umbraco.Cms.Core.Models.Blocks
 @using TestUmbraco.Models
+@using TestUmbraco.Services
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
+@inject IStaticCssGeneratorService StaticCssGenerator
 
 @{
     var content = Model.Content;
@@ -12,16 +14,47 @@
     // Получаем значения свойств
     var tagValue = content.Value<string>("tag");
     var wrapperTag = string.IsNullOrWhiteSpace(tagValue) ? "div" : tagValue;
-    var customClass = content.Value<string>("Class");
+    var customClass = content.Value<string>("Class") ?? "";
     var textContent = content.Value<string>("content");
+    
+    // Получаем цвет текста из content
+    var textColor = "";
+    if (content.HasProperty("textInverse") && content.HasValue("textInverse"))
+    {
+        textColor = content.Value<string>("textInverse") ?? "";
+    }
+    
+    // Применяем textColor если задан
+    if (!string.IsNullOrWhiteSpace(textColor))
+    {
+        var textColorClass = $"text-color-{content.Key:N}";
+        customClass += $" {textColorClass}";
+        
+        var textColorCss = $@"
+.{textColorClass},
+.{textColorClass} * {{
+    color: {textColor} !important;
+}}";
+        
+        await StaticCssGenerator.AddInlineStyleAsync(textColorCss, "textcolor");
+    }
 }
 
 @if (!string.IsNullOrWhiteSpace(textContent))
 {
     @if (applyBackgroundToParent)
     {
-        @* Фон применяется к родительскому элементу, рендерим только контент без обертки *@
-        @Html.Raw(textContent)
+        @* Фон применяется к родительскому элементу, рендерим контент с классом textColor *@
+        @if (!string.IsNullOrWhiteSpace(customClass))
+        {
+            <div class="@customClass">
+                @Html.Raw(textContent)
+            </div>
+        }
+        else
+        {
+            @Html.Raw(textContent)
+        }
     }
     else
     {

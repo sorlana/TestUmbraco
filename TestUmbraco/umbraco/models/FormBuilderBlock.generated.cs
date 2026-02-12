@@ -66,6 +66,14 @@ namespace Umbraco.Cms.Web.Common.PublishedModels
 		public virtual string ButtonModal => this.Value<string>(_publishedValueFallback, "buttonModal");
 
 		///<summary>
+		/// class
+		///</summary>
+		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
+		[global::System.Diagnostics.CodeAnalysis.MaybeNull]
+		[ImplementPropertyType("class")]
+		public virtual string Class => this.Value<string>(_publishedValueFallback, "class");
+
+		///<summary>
 		/// Email получателя
 		///</summary>
 		[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Umbraco.ModelsBuilder.Embedded", "17.1.0+2832436")]
