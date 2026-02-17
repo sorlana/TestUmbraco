@@ -259,6 +259,97 @@ p {
 .col-12 {
   width: 100%; /* 12/12 */
 }
+
+/* Адаптивные стили для планшетов */
+@media (max-width: 1024px) {
+  .col-md-1 {
+    width: 8.333333%;
+  }
+  .col-md-2 {
+    width: 16.666667%;
+  }
+  .col-md-3 {
+    width: 25%;
+  }
+  .col-md-4 {
+    width: 33.333333%;
+  }
+  .col-md-5 {
+    width: 41.666667%;
+  }
+  .col-md-6 {
+    width: 50%;
+  }
+  .col-md-7 {
+    width: 58.333333%;
+  }
+  .col-md-8 {
+    width: 66.666667%;
+  }
+  .col-md-9 {
+    width: 75%;
+  }
+  .col-md-10 {
+    width: 83.333333%;
+  }
+  .col-md-11 {
+    width: 91.666667%;
+  }
+  .col-md-12 {
+    width: 100%;
+  }
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+    margin: 0;
+  }
+  
+  [class*="col-"] {
+    padding: 0;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .col-sm-1 {
+    width: 8.333333%;
+  }
+  .col-sm-2 {
+    width: 16.666667%;
+  }
+  .col-sm-3 {
+    width: 25%;
+  }
+  .col-sm-4 {
+    width: 33.333333%;
+  }
+  .col-sm-5 {
+    width: 41.666667%;
+  }
+  .col-sm-6 {
+    width: 50%;
+  }
+  .col-sm-7 {
+    width: 58.333333%;
+  }
+  .col-sm-8 {
+    width: 66.666667%;
+  }
+  .col-sm-9 {
+    width: 75%;
+  }
+  .col-sm-10 {
+    width: 83.333333%;
+  }
+  .col-sm-11 {
+    width: 91.666667%;
+  }
+  .col-sm-12 {
+    width: 100%;
+  }
+}
 /* ===== End GRID ===== */
 
 /* ===== IMG AND CAARD ===== */
@@ -744,6 +835,12 @@ picture img,
   cursor: default;
 }
 
+/* Активный пункт меню лендинга */
+.landing-menu-link.active {
+  color: var(--color-primary) !important;
+  font-weight: 500;
+}
+
 /* action-элементы в шапке (телефон, кабинет, язык, кнопка) */
 .menu .header-actions {
   display: flex;
@@ -805,6 +902,7 @@ picture img,
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
   -o-transform: rotate(0deg);
+  z-index: 1001; /* Добавляем z-index для обеспечения видимости */
 }
 
 .menu .mobile-menu-toggle:hover {
@@ -955,6 +1053,12 @@ picture img,
 .mobile-menu-link:hover,
 .mobile-landing-link:hover {
   color: var(--color-primary);
+}
+
+/* Активный пункт меню в мобильной версии */
+.mobile-landing-link.active {
+  color: var(--color-primary);
+  font-weight: 500;
 }
 
 /* Блок с дополнительными действиями (телефон, кабинет) */

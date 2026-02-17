@@ -381,6 +381,72 @@
         initSiteMenu();
     }
     
+    
+    function initScrollHighlight() {
+        // Получаем все ссылки меню лендинга
+        const menuLinks = document.querySelectorAll('.landing-menu-link, .mobile-landing-link');
+        
+        // Создаем массив секций и соответствующих ссылок
+        const sections = [];
+        
+        menuLinks.forEach(link => {
+            const sectionId = link.getAttribute('href').substring(1);
+            const section = document.getElementById(sectionId);
+            
+            if (section) {
+                sections.push({
+                    element: section,
+                    link: link,
+                    id: sectionId
+                });
+            }
+        });
+        
+        // Функция для определения активной секции
+        function setActiveSection() {
+            let currentSection = '';
+            const scrollPosition = window.scrollY + 100; // Небольшой отступ сверху
+            
+            sections.forEach(section => {
+                const sectionTop = section.element.offsetTop;
+                const sectionHeight = section.element.offsetHeight;
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    currentSection = section.id;
+                }
+            });
+            
+            // Удаляем класс active у всех ссылок
+            menuLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Добавляем класс active к ссылке текущей секции
+            if (currentSection) {
+                const activeLink = document.querySelector(`.landing-menu-link[href="#${currentSection}"], .mobile-landing-link[href="#${currentSection}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+        }
+        
+        // Добавляем обработчик прокрутки
+        window.addEventListener('scroll', setActiveSection);
+        
+        // Вызываем функцию сразу, чтобы установить активную секцию при загрузке страницы
+        setActiveSection();
+    }
+    
+    function initSiteMenu() {
+        // Добавляем задержку для корректной инициализации
+        setTimeout(function() {
+            initMobileMenu();
+            initSmoothScroll();
+            toggleLandingSections();
+            initScrollHighlight(); // Добавляем вызов новой функции
+            document.body.classList.add('site-menu-loaded');
+        }, 100);
+    }
 })();
 
 // =========================================

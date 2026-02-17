@@ -58,7 +58,6 @@ namespace TestUmbraco.Services
                     // Заголовок файла
                     cssBuilder.AppendLine("/* =========================================== */");
                     cssBuilder.AppendLine("/* BACKGROUNDS.CSS - STATIC BACKGROUND STYLES  */");
-                    cssBuilder.AppendLine("/* Generated: " + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC */");
                     cssBuilder.AppendLine("/* =========================================== */");
                     cssBuilder.AppendLine();
                     
@@ -503,10 +502,6 @@ namespace TestUmbraco.Services
                     
                     System.IO.File.WriteAllText(_cssFilePath, content, Encoding.UTF8);
                     _loggingService.LogInformation<StaticCssGeneratorService>($"CSS file updated: {_cssFilePath}");
-                    
-                    // Добавляем timestamp в конец файла чтобы изменить его hash для cache busting
-                    var timestamp = $"\n/* Updated: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss.fff} UTC */\n";
-                    System.IO.File.AppendAllText(_cssFilePath, timestamp, Encoding.UTF8);
                 }
                 catch (Exception ex)
                 {

@@ -131,47 +131,44 @@
 
             <!-- Дополнительные элементы -->
             @* Показываем блок, только если есть хотя бы один элемент *@
-            @if (showTel || showLk || showLanguage || !string.IsNullOrEmpty(buttonName))
-            {
-                <div class='header-actions'>
-                    @if (showTel)
-                    {
-                        <div class='header-phone'>
-                            <span class='material-symbols-outlined phone-icon'>call</span>
-                            <span class='phone-text'>Контакты</span>
-                        </div>
-                    }
+            <div class='header-actions'>
+                @if (showTel)
+                {
+                    <div class='header-phone'>
+                        <span class='material-symbols-outlined phone-icon'>call</span>
+                        <span class='phone-text'>Контакты</span>
+                    </div>
+                }
 
-                    @if (!string.IsNullOrEmpty(buttonName))
-                    {
-                        <button class='header-button' type='button'>@buttonName</button>
-                    }
+                @if (!string.IsNullOrEmpty(buttonName))
+                {
+                    <button class='header-button' type='button'>@buttonName</button>
+                }
 
-                    @if (showLk)
-                    {
-                        <a href='/account' class='lk-link'>
-                            <span class='material-symbols-outlined'>person</span>
-                            <span class='lk-text'>Войти</span>
-                        </a>
-                    }
+                @if (showLk)
+                {
+                    <a href='/account' class='lk-link'>
+                        <span class='material-symbols-outlined'>person</span>
+                        <span class='lk-text'>Войти</span>
+                    </a>
+                }
 
-                    @if (showLanguage)
-                    {
-                        <div class='language-selector'>
-                            <span class='current-language'>RU</span>
-                            <span class='material-symbols-outlined'>arrow_drop_down</span>
-                        </div>
-                    }
+                @if (showLanguage)
+                {
+                    <div class='language-selector'>
+                        <span class='current-language'>RU</span>
+                        <span class='material-symbols-outlined'>arrow_drop_down</span>
+                    </div>
+                }
 
-                    <!-- Мобильное меню (кнопка) — оставляем JS-хук .mobile-menu-toggle -->
-                    <button class='mobile-menu mobile-menu-toggle' type='button' aria-label='Меню'>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </button>
-                </div>
-            }
+                <!-- Мобильное меню (кнопка) — оставляем JS-хук .mobile-menu-toggle -->
+                <button class='mobile-menu mobile-menu-toggle' type='button' aria-label='Меню'>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </nav>
     </div>
 </div>
