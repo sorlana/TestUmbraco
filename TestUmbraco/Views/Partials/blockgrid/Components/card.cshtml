@@ -15,11 +15,11 @@
     var applyBackgroundToParent = ViewData["ApplyBackgroundToParent"] as bool? ?? false;
 
     // ---------- Свойства карточки ----------
-    var cardTitle = content.Value<string>("cardTitle");
-    var cardSummary = content.Value<string>("cardSummary");
+    var cardTitle = content.Value<string>("cardTitle") ?? string.Empty;
+    var cardSummary = content.Value<string>("cardSummary") ?? string.Empty;
     var cardImage = content.Value<IPublishedContent>("cardImage");
     var cardDate = content.Value<DateTime?>("cardDate");
-    var cardCategory = content.Value<IEnumerable<string>>("cardCategory");
+    var cardCategory = content.Value<IEnumerable<string>>("cardCategory") ?? Enumerable.Empty<string>();
 
     // ---------- Ссылки ----------
     var cardImgLink = content.Value<CoreLink>("cardImgLink");
@@ -108,7 +108,7 @@
 
     // ---------- ФОРМИРУЕМ СОДЕРЖИМОЕ КАРТОЧКИ (как делегат для _BackgroundClasses) ----------
     Func<object, IHtmlContent> cardContent = @<text>
-        @if (hasImgLink)
+        @if (hasImgLink && cardImgLink != null)
         {
             <a href="@cardImgLink.Url" target="@cardImgLink.Target" class="card-link-wrapper">
                 @RenderCardInner()
@@ -176,10 +176,10 @@
         // Ссылка
         if (hasCardLink)
         {
-            var linkTarget = string.IsNullOrWhiteSpace(cardLink.Target) ? "" : $" target=\"{cardLink.Target}\"";
-            var linkRel = string.IsNullOrWhiteSpace(cardLink.Target) ? "" : " rel=\"noopener\"";
-            var linkText = string.IsNullOrWhiteSpace(cardLink.Name) ? "Подробнее" : cardLink.Name;
-            sb.Append($"<a href=\"{cardLink.Url}\"{linkTarget}{linkRel} class=\"btn btn-primary mt-2\">{linkText}</a>");
+            var linkTarget = cardLink?.Target != null && !string.IsNullOrWhiteSpace(cardLink.Target) ? $" target=\"{cardLink.Target}\"" : "";
+            var linkRel = cardLink?.Target != null && !string.IsNullOrWhiteSpace(cardLink.Target) ? " rel=\"noopener\"" : "";
+            var linkText = string.IsNullOrWhiteSpace(cardLink?.Name) ? "Подробнее" : cardLink.Name;
+            sb.Append($"<a href=\"{cardLink?.Url}\"{linkTarget}{linkRel} class=\"btn btn-primary mt-2\">{linkText}</a>");
         }
         else
         {
@@ -199,26 +199,26 @@
 }
 
 @* =============================================================================
-   ВЫВОД С УЧЁТОМ ФОНА (через _BackgroundClasses)
-   ============================================================================= *@
+ВЫВОД С УЧЁТОМ ФОНА (через _BackgroundClasses)
+============================================================================= *@
 @if (applyBackgroundToParent)
 {
-    @* Фон уже применён к родителю — рендерим только содержимое карточки *@
-    @cardContent(null)
+@* Фон уже применён к родителю — рендерим только содержимое карточки *@
+@cardContent(new object())
 }
 else
 {
-    var backgroundModel = new BackgroundClassesModel
-    {
-        Settings = settings,
-        ComponentId = content.Key,
-        Prefix = "card-bg",
-        BaseClass = "",
-        AdditionalClasses = "",
-        Tag = wrapperTag,
-        ContainerClass = "",
-        Content = cardContent   // передаём делегат
-    };
+var backgroundModel = new BackgroundClassesModel
+{
+    Settings = settings,
+    ComponentId = content.Key,
+    Prefix = "card-bg",
+    BaseClass = "",
+    AdditionalClasses = "",
+    Tag = wrapperTag,
+    ContainerClass = "",
+    Content = cardContent   // передаём делегат
+};
 
-    <partial name="_BackgroundClasses" model="backgroundModel" />
+<partial name="_BackgroundClasses" model="backgroundModel" />
 }

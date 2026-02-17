@@ -441,7 +441,7 @@ namespace TestUmbraco.Services
             else
             {
                 _loggingService.LogWarning<UmbracoBackgroundService>(
-                    $"Overlay opacity NOT found: HasProperty={settings.HasProperty("opacityOverlay")}, overlayClass={overlayClass}");
+                    $"Overlay opacity NOT found: HasProperty={settings?.HasProperty("opacityOverlay")}, overlayClass={overlayClass}");
             }
             
             // Добавляем стили для правильного позиционирования контента над оверлеем

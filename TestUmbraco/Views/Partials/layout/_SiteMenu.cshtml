@@ -52,22 +52,25 @@
     
     // Данные для JS
     var menuLandingData = new List<object>();
-    if (hasMenuLanding)
+    if (hasMenuLanding && menuLandingItems != null)
     {
         foreach (var blockItem in menuLandingItems)
         {
-            var nameItem = blockItem.Content.Value<string>("nameItem");
-            var idItem = blockItem.Content.Value<string>("idItem");
-            var show = blockItem.Content.Value<bool>("show");
-            
-            if (!string.IsNullOrEmpty(nameItem) && !string.IsNullOrEmpty(idItem))
+            if (blockItem?.Content != null)
             {
-                menuLandingData.Add(new
+                var nameItem = blockItem.Content.Value<string>("nameItem");
+                var idItem = blockItem.Content.Value<string>("idItem");
+                var show = blockItem.Content.Value<bool>("show");
+                
+                if (!string.IsNullOrEmpty(nameItem) && !string.IsNullOrEmpty(idItem))
                 {
-                    name = nameItem,
-                    id = idItem,
-                    show = show
-                });
+                    menuLandingData.Add(new
+                    {
+                        name = nameItem,
+                        id = idItem,
+                        show = show
+                    });
+                }
             }
         }
     }

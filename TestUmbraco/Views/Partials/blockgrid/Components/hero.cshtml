@@ -104,26 +104,26 @@
 }
 
 @* =============================================================================
-   ВЫВОД С УЧЁТОМ ФОНА (через _BackgroundClasses) — ТОЧНО КАК В section.cshtml
-   ============================================================================= *@
+ВЫВОД С УЧЁТОМ ФОНА (через _BackgroundClasses) — ТОЧНО КАК В section.cshtml
+============================================================================= *@
 @if (applyBackgroundToParent)
 {
-    @heroContentFunc(null)
+@heroContentFunc(new object())
 }
 else
 {
-    var backgroundModel = new BackgroundClassesModel
-    {
-        Settings = settings,
-        ComponentId = content?.Key,
-        Prefix = "hero-bg",
-        BaseClass = sectionClass.Trim(),
-        AdditionalClasses = "",
-        Tag = "section",               // семантический тег
-        ContainerClass = "",          // контейнер уже внутри heroContentFunc
-        ElementId = idSection.Trim(),
-        Content = heroContentFunc
-    };
+var backgroundModel = new BackgroundClassesModel
+{
+    Settings = settings,
+    ComponentId = content?.Key,
+    Prefix = "hero-bg",
+    BaseClass = sectionClass.Trim(),
+    AdditionalClasses = "",
+    Tag = "section",               // семантический тег
+    ContainerClass = "",          // контейнер уже внутри heroContentFunc
+    ElementId = idSection.Trim(),
+    Content = heroContentFunc
+};
 
-    <partial name="_BackgroundClasses" model="backgroundModel" />
+<partial name="_BackgroundClasses" model="backgroundModel" />
 }
