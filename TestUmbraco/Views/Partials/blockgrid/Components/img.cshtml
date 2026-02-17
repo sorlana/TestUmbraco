@@ -26,6 +26,14 @@
     
     // CSS классы
     var cardClass = content.Value<string>("class") ?? "";
+    
+    // Извлекаем класс анимации из строки вида "bounce (Привлекающие внимание)"
+    if (!string.IsNullOrWhiteSpace(cardClass) && cardClass.Contains("("))
+    {
+        var animateClass = cardClass.Split('(')[0].Trim();
+        cardClass = animateClass;
+    }
+    
     var imageClass = content.Value<string>("imageClass") ?? "card-img-top";
     
     // Параметры изображения

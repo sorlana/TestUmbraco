@@ -9,13 +9,16 @@ namespace TestUmbraco.Controllers
     {
         private readonly IMediaCacheService _mediaCacheService;
         private readonly ILogger<UniversalBackgroundController> _logger;
+        private readonly IStaticCssGeneratorService _cssGeneratorService;
 
         public UniversalBackgroundController(
             IMediaCacheService mediaCacheService,
-            ILogger<UniversalBackgroundController> logger)
+            ILogger<UniversalBackgroundController> logger,
+            IStaticCssGeneratorService cssGeneratorService)
         {
             _mediaCacheService = mediaCacheService;
             _logger = logger;
+            _cssGeneratorService = cssGeneratorService;
         }
 
         [HttpGet("multiple")]
@@ -30,6 +33,21 @@ namespace TestUmbraco.Controllers
                 css = "/* No valid backgrounds generated */";
             
             return Content(css, "text/css");
+        }
+        
+        [HttpPost("regenerate-all")]
+        public async Task<IActionResult> RegenerateAllCss()
+        {
+            try
+            {
+                await _cssGeneratorService.RegenerateAllCssAsync();
+                return Ok("CSS regenerated successfully");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error regenerating CSS");
+                return StatusCode(500, "Error regenerating CSS: " + ex.Message);
+            }
         }
     }
 }

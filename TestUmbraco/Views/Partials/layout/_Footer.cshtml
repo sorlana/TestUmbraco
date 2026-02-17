@@ -44,7 +44,7 @@
     <div class="container">
         <div class="row">
             <!-- ЛЕВАЯ КОЛОНКА: Копирайт + Контакты -->
-            <div class="col-md-4">
+            <div class="col-12">
                 @if (!string.IsNullOrWhiteSpace(copyright) || showYear)
                 {
                     <div class="footer-copyright">
@@ -63,7 +63,8 @@
                     </div>
                 }
             </div>
-
+            </div>
+            <div class="row">
             <!-- СРЕДНЯЯ КОЛОНКА: Соцсети и Навигационное меню -->
             <div class="col-md-4">
                 @if (socialBlocks?.Any() == true)

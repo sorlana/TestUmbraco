@@ -13,6 +13,13 @@
     // Получаем значение свойства "Class"
     var customClass = content.Value<string>("Class");
     
+    // Извлекаем класс анимации из строки вида "bounce (Привлекающие внимание)"
+    if (!string.IsNullOrWhiteSpace(customClass) && customClass.Contains("("))
+    {
+        var animateClass = customClass.Split('(')[0].Trim();
+        customClass = animateClass;
+    }
+    
     // Получаем видео-контент (ID видео Vimeo)
     var videoContent = content.Value<string>("videoContent");
 }

@@ -51,7 +51,7 @@
 
     // ---------- Функция для рендеринга содержимого Hero ----------
     Func<object, IHtmlContent>? heroContentFunc = @<text>
-        <div class="container @containerClass.Trim()">
+        <div class="hero container @containerClass.Trim()">
             <div class="hero-content">
                 @if (!string.IsNullOrWhiteSpace(title))
                 {

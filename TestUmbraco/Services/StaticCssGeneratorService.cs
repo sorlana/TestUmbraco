@@ -6,6 +6,7 @@ using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Models;
 using System.Collections.Concurrent;
 using Umbraco.Extensions;
+using System.Collections.Generic;
 
 namespace TestUmbraco.Services
 {
@@ -18,6 +19,8 @@ namespace TestUmbraco.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _cssFilePath;
         private readonly ConcurrentDictionary<string, string> _styleCache = new();
+        private readonly ConcurrentDictionary<string, string> _colorClasses = new();
+        private readonly ConcurrentDictionary<string, (string, string, string)> _gradientClasses = new();
         private readonly object _fileLock = new();
 
         public StaticCssGeneratorService(
@@ -270,6 +273,36 @@ namespace TestUmbraco.Services
                     await UpdateCssForMediaAsync(media.Key);
                 }
                 
+                // Восстанавливаем цветовые классы
+                foreach (var kvp in _colorClasses)
+                {
+                    var className = kvp.Key;
+                    var colorValue = kvp.Value;
+                    
+                    var css = $@"
+.{className} {{
+    background-color: {colorValue};
+    position: relative;
+}}";
+                    
+                    await AppendOrUpdateCssSectionAsync(className, css, "COLOR BACKGROUND CLASSES");
+                }
+                
+                // Восстанавливаем градиентные классы
+                foreach (var kvp in _gradientClasses)
+                {
+                    var className = kvp.Key;
+                    var (colorStart, colorEnd, direction) = kvp.Value;
+                    
+                    var css = $@"
+.{className} {{
+    background: linear-gradient({direction}, {colorStart}, {colorEnd});
+    position: relative;
+}}";
+                    
+                    await AppendOrUpdateCssSectionAsync(className, css, "GRADIENT BACKGROUND CLASSES");
+                }
+                
                 _loggingService.LogInformation<StaticCssGeneratorService>("Regenerated all CSS backgrounds");
             }
             catch (Exception ex)
@@ -351,6 +384,9 @@ namespace TestUmbraco.Services
             var hash = ComputeHash($"color:{colorValue}");
             var className = $"bg-color-{hash}";
             
+            // Track the color class
+            _colorClasses.TryAdd(className, colorValue);
+            
             var css = $@"
 .{className} {{
     background-color: {colorValue};
@@ -366,6 +402,9 @@ namespace TestUmbraco.Services
         {
             var hash = ComputeHash($"gradient:{colorStart}:{colorEnd}:{direction}");
             var className = $"bg-gradient-{hash}";
+            
+            // Track the gradient class
+            _gradientClasses.TryAdd(className, (colorStart, colorEnd, direction));
             
             var css = $@"
 .{className} {{
@@ -409,6 +448,7 @@ namespace TestUmbraco.Services
             {
                 try
                 {
+                    // Проверяем, существует ли файл, если нет - создаем базовый
                     if (!System.IO.File.Exists(_cssFilePath))
                     {
                         GenerateBackgroundCssFileAsync().Wait();
@@ -418,7 +458,7 @@ namespace TestUmbraco.Services
                     
                     // Ищем секцию по имени
                     var escapedSectionName = Regex.Escape(sectionName);
-                    var sectionPattern = $@"\/\*\s*={{{escapedSectionName}}}\s*\*\/.*?(?=\/\*\s*=|\Z)";
+                    var sectionPattern = $@"\/\*\s*{escapedSectionName}\s*\*\/.*?(?=\/\*\s*[A-Z]|\Z)";
                     var sectionMatch = Regex.Match(content, sectionPattern, RegexOptions.Singleline | RegexOptions.IgnoreCase);
                     
                     if (sectionMatch.Success)
@@ -426,7 +466,7 @@ namespace TestUmbraco.Services
                         var sectionContent = sectionMatch.Value;
                         
                         // Ищем подсекцию с нашим ID
-                        var subsectionPattern = $@"\/\*\s*{Regex.Escape(sectionId)}\s*\*\/.*?(?=\/\*\s*\w+|$)";
+                        var subsectionPattern = $@"\/\*\s*{Regex.Escape(sectionId)}\s*\*\/.*?(?=\/\*\s*[A-Z]|\Z)";
                         var subsectionMatch = Regex.Match(sectionContent, subsectionPattern, RegexOptions.Singleline);
                         
                         if (subsectionMatch.Success)
@@ -487,7 +527,7 @@ namespace TestUmbraco.Services
                     var content = System.IO.File.ReadAllText(_cssFilePath);
                     
                     // Ищем и удаляем подсекцию с нашим ID
-                    var pattern = $@"\/\*\s*{Regex.Escape(sectionId)}\s*\*\/.*?(?=\/\*\s*\w+|$)";
+                    var pattern = $@"\/\*\s*{Regex.Escape(sectionId)}\s*\*\/.*?(?=\/\*\s*[A-Z]|\Z)";
                     content = Regex.Replace(content, pattern, "", RegexOptions.Singleline);
                     
                     // Удаляем пустые строки

@@ -1,23 +1,106 @@
-﻿/* Auto-generated background and text color styles */
-
-
-/* =========================================== */
-/* COLOR BACKGROUND CLASSES                 */
+﻿/* =========================================== */
+/* BACKGROUNDS.CSS - STATIC BACKGROUND STYLES  */
+/* Generated: 2026-02-17 04:31:25 UTC */
 /* =========================================== */
 
-/* bg-color-2041d553 */
-
-.bg-color-2041d553 {
-    background-color: #2b00ff;
-    position: relative;
+/* === GLOBAL BACKGROUND CLASSES === */
+.lazy-bg {
+  position: relative;
+  overflow: hidden;
 }
 
-/* Updated: 2026-02-12 07:19:08.654 UTC */
+.with-overlay {
+  position: relative;
+}
 
+.background-overlay {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* === VIDEO BACKGROUND CLASSES === */
+.lazy-video {
+  position: relative;
+  overflow: hidden;
+}
+
+.lazy-video .video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.lazy-video .video-bg-iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 177.77777778vh;
+  min-width: 100%;
+  min-height: 100%;
+  height: 56.25vw;
+  transform: translate(-50%, -50%);
+  border: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.lazy-video .video-placeholder {
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+/* Активный placeholder - показываем */
+.lazy-video .video-placeholder-active {
+  opacity: 1;
+}
+
+/* Скрытый placeholder после загрузки видео */
+.lazy-video .video-placeholder-hidden {
+  opacity: 0;
+}
+
+/* Видимый placeholder в backoffice */
+.lazy-video .video-placeholder-visible {
+  opacity: 1 !important;
+  display: block !important;
+}
+
+/* Скрытое видео в backoffice */
+.video-hidden {
+  display: none !important;
+}
+
+/* На мобильных устройствах placeholder всегда видим */
+@media (max-width: 1024px) {
+  .lazy-video .video-placeholder {
+    opacity: 1 !important;
+  }
+  
+  .lazy-video .video-bg-iframe {
+    display: none;
+  }
+}
 
 /* =========================================== */
-/* MEDIA BACKGROUND CLASSES                 */
-/* =========================================== */
+/* MEDIA BACKGROUND CLASSES                   */
 
 /* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
 
@@ -27,14 +110,155 @@
     background-position: center;
     background-repeat: no-repeat;
 }
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
 
-/* Updated: 2026-02-12 07:19:08.876 UTC */
-
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+/* Auto-generated from Umbraco media library  */
+/* =========================================== */
 
 /* =========================================== */
-/* OVERLAY STYLES                           */
+/* COLOR BACKGROUND CLASSES                   */
 /* =========================================== */
 
+/* =========================================== */
+
+/* bg-color-2041d553 */
+
+.bg-color-2041d553 {
+    background-color: #2b00ff;
+    position: relative;
+}
+/* bg-color-fc9bf3a6 */
+
+.bg-color-fc9bf3a6 {
+    background-color: #030303;
+    position: relative;
+}
+/* bg-color-2041d553 */
+
+.bg-color-2041d553 {
+    background-color: #2b00ff;
+    position: relative;
+}
+/* bg-color-2041d553 */
+
+.bg-color-2041d553 {
+    background-color: #2b00ff;
+    position: relative;
+}
+/* GRADIENT BACKGROUND CLASSES                */
+/* =========================================== */
+
+/* =========================================== */
+/* OVERLAY STYLES                             */
+/* =========================================== */
+
+/* =========================================== */
+
+/* overlay-5640d1e7 */
+
+.overlay-b5855bba30164526ab003da00af8dda9 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.overlay-b5855bba30164526ab003da00af8dda9::before {
+    background-color: #2b00ff;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-b5855bba30164526ab003da00af8dda9 > .container,
+.overlay-b5855bba30164526ab003da00af8dda9 > [class*="container"] {
+    position: relative;
+    z-index: 2;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-b5855bba30164526ab003da00af8dda9 > *:not(.video-container) {
+    position: relative;
+    z-index: 2;
+}
+/* overlay-1597caa4 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
+/* overlay-03bf8f42 */
+
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
+    position: relative;
+}
+
+/* Оверлей над фоном/видео, но под контентом */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    background-color: #030303;
+}
+.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
+    opacity: 0.65;
+}
+/* Позиционируем контент над оверлеем */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
+    position: relative;
+    z-index: 1;
+}
+
+/* Все прямые дочерние элементы, кроме video-container */
+.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
+    position: relative;
+    z-index: 1;
+}
 /* overlay-18478a7b */
 
 .overlay-b5855bba30164526ab003da00af8dda9 {
@@ -70,8 +294,62 @@
     position: relative;
     z-index: 2;
 }
+/* CUSTOM INLINE STYLES                       */
+/* =========================================== */
 
-/* Updated: 2026-02-12 07:19:08.950 UTC */
+
+
+/* =========================================== */
+
+/* textcolor-2685e2f8 */
+
+.text-color-d9f586c307ca4968b2f3257b7e228640,
+.text-color-d9f586c307ca4968b2f3257b7e228640 * {
+    color: #ffffff !important;
+}
+/* textcolor-a1eec467 */
+
+.text-color-c1cf06c63d644aecb75f4860c5363be6,
+.text-color-c1cf06c63d644aecb75f4860c5363be6 * {
+    color: #ffffff !important;
+}
+/* textcolor-154089b9 */
+
+.text-color-7790222413a2485499bda2825a7637d4,
+.text-color-7790222413a2485499bda2825a7637d4 * {
+    color: #ffffff !important;
+}
+/* textcolor-8115f00f */
+
+.text-color-275fa13b30f546b4bc169abd36008c71,
+.text-color-275fa13b30f546b4bc169abd36008c71 * {
+    color: #ffffff !important;
+}
+/* textcolor-e9bc3081 */
+
+.text-color-83bda90ba1c745cdb77c4b0a3c153a76,
+.text-color-83bda90ba1c745cdb77c4b0a3c153a76 * {
+    color: #ffffff !important;
+}
+/* MEDIA BACKGROUND CLASSES                 */
+/* =========================================== */
+
+/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
+
+.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
+    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Updated: 2026-02-17 04:31:25.425 UTC */
+
+/* Updated: 2026-02-17 05:02:38.894 UTC */
+
+/* Updated: 2026-02-17 05:02:38.952 UTC */
+
+/* Updated: 2026-02-17 05:02:39.039 UTC */
 
 
 /* =========================================== */
@@ -114,187 +392,28 @@
     z-index: 0 !important;
 }
 
-/* Updated: 2026-02-12 07:19:08.990 UTC */
+/* Updated: 2026-02-17 05:02:39.138 UTC */
 
+/* Updated: 2026-02-17 05:02:39.237 UTC */
 
-/* =========================================== */
-/* OVERLAY STYLES                           */
-/* =========================================== */
+/* Updated: 2026-02-17 05:02:40.087 UTC */
 
-/* overlay-03bf8f42 */
+/* Updated: 2026-02-17 05:02:40.244 UTC */
 
-.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
-    position: relative;
-}
+/* Updated: 2026-02-17 05:02:40.304 UTC */
 
-/* Оверлей над фоном/видео, но под контентом */
-.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-}
-.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
-    background-color: #030303;
-}
-.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
-    opacity: 0.65;
-}
-/* Позиционируем контент над оверлеем */
-.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
-.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
-    position: relative;
-    z-index: 1;
-}
+/* Updated: 2026-02-17 05:02:40.360 UTC */
 
-/* Все прямые дочерние элементы, кроме video-container */
-.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
-    position: relative;
-    z-index: 1;
-}
+/* Updated: 2026-02-17 05:02:40.606 UTC */
 
-/* Updated: 2026-02-12 07:19:09.042 UTC */
+/* Updated: 2026-02-17 05:11:32.544 UTC */
 
+/* Updated: 2026-02-17 05:11:32.608 UTC */
 
-/* =========================================== */
-/* CUSTOM INLINE STYLES                     */
-/* =========================================== */
+/* Updated: 2026-02-17 05:11:32.673 UTC */
 
-/* textcolor-e9bc3081 */
+/* Updated: 2026-02-17 05:11:32.771 UTC */
 
-.text-color-83bda90ba1c745cdb77c4b0a3c153a76,
-.text-color-83bda90ba1c745cdb77c4b0a3c153a76 * {
-    color: #ffffff !important;
-}
+/* Updated: 2026-02-17 05:11:35.651 UTC */
 
-/* Updated: 2026-02-12 07:19:09.369 UTC */
-
-
-/* =========================================== */
-/* CUSTOM INLINE STYLES                     */
-/* =========================================== */
-
-/* textcolor-8115f00f */
-
-.text-color-275fa13b30f546b4bc169abd36008c71,
-.text-color-275fa13b30f546b4bc169abd36008c71 * {
-    color: #ffffff !important;
-}
-
-/* Updated: 2026-02-12 07:19:09.427 UTC */
-
-
-/* =========================================== */
-/* CUSTOM INLINE STYLES                     */
-/* =========================================== */
-
-/* textcolor-154089b9 */
-
-.text-color-7790222413a2485499bda2825a7637d4,
-.text-color-7790222413a2485499bda2825a7637d4 * {
-    color: #ffffff !important;
-}
-
-/* Updated: 2026-02-12 07:19:09.527 UTC */
-
-
-/* =========================================== */
-/* CUSTOM INLINE STYLES                     */
-/* =========================================== */
-
-/* textcolor-a1eec467 */
-
-.text-color-c1cf06c63d644aecb75f4860c5363be6,
-.text-color-c1cf06c63d644aecb75f4860c5363be6 * {
-    color: #ffffff !important;
-}
-
-/* Updated: 2026-02-12 07:19:36.447 UTC */
-
-
-/* =========================================== */
-/* OVERLAY STYLES                           */
-/* =========================================== */
-
-/* overlay-1597caa4 */
-
-.overlay-95f866a456324d2fa89fe3ae8632b6a2 {
-    position: relative;
-}
-
-/* Оверлей над фоном/видео, но под контентом */
-.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-}
-.overlay-95f866a456324d2fa89fe3ae8632b6a2::before {
-    background-color: #030303;
-}
-/* Позиционируем контент над оверлеем */
-.overlay-95f866a456324d2fa89fe3ae8632b6a2 > .container,
-.overlay-95f866a456324d2fa89fe3ae8632b6a2 > [class*="container"] {
-    position: relative;
-    z-index: 1;
-}
-
-/* Все прямые дочерние элементы, кроме video-container */
-.overlay-95f866a456324d2fa89fe3ae8632b6a2 > *:not(.video-container) {
-    position: relative;
-    z-index: 1;
-}
-
-/* Updated: 2026-02-12 07:19:38.744 UTC */
-
-
-/* =========================================== */
-/* CUSTOM INLINE STYLES                     */
-/* =========================================== */
-
-/* textcolor-2685e2f8 */
-
-.text-color-d9f586c307ca4968b2f3257b7e228640,
-.text-color-d9f586c307ca4968b2f3257b7e228640 * {
-    color: #ffffff !important;
-}
-
-/* Updated: 2026-02-12 07:19:51.997 UTC */
-
-
-/* =========================================== */
-/* COLOR BACKGROUND CLASSES                 */
-/* =========================================== */
-
-/* bg-color-2041d553 */
-
-.bg-color-2041d553 {
-    background-color: #2b00ff;
-    position: relative;
-}
-
-/* Updated: 2026-02-12 07:20:00.026 UTC */
-
-
-/* =========================================== */
-/* MEDIA BACKGROUND CLASSES                 */
-/* =========================================== */
-
-/* media_9807c5d0d59c4d6280f2e9bb0150fef0_717c583f */
-
-.bg-media-9807c5d0d59c4d6280f2e9bb0150fef0 {
-    background-image: url('/media/l2hfclxv/1764077659.png?v=639041638226700000');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-/* Updated: 2026-02-12 07:20:00.096 UTC */
+/* Updated: 2026-02-17 05:11:36.699 UTC */

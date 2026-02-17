@@ -71,7 +71,13 @@
 }
 
 /* ============================================ */
-/* КОНЕЦ ФАЙЛА                                  */
-/* ВСЕ остальные свойства берутся из            */
-/* backgrounds.css (цвета, opacity, размеры)    */
+/* BACKOFFICE PREVIEW                           */
 /* ============================================ */
+
+/* В backoffice убираем минимальные высоты для лучшего preview */
+.umb-block-grid__layout-item img[data-src],
+.umb-block-grid__layout-item img[data-srcset],
+.umb-block-list__item img[data-src],
+.umb-block-list__item img[data-srcset] {
+  min-height: auto;
+}

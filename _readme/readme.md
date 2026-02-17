@@ -1,3 +1,6 @@
+---
+alwaysApply: true
+---
 # Модульный обзор проекта TestUmbraco
 
 ## Введение
@@ -45,8 +48,7 @@
 - `TestUmbraco/Composers/MediaCacheComposer.cs` - Регистрация сервисов
 - `TestUmbraco/Views/Shared/_Image.cshtml` - Partial view для изображений
 - `TestUmbraco/wwwroot/css/images.css` - Стили для изображений
-- `TestUmbraco/wwwroot/css/lazy-load.css` - Стили для lazy loading
-- `TestUmbraco/wwwroot/js/lazy-load.js` - JavaScript для lazy loading
+  - `TestUmbraco/wwwroot/css/lazy-load.css` - Стили для lazy loading
 
 ### Основные классы и их роль
 
@@ -100,8 +102,6 @@
 - `TestUmbraco/Views/Shared/_BackgroundClasses.cshtml` - Partial view
 - `TestUmbraco/Views/Partials/_BackgroundConfig.cshtml` - Конфигурация фонов
 - `TestUmbraco/wwwroot/css/backgrounds.css` - Сгенерированные стили
-- `TestUmbraco/wwwroot/js/lazy-backgrounds.js` - Lazy loading фонов
-- `TestUmbraco/wwwroot/js/video-placeholders.js` - Placeholders для видео
 - `TestUmbraco/App_Plugins/UniversalBackground/` - Плагин для бэк-офиса
 
 ### Основные классы и их роль
@@ -138,49 +138,70 @@
 
 ---
 
-## Модуль 3: Отправка Email
+## Модуль 3: Обработка форм конструктора форм
 
 ### Цель модуля
-Обработка форм обратной связи и отправка email уведомлений с защитой от спама через reCAPTCHA.
+Обработка отправки форм конструктора форм Umbraco, сохранение данных в БД и отправка email уведомлений с защитой от спама через reCAPTCHA.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
-- `TestUmbraco/Controllers/EmailController.cs` - Контроллер форм
+- `TestUmbraco/Controllers/FormBuilderController.cs` - Контроллер обработки форм
+- `TestUmbraco/Models/FormSubmissionModel.cs` - Модель для привязки данных формы
 
 **Application Layer:**
-- `TestUmbraco.Application/Contracts/IEmailService.cs` - Интерфейс сервиса
-- `TestUmbraco.Application/Services/EmailService.cs` - Реализация отправки
-- `TestUmbraco.Application/DTO/EmailRequestDto.cs` - DTO email-заявки
-- `TestUmbraco.Application/DTO/CallRequestDto.cs` - DTO запроса звонка
+- `TestUmbraco.Application/Contracts/IEmailService.cs` - Интерфейс сервиса отправки email
+- `TestUmbraco.Application/Services/EmailService.cs` - Реализация отправки email
+- `TestUmbraco.Application/Contracts/IFormSubmissionService.cs` - Интерфейс сервиса обработки форм
+- `TestUmbraco.Application/Services/FormSubmissionService.cs` - Реализация обработки форм
+- `TestUmbraco.Application/DTO/FormSubmissionDto.cs` - DTO отправки формы
+- `TestUmbraco.Application/DTO/FormFieldDto.cs` - DTO поля формы
 
 **Domain Layer:**
-- `TestUmbraco.Domain/Models/EmailRequestItem.cs` - Entity email-заявки
-- `TestUmbraco.Domain/Models/CallRequestItem.cs` - Entity запроса звонка
+- `TestUmbraco.Domain/Models/FormSubmission.cs` - Entity отправки формы
+- `TestUmbraco.Domain/Contracts/IFormSubmissionRepository.cs` - Интерфейс репозитория форм
+- `TestUmbraco.Domain/Repositories/FormSubmissionRepository.cs` - Реализация репозитория форм
 
 ### Основные классы и их роль
 
-**EmailController** (SurfaceController)
-- `SendEmailRequest()` - Обработка email-заявки
-- `SendCallRequest()` - Обработка запроса звонка
-- Использует атрибут `[ValidateRecaptcha(0.5)]` для защиты
+**FormBuilderController** (SurfaceController)
+- `SubmitForm()` - Обработка отправки формы конструктора форм
+- Поддержка AJAX и обычных запросов
+- Валидация данных формы
+- Проверка reCAPTCHA токена
+- Интеграция с Notyf для уведомлений
+
+**FormSubmissionService**
+- `ProcessSubmissionAsync()` - Обработка и сохранение отправки формы в БД
+- `GetSubmissionsByFormAsync()` - Получение всех отправок конкретной формы
+- Преобразование DTO в Entity
+- Сериализация данных полей в JSON
 
 **EmailService**
-- `SendEmailRequestAsync()` - Отправка email-заявки
-- `SendCallRequestAsync()` - Отправка запроса звонка
-- `SendEmailAsync()` - Базовый метод отправки через SMTP
+- `SendFormSubmissionAsync()` - Отправка email с данными формы
+- Генерация HTML шаблона письма
+- Поддержка логотипа в письме
+- Отправка через SMTP (MailKit)
 
-**EmailRequestDto / CallRequestDto**
+**FormSubmissionRepository**
+- `SaveAsync()` - Сохранение отправки формы
+- `GetByIdAsync()` - Получение отправки по ID
+- `GetByFormIdAsync()` - Получение всех отправок формы
+- `GetAllAsync()` - Получение всех отправок с пагинацией
+
+**FormSubmissionDto**
 - DTO для передачи данных между слоями
+- Содержит: FormId, FormTitle, SubmittedAt, IpAddress, FieldValues, LogoUrl
 
-**EmailRequestItem / CallRequestItem**
-- Entity модели для сохранения в БД
-- Наследуются от `EntityBase`
+**FormSubmission** (Entity)
+- Entity модель для сохранения в БД
+- Свойства: FormId, FormTitle, SubmittedAt, IpAddress, FieldValuesJson
+- Наследуется от `EntityBase`
 
 ### Зависимости от других модулей
-- **Модуль данных**: Использует `IRepository<T>` для сохранения
+- **Модуль данных**: Использует `IFormSubmissionRepository` для сохранения
 - **Модуль конфигурации**: SMTP настройки из appsettings.json
-- **Внешние библиотеки**: MailKit, MimeKit, reCAPTCHA.AspNetCore
+- **Внешние библиотеки**: MailKit, MimeKit, reCAPTCHA.AspNetCore, AspNetCoreHero.ToastNotification
 
 ---
 
@@ -193,19 +214,21 @@
 
 **Domain Layer:**
 - `TestUmbraco.Domain/AppDbContext.cs` - DbContext Entity Framework
-- `TestUmbraco.Domain/Contracts/IRepository.cs` - Интерфейс репозитория
-- `TestUmbraco.Domain/Repositories/Repository.cs` - Реализация репозитория
+- `TestUmbraco.Domain/Contracts/IRepository.cs` - Интерфейс generic репозитория
+- `TestUmbraco.Domain/Repositories/Repository.cs` - Реализация generic репозитория
+- `TestUmbraco.Domain/Contracts/IFormSubmissionRepository.cs` - Интерфейс репозитория форм
+- `TestUmbraco.Domain/Repositories/FormSubmissionRepository.cs` - Реализация репозитория форм
 - `TestUmbraco.Domain/Models/EntityBase.cs` - Базовая entity
-- `TestUmbraco.Domain/Models/EmailRequestItem.cs` - Entity заявки
-- `TestUmbraco.Domain/Models/CallRequestItem.cs` - Entity звонка
+- `TestUmbraco.Domain/Models/FormSubmission.cs` - Entity отправки формы
 - `TestUmbraco.Domain/Migrations/` - EF Core миграции
+- `TestUmbraco.Domain/Domain.cs` - Extension методы для регистрации сервисов
 
 ### Основные классы и их роль
 
 **AppDbContext**
 - DbContext для работы с SQL Server
-- Управление DbSet для всех entity
-- Конфигурация подключения к БД
+- Содержит `DbSet<FormSubmission> FormSubmissions`
+- Конфигурация подключения к БД через ConnectionString `TestUmbracoData`
 
 **IRepository<T>**
 - Интерфейс generic репозитория
@@ -216,10 +239,26 @@
 - Работа с DbContext
 - Сохранение изменений
 
+**IFormSubmissionRepository**
+- Специализированный интерфейс репозитория для форм
+- `SaveAsync()` - Сохранение отправки формы
+- `GetByIdAsync()` - Получение отправки по ID
+- `GetByFormIdAsync()` - Получение всех отправок формы
+- `GetAllAsync()` - Получение всех отправок с пагинацией
+
+**FormSubmissionRepository**
+- Реализация специализированного репозитория
+- Использует Entity Framework Core для запросов
+- Оптимизированные методы для работы с формами
+
 **EntityBase**
 - Базовый класс для всех entity
 - Свойства: Id, CreatedAt, UpdatedAt, IsActive
 - Обеспечивает единообразие моделей
+
+**DomainModule**
+- Extension класс для регистрации сервисов Domain слоя
+- `AddDomain()` - Регистрация DbContext, репозиториев
 
 ### Зависимости от других модулей
 - **Entity Framework Core**: ORM для работы с БД
@@ -350,6 +389,10 @@
   - `_ViewImports.cshtml` - Импорты и using
 - `TestUmbraco/Views/Partials/` - Partial views
   - `blockgrid/Components/` - Компоненты Block Grid
+    - `FormBuilderBlock.cshtml` - Блок формы конструктора форм
+    - `formColumn.cshtml` - Колонка формы
+    - `formField.cshtml` - Поле формы
+    - `gridSection.cshtml`, `gridColumn.cshtml`, `img.cshtml`, `video.cshtml`, и т.д.
   - `blocklist/Components/` - Компоненты Block List
   - `blockpreview/` - Предпросмотр в бэк-офисе
   - `layout/` - Элементы layout (меню, favicon, и т.д.)
@@ -368,9 +411,18 @@
 - Рендеринг Block Grid структуры
 - Итерация по секциям и колонкам
 
-**Компоненты** (gridSection, gridColumn, img, video, и т.д.)
+**Компоненты Block Grid** (gridSection, gridColumn, img, video, и т.д.)
 - Рендеринг отдельных блоков
 - Использование helpers для изображений и фонов
+
+**FormBuilderBlock.cshtml**
+- Рендеринг блока формы конструктора форм
+- Интеграция с FormBuilderController
+- Поддержка клиентской валидации
+
+**formColumn.cshtml / formField.cshtml**
+- Рендеринг структуры формы
+- Отображение полей формы с валидацией
 
 **Block Preview**
 - Предпросмотр компонентов в бэк-офисе
@@ -379,6 +431,7 @@
 ### Зависимости от других модулей
 - **Модуль оптимизации изображений**: ImageHelper
 - **Модуль фонов**: BackgroundHtmlExtensions
+- **Модуль форм**: FormBuilderController, FormSubmissionModel
 - **Umbraco Content Models**: Типизированные модели
 
 ---
@@ -397,35 +450,32 @@ CSS стили и JavaScript для фронтенда сайта.
   - `images.css` - Стили для изображений
   - `lazy-load.css` - Стили для lazy loading
   - `backoffice-preview.css` - Стили для предпросмотра
+  - `bootstrap-form-isolated.css` - Изолированные стили для форм
 - `TestUmbraco/wwwroot/js/` - JavaScript
-  - `lazy-load.js` - Lazy loading изображений
-  - `lazy-backgrounds.js` - Lazy loading фонов
-  - `video-placeholders.js` - Placeholders для видео
-  - `site-menu.js` - Логика меню
-  - `button-up.js` - Кнопка "Вверх"
+  - `site.js` - Объединенный файл со всей функциональностью сайта
+  - `form-builder.js` - Клиентская валидация и обработка отправки форм
 
 ### Основные скрипты и их роль
 
-**lazy-load.js**
-- Intersection Observer для изображений
-- Загрузка изображений при появлении в viewport
+**site.js** (объединенный файл)
+- Содержит функциональность нескольких модулей:
+  - **Button Up**: Кнопка "Наверх" с плавной прокруткой
+  - **Site Menu**: Логика навигационного меню, мобильное меню
+  - **Lazy Load**: Intersection Observer для изображений, загрузка при появлении в viewport
+  - **Lazy Backgrounds**: Lazy loading фоновых изображений, загрузка видео фонов (Vimeo), обработка placeholders
+  - **Video Placeholders**: Управление video placeholders, переключение между видео и изображением на мобильных
 
-**lazy-backgrounds.js**
-- Lazy loading фоновых изображений
-- Загрузка видео фонов (Vimeo)
-- Обработка placeholders
-
-**video-placeholders.js**
-- Управление video placeholders
-- Переключение между видео и изображением на мобильных
-
-**site-menu.js**
-- Логика навигационного меню
-- Мобильное меню
+**form-builder.js**
+- Клиентская валидация форм конструктора форм
+- Обработка отправки форм через AJAX
+- Интеграция с reCAPTCHA
+- Валидация полей на основе паттернов
+- Отображение сообщений об ошибках и успехе
 
 ### Зависимости от других модулей
 - **Bootstrap 5.3.0**: CSS фреймворк (CDN)
 - **Модуль фонов**: Использует данные из BackgroundInfo
+- **Модуль форм**: Интеграция с FormBuilderController
 
 ---
 
@@ -440,6 +490,8 @@ CSS стили и JavaScript для фронтенда сайта.
 - `TestUmbraco/appsettings.json` - Основная конфигурация
 - `TestUmbraco/appsettings.Development.json` - Конфигурация для разработки
 - `TestUmbraco/Program.cs` - Точка входа приложения
+- `TestUmbraco/robots.txt` - Файл для поисковых роботов
+- `TestUmbraco/sitemap.xml` - Карта сайта
 
 ### Основные секции конфигурации
 
@@ -453,8 +505,8 @@ CSS стили и JavaScript для фронтенда сайта.
 - EnableWebp, EnableLazyLoading
 
 **Email**
-- SMTP настройки
-- Отправитель и получатель
+- SMTP настройки (SmtpServer, SmtpPort)
+- EmailSenderAddress, EmailSenderName, EmailSenderPassword
 
 **RecaptchaSettings**
 - SecretKey, SiteKey
@@ -464,11 +516,32 @@ CSS стили и JavaScript для фронтенда сайта.
 - Runtime, Security, WebRouting
 
 **ConnectionStrings**
-- umbracoDbDSN - подключение к SQL Server
+- `TestUmbracoData` - подключение к SQL Server для AppDbContext
+- `umbracoDbDSN` - подключение к SQL Server для Umbraco
 
 **BlockPreview**
 - Настройки предпросмотра
 - Подключаемые стили и скрипты
+
+### Program.cs - структура регистрации
+
+**Регистрация сервисов:**
+- `AddHttpContextAccessor()` - HttpContext для сервисов
+- `Configure<ImageOptimizationSettings>()` - Настройки оптимизации изображений
+- `AddMemoryCache()` - Кэш в памяти
+- `AddResponseCaching()` - Кэширование ответов
+- `AddResponseCompression()` - Сжатие ответов (Gzip, Brotli)
+- `AddDomain()` - Регистрация сервисов Domain слоя
+- `AddServices()` - Регистрация сервисов Application слоя
+- `AddUmbraco().AddComposers()` - Umbraco и Composers
+- `AddRecaptcha()` - reCAPTCHA
+- `AddNotyf()` - Уведомления (Toast notifications)
+
+**Middleware pipeline:**
+- Настройка кэширования статических файлов
+- Отключение кэша для `backgrounds.css`
+- Umbraco middleware
+- Notyf middleware
 
 ### Зависимости от других модулей
 - Используется всеми модулями для получения настроек
@@ -478,32 +551,90 @@ CSS стили и JavaScript для фронтенда сайта.
 ## Модуль 11: Dependency Injection и Composers
 
 ### Цель модуля
-Регистрация сервисов в DI контейнере через Umbraco Composers.
+Регистрация сервисов в DI контейнере через Umbraco Composers и extension методы.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
-- `TestUmbraco/Composers/MediaCacheComposer.cs` - Регистрация сервисов кэширования
+- `TestUmbraco/Composers/MediaCacheComposer.cs` - Регистрация сервисов кэширования и фонов
+
+**Application Layer:**
+- `TestUmbraco.Application/Application.cs` - Extension методы для регистрации сервисов Application слоя
+
+**Domain Layer:**
+- `TestUmbraco.Domain/Domain.cs` - Extension методы для регистрации сервисов Domain слоя
 
 ### Основные классы и их роль
 
 **MediaCacheComposer**
 - Реализует `IComposer`
 - Метод `Compose(IUmbracoBuilder builder)`
-- Регистрирует:
+- Регистрирует сервисы Presentation слоя:
+  - `ILoggingService` → `LoggingService` (Singleton)
   - `IMediaCacheService` → `MediaCacheService` (Singleton)
-  - `IUmbracoBackgroundService` → `UmbracoBackgroundService`
-  - `IStaticCssGeneratorService` → `StaticCssGeneratorService`
-  - `ILoggingService` → `LoggingService`
-  - `IEmailService` → `EmailService`
-  - `IRepository<T>` → `Repository<T>`
+  - `IStaticCssGeneratorService` → `StaticCssGeneratorService` (Singleton)
+  - `IUmbracoBackgroundService` → `UmbracoBackgroundService` (Scoped)
+  - `BackgroundClassesService` (Scoped)
+  - `ImageHelper` (Scoped)
+- Регистрирует notification handlers:
+  - `MediaCacheNotificationHandler` - обработчик уведомлений Umbraco для автоматической очистки кэша и обновления CSS
+- Регистрирует BackgroundService:
+  - `StaticCssInitializer` - инициализация CSS файла при старте приложения
+
+**Application.AddServices()**
+- Extension метод для регистрации сервисов Application слоя
+- Регистрирует:
+  - `IEmailService` → `EmailService` (Scoped)
+  - `IFormSubmissionService` → `FormSubmissionService` (Scoped)
+
+**Domain.AddDomain()**
+- Extension метод для регистрации сервисов Domain слоя
+- Регистрирует:
+  - `AppDbContext` с подключением к SQL Server
+  - `IRepository<T>` → `Repository<T>` (Scoped)
+  - `IFormSubmissionRepository` → `FormSubmissionRepository` (Scoped)
+
+**MediaCacheNotificationHandler**
+- Обрабатывает уведомления Umbraco о событиях с медиа
+- `MediaSavedNotification` - очистка кэша и обновление CSS при сохранении
+- `MediaDeletedNotification` - очистка кэша и удаление из CSS при удалении
+- `MediaMovedNotification` - очистка кэша и обновление CSS при перемещении
+
+**StaticCssInitializer**
+- BackgroundService для инициализации CSS файла при старте
+- Проверяет существование `backgrounds.css`
+- Создает файл при отсутствии
 
 ### Зависимости от других модулей
 - Регистрирует сервисы из всех модулей
+- Используется в `Program.cs` через extension методы
 
 ---
 
-## Модуль 12: uSync - Синхронизация контента
+## Модуль 12: Middleware
+
+### Цель модуля
+Обработка HTTP запросов на уровне middleware для управления кэшированием и другими аспектами запросов.
+
+### Ключевые файлы и папки
+
+**Presentation Layer:**
+- `TestUmbraco/Middleware/NoCacheMiddleware.cs` - Middleware для отключения кэша
+
+### Основные классы и их роль
+
+**NoCacheMiddleware**
+- Middleware для отключения кэша для динамически генерируемых файлов
+- Устанавливает заголовки `Cache-Control: no-cache, no-store, must-revalidate` для `backgrounds.css`
+- Обеспечивает актуальность CSS файла, который часто обновляется
+
+### Зависимости от других модулей
+- **Модуль фонов**: Используется для `backgrounds.css`
+- **Модуль конфигурации**: Настройка через `Program.cs`
+
+---
+
+## Модуль 13: uSync - Синхронизация контента
 
 ### Цель модуля
 Синхронизация структуры контента Umbraco через файловую систему для версионирования и командной работы.
@@ -564,7 +695,8 @@ CSS стили и JavaScript для фронтенда сайта.
 │  └──────────────┘  └──────────────┘  └──────────────┘      │
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Email Forms  │  │   uSync      │  │   Frontend   │      │
+│  │ Form Builder │  │  Middleware  │  │   Frontend   │      │
+│  │  Controller  │  │              │  │   Assets     │      │
 │  └──────┬───────┘  └──────────────┘  └──────────────┘      │
 └─────────┼──────────────────────────────────────────────────┘
           │
@@ -572,21 +704,28 @@ CSS стили и JavaScript для фронтенда сайта.
 ┌─────────────────────────────────────────────────────────────┐
 │                    Application Layer                         │
 │                                                              │
-│  ┌──────────────┐                                           │
-│  │ Email Service│                                           │
-│  └──────┬───────┘                                           │
-└─────────┼──────────────────────────────────────────────────┘
-          │
-          ▼
-┌─────────────────────────────────────────────────────────────┐
-│                      Domain Layer                            │
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Repositories │  │   Entities   │  │  DbContext   │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-└─────────────────────────────────────────────────────────────┘
-          │
-          ▼
+│  ┌──────────────┐  ┌──────────────────────────┐            │
+│  │ Email Service│  │ Form Submission Service  │            │
+│  └──────┬───────┘  └──────────┬───────────────┘            │
+└─────────┼──────────────────────┼──────────────────────────┘
+          │                      │
+          │                      ▼
+┌─────────┼──────────────────────────────────────────────────┐
+│         │              Domain Layer                        │
+│         │                                                  │
+│  ┌──────▼───────┐  ┌──────────────────────────┐          │
+│  │ Repositories │  │ Form Submission Repo    │          │
+│  │  (Generic)   │  │  (Specialized)           │          │
+│  └──────┬───────┘  └──────────┬───────────────┘          │
+│         │                     │                            │
+│         └──────────┬──────────┘                            │
+│                    │                                        │
+│              ┌─────▼──────┐                                 │
+│              │  DbContext │                                 │
+│              └─────┬──────┘                                 │
+└────────────────────┼────────────────────────────────────────┘
+                     │
+                     ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                      SQL Server Database                     │
 └─────────────────────────────────────────────────────────────┘
@@ -604,13 +743,13 @@ CSS стили и JavaScript для фронтенда сайта.
 - **Использует**: Оптимизация изображений, Логирование, Конфигурация
 - **Используется**: Views, Frontend Assets
 
-### Модуль Email
-- **Использует**: Модуль данных, Конфигурация, Логирование
-- **Используется**: Email Forms Controller
+### Модуль форм (Form Builder)
+- **Использует**: Модуль данных (IFormSubmissionRepository), Конфигурация, Логирование, Email Service
+- **Используется**: FormBuilderController, Views
 
 ### Модуль данных
 - **Использует**: Entity Framework Core, SQL Server
-- **Используется**: Модуль Email
+- **Используется**: Модуль форм, Application Layer сервисы
 
 ### Модуль логирования
 - **Использует**: Serilog, Конфигурация
@@ -635,7 +774,7 @@ CSS стили и JavaScript для фронтенда сайта.
 1. **Определите модуль**: К какому модулю относится функционал?
 2. **Создайте интерфейс**: В соответствующем слое (Contracts/)
 3. **Реализуйте сервис**: В Services/
-4. **Зарегистрируйте в DI**: Через Composer
+4. **Зарегистрируйте в DI**: Через extension методы (Application.AddServices() или Domain.AddDomain()) или Composer
 5. **Создайте контроллер**: Если нужен API endpoint
 6. **Добавьте view**: Если нужен UI
 
@@ -656,7 +795,7 @@ CSS стили и JavaScript для фронтенда сайта.
 
 ## Заключение
 
-Проект TestUmbraco организован в 12 логических модулей, каждый из которых имеет четко определенную ответственность. Модульная структура обеспечивает:
+Проект TestUmbraco организован в 13 логических модулей, каждый из которых имеет четко определенную ответственность. Модульная структура обеспечивает:
 
 - **Разделение ответственности**: Каждый модуль решает свою задачу
 - **Переиспользование кода**: Сервисы используются через интерфейсы

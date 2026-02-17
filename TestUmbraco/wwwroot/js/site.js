@@ -267,28 +267,68 @@
     }
     
     function initMobileMenu() {
-        const mobileToggle = document.querySelector('.mobile-menu-toggle');
-        const mobileClose = document.querySelector('.mobile-menu-close');
-        const mobileOverlay = document.querySelector('.mobile-menu-overlay');
-        
-        if (!mobileToggle || !mobileClose || !mobileOverlay) {
+        // Проверяем, что jQuery доступен
+        if (typeof jQuery === 'undefined') {
+            console.warn('jQuery is not available for mobile menu initialization');
             return;
         }
         
-        mobileToggle.addEventListener('click', function() {
-            mobileOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+        // Используем primer подход с jQuery
+        var touch = $('.mobile-menu-toggle');
+        var mobileOverlay = $('.mobile-menu-overlay');
+        var mobileClose = $('.mobile-menu-close');
+        var mobileContainer = $('.mobile-menu-container');
+        
+        // Обработчик клика по бургеру
+        touch.on('click', function(e) {
+            e.preventDefault();
+            // Переключаем видимость меню
+            mobileOverlay.toggleClass('active');
+            
+            // Управление прокруткой body
+            if (mobileOverlay.hasClass('active')) {
+                $('body').css('overflow', 'hidden');
+            } else {
+                $('body').css('overflow', '');
+            }
+            
+            // Добавляем/убираем класс open для анимации бургера
+            $(this).toggleClass('open');
         });
         
-        mobileClose.addEventListener('click', function() {
-            mobileOverlay.classList.remove('active');
-            document.body.style.overflow = '';
+        // Обработчик изменения размера окна
+        $(window).resize(function(){
+            var w = $(window).width();
+            if (w > 768 && mobileOverlay.hasClass('active')) {
+                mobileOverlay.removeClass('active');
+                $('body').css('overflow', '');
+                touch.removeClass('open');
+            }
         });
         
-        mobileOverlay.addEventListener('click', function(e) {
-            if (e.target === mobileOverlay) {
-                mobileOverlay.classList.remove('active');
-                document.body.style.overflow = '';
+        // Обработчик клика по ссылкам в меню
+        $('.nav a').on('click', function(){
+            if (touch.css('display') != 'none'){
+                touch.trigger("click");
+            }
+        });
+        
+        // Обработчик клика по кнопке закрытия
+        if (mobileClose.length) {
+            mobileClose.on('click', function(e) {
+                e.preventDefault();
+                mobileOverlay.removeClass('active');
+                $('body').css('overflow', '');
+                touch.removeClass('open');
+            });
+        }
+        
+        // Обработчик клика по оверлею
+        mobileOverlay.on('click', function(e) {
+            if (e.target === this) {
+                $(this).removeClass('active');
+                $('body').css('overflow', '');
+                touch.removeClass('open');
             }
         });
     }
@@ -326,10 +366,13 @@
     }
     
     function initSiteMenu() {
-        initMobileMenu();
-        initSmoothScroll();
-        toggleLandingSections();
-        document.body.classList.add('site-menu-loaded');
+        // Добавляем задержку для корректной инициализации
+        setTimeout(function() {
+            initMobileMenu();
+            initSmoothScroll();
+            toggleLandingSections();
+            document.body.classList.add('site-menu-loaded');
+        }, 100);
     }
     
     if (document.readyState === 'loading') {
@@ -601,4 +644,4 @@
     } else {
         setTimeout(init, 100);
     }
-})();
+})();

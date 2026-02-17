@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="~/css/backgrounds.css" asp-append-version="true" />
     <!-- 2. style.css - все статические стили сайта -->
     <link rel="stylesheet" href="@Url.Content("~/css/style.css")" media="screen"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
     <!-- Остальные стили и скрипты -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
@@ -52,7 +53,7 @@
     @RenderBody()
     
     <!-- ========== ФУТЕР ========== -->
-    @await Html.PartialAsync("~/Views/Partials/blockgrid/Components/footer.cshtml", Model)
+    @await Html.PartialAsync("~/Views/Partials/layout/_Footer.cshtml", Model)
 
     <!-- Кнопка "Наверх" через Partial View -->
     @await Html.PartialAsync("~/Views/Partials/layout/_ButtonUp.cshtml", Model)

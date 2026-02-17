@@ -1,0 +1,204 @@
+:root {
+  /* Размеры */
+  --size: calc((100vw / 100vh)*1);     /* Базовый размер */
+  --font: calc(100vw / 75);           /* Размер шрифта */
+  --mg-rt: calc((100vw / 1680)*5);     /* Правый отступ */
+  
+  /* Цвета */
+  --gray: #DDDDDD;          /* Светло-серый */
+  --lightgray: #EDEDED;      /* Очень светлый серый */
+  --middlegray: #717681;     /* Средний серый */
+  --darkgray: #262930;       /* Темно-серый */
+  --red: #E31616;            /* Красный */
+  --redhover: #BD0000;       /* Темно-красный при наведении */
+}
+
+/*=======NAVIGATION==========*/
+/* Основной контейнер меню */
+.menu {
+  position: fixed;           /* Фиксированное позиционирование */
+  left: 0;                  /* Прижато к левому краю */
+  top: 0;                   /* Прижато к верху */
+  z-index: 10;             /* Высокий z-index для отображения поверх других элементов */
+  width: 100%;              /* Ширина 100% */
+  height: calc(var(--size)*65); /* Высота рассчитывается через переменную */
+  background-color: var(--darkgray); /* Цвет фона */
+  border-bottom: 1px solid white;    /* Белая нижняя граница */
+}
+
+/* Контейнер навигации */
+.navbar {
+  width: 92%;               /* Ширина 92% */
+  position: relative;       /* Относительное позиционирование */
+  margin: 0 auto;            /* Центрирование по горизонтали */
+  display: flex;            /* Flexbox для выравнивания */
+  justify-content: space-between; /* Равномерное распределение элементов */
+  align-items: center;      /* Вертикальное центрирование */
+}
+
+/* Бренд (логотип) - скрыт в мобильной версии */
+.brand {
+  display: none;            /* Скрыт по умолчанию */
+  position: relative;        /* Относительное позиционирование */
+  background: url("../img/logo_menu.svg") no-repeat left center; /* Фоновое изображение логотипа */
+  background-size: contain; /* Масштабирование изображения */
+}
+
+/* Навигационный бренд (логотип) */
+.brandnav {
+  width: calc(var(--size)*100);         /* Ширина рассчитывается через переменную */
+  height: calc(var(--size)*40);         /* Высота рассчитывается через переменную */
+  background: url("../img/logo_menu.svg") no-repeat left center; /* Фоновое изображение логотипа */
+  background-size: contain;              /* Масштабирование изображения */
+  position: relative;                  /* Относительное позиционирование */
+  cursor: pointer;                     /* Указатель при наведении */
+}
+
+/* Основной контейнер навигации */
+nav {
+  display: flex;            /* Flexbox для выравнивания */
+  justify-content: space-between; /* Равномерное распределение элементов */
+  align-items: center;      /* Вертикальное центрирование */
+  width: 100%;             /* Ширина 100% */
+  height: calc(var(--size)*65); /* Высота рассчитывается через переменную */
+}
+
+/* Список навигационных элементов */
+nav ul {
+  display: flex;            /* Flexbox для выравнивания */
+  margin: 0;               /* Убираем внешние отступы */
+  padding: 0;             /* Убираем внутренние отступы */
+  height: calc(var(--size)*55); /* Высота рассчитывается через переменную */
+}
+
+/* Элементы списка навигации */
+nav ul li {
+  margin: 0;               /* Убираем внешние отступы */
+  position: relative;      /* Относительное позиционирование */
+  list-style-type: none;   /* Убираем маркеры списка */
+  display: flex;          /* Flexbox для выравнивания */
+  width: auto;            /* Автоматическая ширина */
+  height: calc(var(--size)*55); /* Высота рассчитывается через переменную */
+}
+
+/* Ссылки в навигации */
+nav ul li a {
+  display: flex;           /* Flexbox для выравнивания */
+  height: 100%;            /* Высота 100% */
+  padding: 0 calc(var(--size)*20); /* Горизонтальные отступы */
+  align-items: center;     /* Вертикальное центрирование */
+  text-decoration: none;   /* Убираем подчеркивание */
+  color: white;            /* Белый цвет текста */
+}
+
+/* Ссылки в навигации при наведении */
+nav ul li a:hover {
+  color: var(--red);       /* Красный цвет текста */
+  transition: .3s;         /* Плавный переход */
+}
+
+/* Активный пункт меню */
+nav ul li a.active_menu {
+  color: var(--red) !important; /* Красный цвет текста (важный стиль) */
+}
+
+/* Активный пункт меню при наведении */
+nav ul li a.active_menu:hover {
+  cursor: default;        /* Стандартный курсор */
+}
+
+/*burger*/
+/* Мобильное меню (бургер) */
+.mobile-menu {
+  position: relative;      /* Относительное позиционирование */
+  width: 25px;             /* Ширина 25px */
+  height: 25px;            /* Высота 25px */
+  display: none;           /* Скрыто по умолчанию */
+  
+  /* Трансформации для анимации */
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  
+  /* Плавные переходы */
+  -webkit-transition: .5s ease-in-out;
+  -moz-transition: .5s ease-in-out;
+  -o-transition: .5s ease-in-out;
+  transition: .5s ease-in-out;
+  
+  cursor: pointer;         /* Указатель при наведении */
+}
+
+/* Линии бургер-меню */
+.mobile-menu span {
+  display: block;         /* Блочный элемент */
+  position: absolute;      /* Абсолютное позиционирование */
+  height: 3px;            /* Высота 3px */
+  width: 100%;             /* Ширина 100% */
+  background: white;        /* Белый цвет фона */
+  border-radius: 3px;      /* Скругленные углы */
+  opacity: 1;              /* Полная непрозрачность */
+  right: 0;                /* Прижато к правому краю */
+  top: 6px;                /* Отступ сверху 6px */
+  
+  /* Трансформации для анимации */
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  
+  /* Плавные переходы */
+  -webkit-transition: .25s ease-in-out;
+  -moz-transition: .25s ease-in-out;
+  -o-transition: .25s ease-in-out;
+  transition: .25s ease-in-out;
+}
+
+/* Первая линия бургер-меню */
+.mobile-menu span:nth-child(1) {
+  top: 5px;                /* Отступ сверху 5px */
+}
+
+/* Вторая и третья линии бургер-меню */
+.mobile-menu span:nth-child(2), .mobile-menu span:nth-child(3) {
+  top: 12px;               /* Отступ сверху 12px */
+}
+
+/* Четвертая линия бургер-меню */
+.mobile-menu span:nth-child(4) {
+  top: 19px;               /* Отступ сверху 19px */
+}
+
+/* Первая линия при открытии меню */
+.mobile-menu.open span:nth-child(1) {
+  top: 0px;                /* Отступ сверху 0px */
+  width: 0%;               /* Ширина 0% */
+  left: 50%;               /* Центрирование по горизонтали */
+}
+
+/* Четвертая линия при открытии меню */
+.mobile-menu.open span:nth-child(4) {
+  top: 0px;                /* Отступ сверху 0px */
+  width: 0%;               /* Ширина 0% */
+  left: 50%;               /* Центрирование по горизонтали */
+}
+
+/* Вторая линия при открытии меню (диагональ) */
+.mobile-menu.open span:nth-child(2) {
+  -webkit-transform: rotate(45deg);   /* Поворот на 45 градусов */
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+/* Третья линия при открытии меню (диагональ) */
+.mobile-menu.open span:nth-child(3) {
+  -webkit-transform: rotate(-45deg);  /* Поворот на -45 градусов */
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+/*end burger*/
+/*---NAVIGATION---*/

@@ -23,11 +23,62 @@
 
     // ---------- Ссылки ----------
     var cardImgLink = content.Value<CoreLink>("cardImgLink");
-    var cardLink = content.Value<CoreLink>("cardLink");
+    
+    // cardLink это BlockListItem с блоком link внутри
+    CoreLink? cardLink = null;
+    var debugCardLinkBlock = "null";
+    var debugCardLinkType = "no type";
+    var debugLinkProperties = "";
+    
+    // Получаем raw value как BlockListItem
+    var rawValue = content.GetProperty("cardLink")?.GetValue();
+    if (rawValue != null)
+    {
+        debugCardLinkBlock = $"RawType: {rawValue.GetType().Name}";
+        
+        // Приводим к BlockListItem
+        if (rawValue is Umbraco.Cms.Core.Models.Blocks.BlockListItem blockListItem)
+        {
+            debugCardLinkType = blockListItem.Content?.ContentType?.Alias ?? "no alias";
+            debugCardLinkBlock = "BlockListItem cast success";
+            
+            if (blockListItem.Content != null)
+            {
+                // Выводим все свойства блока link
+                debugLinkProperties = string.Join(", ", blockListItem.Content.Properties.Select(p => p.Alias));
+                
+                // В link.cshtml linkUrl это string, а не CoreLink
+                var linkUrlString = blockListItem.Content.Value<string>("linkUrl");
+                var linkText = blockListItem.Content.Value<string>("textLink") ?? linkUrlString;
+                var showAsButton = blockListItem.Content.Value<bool>("showAsButton");
+                
+                // Создаем CoreLink из данных
+                if (!string.IsNullOrWhiteSpace(linkUrlString))
+                {
+                    cardLink = new CoreLink
+                    {
+                        Url = linkUrlString,
+                        Name = linkText,
+                        Target = "_self"
+                    };
+                }
+            }
+        }
+    }
+    
+    var debugCardLink = cardLink != null ? "not null" : "null";
+    var debugCardLinkUrl = cardLink?.Url ?? "no url";
 
     // ---------- Обёртка и стили ----------
     var wrapperTag = content.Value<string>("tag") ?? "div";
     var customClass = content.Value<string>("Class") ?? "";
+    
+    // Извлекаем класс анимации из строки вида "bounce (Привлекающие внимание)"
+    if (!string.IsNullOrWhiteSpace(customClass) && customClass.Contains("("))
+    {
+        var animateClass = customClass.Split('(')[0].Trim();
+        customClass = animateClass;
+    }
     
     // ---------- Цвет текста ----------
     var textColor = "";
@@ -75,7 +126,7 @@
         var sb = new System.Text.StringBuilder();
         
         // Отладка: добавляем комментарий
-        sb.Append($"<!-- Card Debug: hasCardLink={hasCardLink}, cardLink={(cardLink != null ? "not null" : "null")}, URL={cardLink?.Url ?? "empty"} -->");
+        sb.Append($"<!-- Card Debug: method={debugCardLinkBlock}, type={debugCardLinkType}, linkProps=[{debugLinkProperties}], cardLink={debugCardLink}, URL={debugCardLinkUrl}, hasCardLink={hasCardLink} -->");
         
         // Если есть ссылка-кнопка, добавляем bootstrap-scope
         if (hasCardLink)
