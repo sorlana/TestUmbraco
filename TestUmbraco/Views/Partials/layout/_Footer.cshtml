@@ -5,29 +5,19 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage
 
 @{
-    // ---- 1. Находим корневой узел (тип "blockGrid" — ваша главная страница) ----
     var root = Umbraco.ContentAtRoot()
-        .FirstOrDefault(c => c.ContentType.Alias == "blockGrid"); // Уточните алиас!
-
+        .FirstOrDefault(c => c.ContentType.Alias == "blockGrid");
     if (root == null)
     {
-        // Корень не найден — ничего не выводим
         return;
     }
-
-    // ---- 2. Получаем свойство "footer" (Block Single) с корневого узла ----
     var footerBlock = root.Value<BlockListItem>("footer");
 
     if (footerBlock?.Content == null)
     {
-        // Блок не выбран — ничего не выводим
         return;
     }
-
-    // ---- 3. Content блока — это наш Element Type "footer" ----
     var footerNode = footerBlock.Content;
-
-    // ---- 4. Получаем все поля из блока ----
     var copyright = footerNode.Value<string>("footerCopyright");
     var showYear = footerNode.Value<bool>("footerShowCurrentYear");
     var currentYear = showYear ? DateTime.Now.Year.ToString() : null;
@@ -43,7 +33,6 @@
 <footer class="site-footer">
     <div class="container">
         <div class="row">
-            <!-- ЛЕВАЯ КОЛОНКА: Копирайт + Контакты -->
             <div class="col-12">
                 @if (!string.IsNullOrWhiteSpace(copyright) || showYear)
                 {
@@ -65,7 +54,6 @@
             </div>
             </div>
             <div class="row">
-            <!-- СРЕДНЯЯ КОЛОНКА: Соцсети и Навигационное меню -->
             <div class="col-md-4">
                 @if (socialBlocks?.Any() == true)
                 {
@@ -82,7 +70,6 @@
                 }
             </div>
 
-            <!-- ПРАВАЯ КОЛОНКА: Форма обратной связи -->
             <div class="col-md-4">
                 @if (formBlocks?.Any() == true)
                 {
@@ -93,7 +80,6 @@
             </div>
         </div>
 
-        <!-- НИЖНЯЯ ЧАСТЬ: Ссылки на политику и условия -->
         <div class="row">
             <div class="col-12 footer-legal-links">
                 @if (privacyLinks.Any())

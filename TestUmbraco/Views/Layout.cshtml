@@ -8,36 +8,25 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <!-- Page Title через Partial View -->
     @await Html.PartialAsync("~/Views/Partials/layout/_PageTitle.cshtml", Model)
     
-    <!-- Preconnect для оптимизации загрузки ресурсов -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://player.vimeo.com">
     <link rel="preconnect" href="https://i.vimeocdn.com">  
     
-    <!-- 1. backgrounds.css - динамически генерируемые фоны -->
     <link rel="stylesheet" href="~/css/backgrounds.css" asp-append-version="true" />
-    <!-- 2. style.css - все статические стили сайта -->
     <link rel="stylesheet" href="@Url.Content("~/css/style.css")" media="screen"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-    
-    <!-- Остальные стили и скрипты -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" asp-append-version="true"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"/>
     
-    <!-- Favicon через Partial View -->
     @await Html.PartialAsync("~/Views/Partials/layout/_Favicon.cshtml", Model)
     
-    <!-- Яндекс.Метрика через Partial View -->
     @await Html.PartialAsync("~/Views/Partials/layout/_YandexMetrika.cshtml")
     
-    <!-- Подключаем jQuery перед использованием -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
-    <!-- Detect feature support for older browsers -->
     <script>
         document.documentElement.className = 
             ('willChange' in document.documentElement.style ? '' : 'no-willchange') + ' ' +
@@ -46,19 +35,13 @@
 </head>
 
 <body>
-
-    <!-- Меню сайта через Partial View -->
     @await Html.PartialAsync("~/Views/Partials/layout/_SiteMenu.cshtml", Model)
 
     @RenderBody()
     
-    <!-- ========== ФУТЕР ========== -->
     @await Html.PartialAsync("~/Views/Partials/layout/_Footer.cshtml", Model)
-
-    <!-- Кнопка "Наверх" через Partial View -->
     @await Html.PartialAsync("~/Views/Partials/layout/_ButtonUp.cshtml", Model)
 
-    <!-- Background HTML -->
     @{
         var backgroundHtml = Context.Items["BackgroundHtml"] as Dictionary<string, string>;
     }
@@ -70,10 +53,7 @@
         }
     }
 
-    <!-- ВАЖНО: Сначала загружаем конфиг, потом скрипты -->
-    <partial name="_BackgroundConfig" />
-    
-    <!-- JS FILE: ТОЛЬКО 1 ФАЙЛ -->
+    <partial name="_BackgroundConfig" />   
     <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 </html>

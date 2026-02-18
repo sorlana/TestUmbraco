@@ -5,7 +5,6 @@
 @{
     bool showButtonUp = false;
     
-    // Получаем значение свойства showButtonUp
     if (Model is ContentModels.BlockGrid blockGridPage && blockGridPage.HasProperty("showButtonUp"))
     {
         showButtonUp = blockGridPage.Value<bool>("showButtonUp");

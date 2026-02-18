@@ -3,18 +3,12 @@
 @model IPublishedContent
 
 @{
-    // Получаем текущую страницу как BlockGrid
     var blockGridPage = Model as ContentModels.BlockGrid;
-    
-    // Определяем, главная ли это страница
     bool isHomePage = Model.Level == 1 || Model.Name.Equals("Home", StringComparison.OrdinalIgnoreCase);
-    
-    // Получаем заголовок страницы
-    string pageTitle = Model.Name; // По умолчанию - имя страницы
+    string pageTitle = Model.Name; 
     
     if (blockGridPage != null)
     {
-        // Если это главная страница, ищем свойство titleHomePage
         if (isHomePage && blockGridPage.HasProperty("titleHomePage") && blockGridPage.HasValue("titleHomePage"))
         {
             var homeTitle = blockGridPage.Value<string>("titleHomePage");
@@ -23,10 +17,8 @@
                 pageTitle = homeTitle;
             }
         }
-        // Если не главная страница, ищем общее свойство для заголовка
         else if (!isHomePage)
         {
-            // Проверяем различные возможные свойства для заголовка
             string[] possibleTitleProperties = { "pageTitle", "title", "metaTitle", "seoTitle", "titleHomePage" };
             
             foreach (var propName in possibleTitleProperties)
@@ -43,11 +35,9 @@
             }
         }
     }
-    
-    // Получаем название сайта из настроек или используем значение по умолчанию
+
     string siteTitle = "Мой сайт";
     
-    // Ищем настройки сайта в корне
     var siteSettings = Model.Root()?.ChildrenOfType("siteSettings")?.FirstOrDefault();
     if (siteSettings != null)
     {
@@ -61,17 +51,14 @@
         }
     }
     
-    // Формируем полный заголовок
     string fullTitle;
     
     if (isHomePage)
     {
-        // На главной странице показываем только заголовок (без суффикса)
         fullTitle = pageTitle;
     }
     else
     {
-        // На остальных страницах: заголовок страницы + название сайта
         fullTitle = $"{pageTitle} - {siteTitle}";
     }
 }

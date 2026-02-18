@@ -76,11 +76,9 @@
     }
 }
 
-<!-- ====== MENU (primer) ====== -->
 <div class='menu site-header'>
     <div class='navbar header-container'>
         <nav class='nav'>
-            <!-- Логотип -->
             <a href='#' class='brandnav logo-link' aria-label='На главную'>
                 @if (logo != null)
                 {
@@ -92,7 +90,6 @@
                 }
             </a>
 
-            <!-- Основное меню -->
             @if (hasMenu && filteredMenuItems != null)
             {
                 <ul class='navigation site-menu'>
@@ -114,8 +111,6 @@
                             var nameItem = blockItem.Content.Value<string>("nameItem");
                             var idItem = blockItem.Content.Value<string>("idItem");
                             var show = blockItem.Content.Value<bool>("show");
-
-                            // Пропускаем пункт "Home" в меню лендинга
                             var isHomeItem = nameItem?.Equals("Home", StringComparison.OrdinalIgnoreCase) == true ||
                                             nameItem?.Equals("Главная", StringComparison.OrdinalIgnoreCase) == true ||
                                             idItem?.Equals("home", StringComparison.OrdinalIgnoreCase) == true ||
@@ -132,9 +127,8 @@
                 </ul>
             }
 
-            <!-- Дополнительные элементы -->
             @* Показываем блок, только если есть хотя бы один элемент *@
-            <div class='header-actions'>
+            <div class='header-actions header-actions--desktop-hidden'>
                 @if (showTel)
                 {
                     <div class='header-phone'>
@@ -163,8 +157,6 @@
                         <span class='material-symbols-outlined'>arrow_drop_down</span>
                     </div>
                 }
-
-                <!-- Мобильное меню (кнопка) — оставляем JS-хук .mobile-menu-toggle -->
                 <button class='mobile-menu mobile-menu-toggle' type='button' aria-label='Меню'>
                     <span></span>
                     <span></span>

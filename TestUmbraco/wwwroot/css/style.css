@@ -849,6 +849,13 @@ picture img,
   flex-shrink: 0;
 }
 
+/* Скрываем header-actions на десктопе */
+@media (min-width: 769px) {
+  .menu .header-actions.header-actions--desktop-hidden {
+    display: none !important;
+  }
+}
+
 .menu .header-phone,
 .menu .lk-link,
 .menu .language-selector {

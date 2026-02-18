@@ -2,6 +2,5 @@
 @inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<BlockGridItem>
 
 @{
-    // Для preview просто рендерим основной компонент
     await Html.PartialAsync("blockgrid/Components/card", Model);
 }
