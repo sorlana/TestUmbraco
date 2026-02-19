@@ -42,6 +42,7 @@ body {
   font-family: "Roboto Flex", sans-serif;
   width: 100%;
   max-width: 100%;
+  overflow-y: scroll;
 }
 
 /* Применяем box-sizing ко всем элементам для удобства вёрстки */
@@ -58,10 +59,6 @@ a:focus {
 }
 
 /* Вертикальная прокрутка всегда включена */
-body {
-  overflow-y: scroll;
-}
-
 /* Обёртка всего контента — относительное позиционирование и ширина 100% */
 .wrapper {
   position: relative;
@@ -352,14 +349,25 @@ p {
 }
 /* ===== End GRID ===== */
 
-/* ===== IMG AND CAARD ===== */
-/* Обязательные стили для компонента изображения */
-.optimized-image-wrapper {
+/* ===== IMAGE COMPONENT (img.cshtml) ===== */
+/* Базовые контейнеры */
+.optimized-image-wrapper,
+.image-wrapper {
   position: relative;
   overflow: hidden; /* Скрываем выступающее за границы содержимое */
 }
 
-/* Подпись под изображением (накладывается снизу) */
+.image-wrapper {
+  width: 100%;
+  display: flow-root; /* Создает новый контекст форматирования */
+}
+
+.image-wrapper:has(picture) {
+  display: block !important;
+  contain: layout; /* Оптимизация для браузера */
+}
+
+/* Подпись под изображением */
 .image-caption {
   padding: 8px 12px;
   background: var(--color-black-70);
@@ -372,19 +380,8 @@ p {
   text-align: center;
 }
 
-/* Основной контейнер для изображения */
-.image-wrapper {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  display: block;
-}
-
 /* Соотношения сторон для контейнеров (используется aspect-ratio) */
-.image-wrapper.card-img-top {
-  aspect-ratio: 16/9;
-}
-
+.image-wrapper.card-img-top,
 .image-wrapper.aspect-ratio-16-9 {
   aspect-ratio: 16/9;
 }
@@ -401,57 +398,27 @@ p {
   aspect-ratio: 3/2;
 }
 
-/* Picture должен быть блоком и заполнять контейнер */
-.image-wrapper picture {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* Responsive image класс (если используется) */
+/* Picture/Responsive контейнеры должны заполнять блок */
+.image-wrapper picture,
 .image-wrapper .responsive-image {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-/* Изображение внутри picture должно заполнять его */
-.image-wrapper picture img,
-.image-wrapper .responsive-image img {
+/* Медиа внутри image-wrapper */
+.image-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover; /* Обрезаем изображение, сохраняя пропорции */
   object-position: center;
   display: block;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: static !important;
 }
 
-/* Изображения в карточках — заполнение */
-.card .image-wrapper.card-img-top picture,
-.card .image-wrapper.card-img-top .responsive-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.card .image-wrapper.card-img-top img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-/* Placeholder для карточек (если изображение не загружено) */
-.card-image-placeholder {
-  background: var(--color-bg-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-/* Плейсхолдер, показываемый до загрузки изображения */
+/* Плейсхолдеры */
 .image-placeholder {
   background: var(--color-bg-light);
   display: flex;
@@ -461,18 +428,15 @@ p {
   border: 1px dashed var(--color-border);
 }
 
-/* Контент внутри плейсхолдера */
 .placeholder-content {
   text-align: center;
 }
 
-/* Иконка в плейсхолдере */
 .placeholder-icon {
   opacity: 0.5;
   margin-bottom: 10px;
 }
 
-/* Текст в плейсхолдере */
 .placeholder-text {
   display: block;
   margin-top: 8px;
@@ -480,14 +444,75 @@ p {
   color: var(--color-text-muted);
 }
 
+/* Анимация загрузки изображений — плавное появление */
+.image-wrapper picture img {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-wrapper picture img.loaded {
+  opacity: 1;
+}
+
+/* Fallback для браузеров, которые не поддерживают aspect-ratio */
+@supports not (aspect-ratio: 16/9) {
+  .image-wrapper.card-img-top,
+  .image-wrapper.aspect-ratio-16-9 {
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 в процентах */
+  }
+
+  .image-wrapper.aspect-ratio-4-3 {
+    height: 0;
+    padding-bottom: 75%;
+  }
+
+  .image-wrapper.aspect-ratio-1-1 {
+    height: 0;
+    padding-bottom: 100%;
+  }
+
+  .image-wrapper.aspect-ratio-3-2 {
+    height: 0;
+    padding-bottom: 66.67%;
+  }
+
+  /* Для fallback нам нужно переопределить height для img */
+  .image-wrapper:not(:has(img[src])) {
+    height: auto;
+    min-height: 200px;
+  }
+}
+
+/* Дополнительные гарантии для изображений */
+.optimized-image {
+  display: block !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Убираем возможные конфликты с другими стилями */
+picture,
+picture img,
+.responsive-image,
+.responsive-image img {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+}
+/* ===== END IMAGE COMPONENT ===== */
+
+/* ===== CARD COMPONENT (card.cshtml) ===== */
 .card {
   overflow: hidden;
+  display: flex;
+  flex-direction: column; /* Вертикальное расположение содержимого */
+  background: var(--color-white);
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease; /* Плавные эффекты при наведении */
-  background: var(--color-white);
-  display: flex;
-  flex-direction: column; /* Вертикальное расположение содержимого */
 }
 
 .card:hover {
@@ -501,7 +526,6 @@ p {
   height: auto;
 }
 
-/* Тело карточки с отступами и растяжением */
 .card-body {
   padding: 20px;
   flex: 1; /* Занимает всё доступное пространство */
@@ -524,7 +548,6 @@ p {
   border-top: 1px solid var(--color-border-light);
 }
 
-/* Ссылка в карточке (кнопка) */
 .card-link {
   display: inline-block;
   padding: 8px 16px;
@@ -541,93 +564,26 @@ p {
   text-decoration: none;
 }
 
-/* Анимация загрузки изображений — плавное появление */
-.image-wrapper picture img {
-  opacity: 0;
-  transition: opacity 0.3s ease;
+/* Плейсхолдер для карточек (если изображение не загружено) */
+.card-image-placeholder {
+  background: var(--color-bg-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  width: 100%;
+  aspect-ratio: 16/9;
 }
 
-.image-wrapper picture img.loaded {
-  opacity: 1;
-}
-
-/* Fallback для браузеров, которые не поддерживают aspect-ratio */
 @supports not (aspect-ratio: 16/9) {
-  .image-wrapper.card-img-top {
-    height: 0;
-    padding-bottom: 56.25%; /* 16:9 в процентах */
-  }
-
-  .image-wrapper.aspect-ratio-16-9 {
-    height: 0;
-    padding-bottom: 56.25%;
-  }
-
-  .image-wrapper.aspect-ratio-4-3 {
-    height: 0;
-    padding-bottom: 75%;
-  }
-
-  .image-wrapper.aspect-ratio-1-1 {
-    height: 0;
-    padding-bottom: 100%;
-  }
-
-  .image-wrapper.aspect-ratio-3-2 {
-    height: 0;
-    padding-bottom: 66.67%;
-  }
-
   .card-image-placeholder {
     height: 0;
     padding-bottom: 56.25%;
   }
-
-  /* Для fallback нам нужно переопределить height для img */
-  .image-wrapper:not(:has(img[src])) {
-    height: auto;
-    min-height: 200px;
-  }
 }
+/* ===== END CARD COMPONENT ===== */
 
-/* Дополнительные гарантии для изображений */
-.optimized-image {
-  display: block !important;
-  max-width: 100% !important;
-  height: auto !important;
-}
-
-/* Гарантируем, что изображения будут видимы */
-.image-wrapper img {
-  opacity: 1 !important;
-  visibility: visible !important;
-  position: static !important;
-}
-
-/* Убираем возможные конфликты с другими стилями */
-picture,
-picture img,
-.responsive-image,
-.responsive-image img {
-  position: static !important;
-  top: auto !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-}
-
-/* Обеспечиваем правильное поведение для всех браузеров */
-.image-wrapper {
-  display: flow-root; /* Создает новый контекст форматирования */
-}
-
-.image-wrapper:has(picture) {
-  display: block !important;
-  contain: layout; /* Оптимизация для браузера */
-}
-/* ===== END IMG AND CARD ===== */
-
-/* ===== VIDEO ===== */
+/* ===== VIDEO COMPONENT (video.cshtml) ===== */
 /* Видео компонент - адаптивная обертка */
 .video-component .video-container {
   width: 100%;
@@ -672,7 +628,7 @@ picture img,
 .video-embed-wrapper iframe[loading="lazy"] {
   background: transparent;
 }
-/* ===== VIDEO ===== */
+/* ===== END VIDEO COMPONENT===== */
 
 /* ===== MENU ===== */
 /* Скрыть элемент */
@@ -1138,11 +1094,11 @@ picture img,
 }
 /* ===== End MENU ===== */
 
-/* ===== HERO ===== */
+/* ===== HERO COMPONENT (hero.cshtml) ===== */
 .hero {
   padding-top: 100px;
 }
-/* ===== End HERO ===== */
+/* ===== End HERO COMPONENT ===== */
 
 /* ===== FOOTER ===== */
 .site-footer {

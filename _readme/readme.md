@@ -1,6 +1,7 @@
 ---
 alwaysApply: true
 ---
+
 # Модульный обзор проекта TestUmbraco
 
 ## Введение
@@ -34,11 +35,13 @@ alwaysApply: true
 ## Модуль 1: Оптимизация и кэширование изображений
 
 ### Цель модуля
+
 Обеспечение оптимизации, кэширования и адаптивного рендеринга изображений для повышения производительности сайта.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/Helpers/ImageHelper.cs` - Генерация responsive изображений
 - `TestUmbraco/Services/IMediaCacheService.cs` - Интерфейс сервиса кэширования
 - `TestUmbraco/Services/MediaCacheService.cs` - Реализация кэширования медиа
@@ -53,6 +56,7 @@ alwaysApply: true
 ### Основные классы и их роль
 
 **ImageHelper**
+
 - `RenderResponsiveMediaAsync()` - Генерация адаптивных изображений с srcset
 - `GenerateImageUrl()` - Создание URL с параметрами оптимизации
 - `GenerateSrcSet()` - Генерация srcset для разных размеров
@@ -60,6 +64,7 @@ alwaysApply: true
 - `RenderPlaceholderAsync()` - Placeholder при отсутствии изображения
 
 **MediaCacheService**
+
 - `GetCachedMediaUrlAsync()` - Получение URL с кэшированием
 - `GetCachedImageHtmlAsync()` - Генерация HTML с кэшированием
 - `GeneratePictureElement()` - Создание элемента `<picture>`
@@ -67,14 +72,17 @@ alwaysApply: true
 - `ClearCacheForMedia()` - Очистка кэша для конкретного медиа
 
 **MediaCacheController**
+
 - `GetCacheInfo()` - Информация о состоянии кэша
 - `ClearCacheForMedia()` - Очистка кэша по GUID
 - `ClearAllMediaCache()` - Полная очистка кэша
 
 **ImageOptimizationSettings**
+
 - Конфигурация размеров, качества WebP/JPEG, lazy loading
 
 ### Зависимости от других модулей
+
 - **Umbraco CMS Core**: Использует `IPublishedContent`, `IMediaService`
 - **Модуль логирования**: Для записи ошибок
 - **Модуль конфигурации**: Для настроек оптимизации
@@ -84,11 +92,13 @@ alwaysApply: true
 ## Модуль 2: Управление фоновыми изображениями
 
 ### Цель модуля
+
 Динамическая генерация CSS для фоновых изображений, цветов, градиентов и видео с поддержкой оверлеев и lazy loading.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/Services/IUmbracoBackgroundService.cs` - Интерфейс сервиса фонов
 - `TestUmbraco/Services/UmbracoBackgroundService.cs` - Обработка фонов
 - `TestUmbraco/Services/IStaticCssGeneratorService.cs` - Интерфейс генератора CSS
@@ -107,6 +117,7 @@ alwaysApply: true
 ### Основные классы и их роль
 
 **UmbracoBackgroundService**
+
 - `ProcessBackground()` - Главный метод обработки фонов
 - `ProcessImageBackground()` - Обработка фоновых изображений
 - `ProcessColorBackground()` - Обработка цветовых фонов
@@ -116,6 +127,7 @@ alwaysApply: true
 - `RegisterBackgroundInfo()` - Регистрация данных для JavaScript
 
 **StaticCssGeneratorService**
+
 - `GenerateBackgroundCssFileAsync()` - Генерация базового CSS файла
 - `GetOrAddMediaClassAsync()` - Добавление класса для медиа
 - `GetOrAddColorClassAsync()` - Добавление класса для цвета
@@ -125,13 +137,16 @@ alwaysApply: true
 - `UpdateCssForMediaAsync()` - Обновление CSS при изменении медиа
 
 **UniversalBackgroundController**
+
 - `GetMultipleCss()` - API endpoint для получения CSS нескольких фонов
 
 **BackgroundHtmlExtensions**
+
 - `GetBackgroundClasses()` - Extension метод для получения CSS классов
 - `AddBackgroundClasses()` - Объединение базовых и фоновых классов
 
 ### Зависимости от других модулей
+
 - **Модуль оптимизации изображений**: Использует `IMediaCacheService`
 - **Модуль логирования**: Для отладки и ошибок
 - **Umbraco CMS Core**: Работа с `IPublishedElement`, `IMediaService`
@@ -141,15 +156,18 @@ alwaysApply: true
 ## Модуль 3: Обработка форм конструктора форм
 
 ### Цель модуля
+
 Обработка отправки форм конструктора форм Umbraco, сохранение данных в БД и отправка email уведомлений с защитой от спама через reCAPTCHA.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/Controllers/FormBuilderController.cs` - Контроллер обработки форм
 - `TestUmbraco/Models/FormSubmissionModel.cs` - Модель для привязки данных формы
 
 **Application Layer:**
+
 - `TestUmbraco.Application/Contracts/IEmailService.cs` - Интерфейс сервиса отправки email
 - `TestUmbraco.Application/Services/EmailService.cs` - Реализация отправки email
 - `TestUmbraco.Application/Contracts/IFormSubmissionService.cs` - Интерфейс сервиса обработки форм
@@ -158,6 +176,7 @@ alwaysApply: true
 - `TestUmbraco.Application/DTO/FormFieldDto.cs` - DTO поля формы
 
 **Domain Layer:**
+
 - `TestUmbraco.Domain/Models/FormSubmission.cs` - Entity отправки формы
 - `TestUmbraco.Domain/Contracts/IFormSubmissionRepository.cs` - Интерфейс репозитория форм
 - `TestUmbraco.Domain/Repositories/FormSubmissionRepository.cs` - Реализация репозитория форм
@@ -165,6 +184,7 @@ alwaysApply: true
 ### Основные классы и их роль
 
 **FormBuilderController** (SurfaceController)
+
 - `SubmitForm()` - Обработка отправки формы конструктора форм
 - Поддержка AJAX и обычных запросов
 - Валидация данных формы
@@ -172,33 +192,39 @@ alwaysApply: true
 - Интеграция с Notyf для уведомлений
 
 **FormSubmissionService**
+
 - `ProcessSubmissionAsync()` - Обработка и сохранение отправки формы в БД
 - `GetSubmissionsByFormAsync()` - Получение всех отправок конкретной формы
 - Преобразование DTO в Entity
 - Сериализация данных полей в JSON
 
 **EmailService**
+
 - `SendFormSubmissionAsync()` - Отправка email с данными формы
 - Генерация HTML шаблона письма
 - Поддержка логотипа в письме
 - Отправка через SMTP (MailKit)
 
 **FormSubmissionRepository**
+
 - `SaveAsync()` - Сохранение отправки формы
 - `GetByIdAsync()` - Получение отправки по ID
 - `GetByFormIdAsync()` - Получение всех отправок формы
 - `GetAllAsync()` - Получение всех отправок с пагинацией
 
 **FormSubmissionDto**
+
 - DTO для передачи данных между слоями
 - Содержит: FormId, FormTitle, SubmittedAt, IpAddress, FieldValues, LogoUrl
 
 **FormSubmission** (Entity)
+
 - Entity модель для сохранения в БД
 - Свойства: FormId, FormTitle, SubmittedAt, IpAddress, FieldValuesJson
 - Наследуется от `EntityBase`
 
 ### Зависимости от других модулей
+
 - **Модуль данных**: Использует `IFormSubmissionRepository` для сохранения
 - **Модуль конфигурации**: SMTP настройки из appsettings.json
 - **Внешние библиотеки**: MailKit, MimeKit, reCAPTCHA.AspNetCore, AspNetCoreHero.ToastNotification
@@ -208,11 +234,13 @@ alwaysApply: true
 ## Модуль 4: Работа с данными (Data Access)
 
 ### Цель модуля
+
 Абстракция доступа к данным через Repository Pattern и управление контекстом Entity Framework.
 
 ### Ключевые файлы и папки
 
 **Domain Layer:**
+
 - `TestUmbraco.Domain/AppDbContext.cs` - DbContext Entity Framework
 - `TestUmbraco.Domain/Contracts/IRepository.cs` - Интерфейс generic репозитория
 - `TestUmbraco.Domain/Repositories/Repository.cs` - Реализация generic репозитория
@@ -226,20 +254,24 @@ alwaysApply: true
 ### Основные классы и их роль
 
 **AppDbContext**
+
 - DbContext для работы с SQL Server
 - Содержит `DbSet<FormSubmission> FormSubmissions`
 - Конфигурация подключения к БД через ConnectionString `TestUmbracoData`
 
 **IRepository<T>**
+
 - Интерфейс generic репозитория
 - `AddAsync()` - Добавление entity
 
 **Repository<T>**
+
 - Реализация generic репозитория
 - Работа с DbContext
 - Сохранение изменений
 
 **IFormSubmissionRepository**
+
 - Специализированный интерфейс репозитория для форм
 - `SaveAsync()` - Сохранение отправки формы
 - `GetByIdAsync()` - Получение отправки по ID
@@ -247,20 +279,24 @@ alwaysApply: true
 - `GetAllAsync()` - Получение всех отправок с пагинацией
 
 **FormSubmissionRepository**
+
 - Реализация специализированного репозитория
 - Использует Entity Framework Core для запросов
 - Оптимизированные методы для работы с формами
 
 **EntityBase**
+
 - Базовый класс для всех entity
 - Свойства: Id, CreatedAt, UpdatedAt, IsActive
 - Обеспечивает единообразие моделей
 
 **DomainModule**
+
 - Extension класс для регистрации сервисов Domain слоя
 - `AddDomain()` - Регистрация DbContext, репозиториев
 
 ### Зависимости от других модулей
+
 - **Entity Framework Core**: ORM для работы с БД
 - **SQL Server**: База данных
 
@@ -269,11 +305,13 @@ alwaysApply: true
 ## Модуль 5: Логирование
 
 ### Цель модуля
+
 Централизованное структурированное логирование с поддержкой цветного вывода в консоль и записи в файлы.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/Services/ILoggingService.cs` - Интерфейс сервиса
 - `TestUmbraco/Services/LoggingService.cs` - Реализация логирования
 - `TestUmbraco/Logs/` - Директория с логами
@@ -281,16 +319,19 @@ alwaysApply: true
 ### Основные классы и их роль
 
 **ILoggingService**
+
 - `IsEnabled` - Флаг включения логирования
 - Методы для разных уровней логирования
 
 **LoggingService**
+
 - `LogInformation()` / `LogInformation<T>()` - Информационные сообщения
 - `LogError()` / `LogError<T>()` - Ошибки
 - `LogWarning()` / `LogWarning<T>()` - Предупреждения
 - `WriteColored()` - Цветной вывод в консоль
 
 ### Зависимости от других модулей
+
 - **Serilog**: Структурированное логирование
 - **Модуль конфигурации**: Настройки логирования
 
@@ -299,11 +340,13 @@ alwaysApply: true
 ## Модуль 6: Кастомные плагины бэк-офиса
 
 ### Цель модуля
+
 Расширение функционала бэк-офиса Umbraco через кастомные property editors.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/App_Plugins/MenuIdPicker/` - Плагин выбора ID меню
   - `menu-id-picker.js` - JavaScript компонент
   - `menu-id-picker.css` - Стили
@@ -316,24 +359,29 @@ alwaysApply: true
   - Использует Lit Web Components
 
 **Source Files:**
+
 - `plugins-src/UniversalBackground/` - Исходники TypeScript
 
 ### Основные компоненты и их роль
 
 **MenuIdPicker**
+
 - Property editor для выбора ID секции меню
 - Интеграция с Umbraco бэк-офисом
 
 **ColorSelector**
+
 - Property editor для выбора цвета
 - Цветовая палитра
 
 **UniversalBackground**
+
 - Property editor для управления фоновыми изображениями
 - Настройка параметров фона (size, position, overlay)
 - TypeScript + Lit компоненты
 
 ### Зависимости от других модулей
+
 - **Umbraco Backoffice**: @umbraco-cms/backoffice
 - **Lit**: Для Web Components
 - **TypeScript**: Для типобезопасности
@@ -343,11 +391,13 @@ alwaysApply: true
 ## Модуль 7: Umbraco Content Models
 
 ### Цель модуля
+
 Автогенерированные модели контента для типобезопасной работы с Document Types.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/umbraco/models/*.generated.cs` - Сгенерированные модели
   - `Page.generated.cs` - Модель страницы
   - `BlockGrid.generated.cs` - Модель Block Grid
@@ -358,18 +408,22 @@ alwaysApply: true
 ### Основные модели и их роль
 
 **Page**
+
 - Основная модель страницы сайта
 - Свойства: Title, Content, SEO метаданные
 
 **BlockGrid / GridSection / GridColumn**
+
 - Модели для Grid редактора
 - Структура layout страницы
 
 **Компоненты** (Hero, Card, Img, Video, Quote, и т.д.)
+
 - Модели для Block Grid компонентов
 - Переиспользуемые блоки контента
 
 ### Зависимости от других модулей
+
 - **Umbraco Models Builder**: Автогенерация моделей
 - **uSync**: Синхронизация Document Types
 
@@ -378,11 +432,13 @@ alwaysApply: true
 ## Модуль 8: Views и Razor Templates
 
 ### Цель модуля
+
 Рендеринг HTML контента с использованием Razor шаблонов и partial views.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/Views/` - Основные views
   - `Layout.cshtml` - Главный layout
   - `BlockGrid.cshtml` - View для Block Grid
@@ -403,32 +459,39 @@ alwaysApply: true
 ### Основные views и их роль
 
 **Layout.cshtml**
+
 - Главный layout страницы
 - Подключение CSS, JavaScript
 - Меню, footer, метатеги
 
 **BlockGrid.cshtml**
+
 - Рендеринг Block Grid структуры
 - Итерация по секциям и колонкам
 
 **Компоненты Block Grid** (gridSection, gridColumn, img, video, и т.д.)
+
 - Рендеринг отдельных блоков
 - Использование helpers для изображений и фонов
 
 **FormBuilderBlock.cshtml**
+
 - Рендеринг блока формы конструктора форм
 - Интеграция с FormBuilderController
 - Поддержка клиентской валидации
 
 **formColumn.cshtml / formField.cshtml**
+
 - Рендеринг структуры формы
 - Отображение полей формы с валидацией
 
 **Block Preview**
+
 - Предпросмотр компонентов в бэк-офисе
 - Подключение стилей Bootstrap и кастомных CSS
 
 ### Зависимости от других модулей
+
 - **Модуль оптимизации изображений**: ImageHelper
 - **Модуль фонов**: BackgroundHtmlExtensions
 - **Модуль форм**: FormBuilderController, FormSubmissionModel
@@ -439,11 +502,13 @@ alwaysApply: true
 ## Модуль 9: Статические ресурсы (Frontend Assets)
 
 ### Цель модуля
+
 CSS стили и JavaScript для фронтенда сайта.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/wwwroot/css/` - Стили
   - `style.css` - Основные стили сайта
   - `backgrounds.css` - Сгенерированные стили фонов
@@ -458,6 +523,7 @@ CSS стили и JavaScript для фронтенда сайта.
 ### Основные скрипты и их роль
 
 **site.js** (объединенный файл)
+
 - Содержит функциональность нескольких модулей:
   - **Button Up**: Кнопка "Наверх" с плавной прокруткой
   - **Site Menu**: Логика навигационного меню, мобильное меню
@@ -466,6 +532,7 @@ CSS стили и JavaScript для фронтенда сайта.
   - **Video Placeholders**: Управление video placeholders, переключение между видео и изображением на мобильных
 
 **form-builder.js**
+
 - Клиентская валидация форм конструктора форм
 - Обработка отправки форм через AJAX
 - Интеграция с reCAPTCHA
@@ -473,6 +540,7 @@ CSS стили и JavaScript для фронтенда сайта.
 - Отображение сообщений об ошибках и успехе
 
 ### Зависимости от других модулей
+
 - **Bootstrap 5.3.0**: CSS фреймворк (CDN)
 - **Модуль фонов**: Использует данные из BackgroundInfo
 - **Модуль форм**: Интеграция с FormBuilderController
@@ -482,11 +550,13 @@ CSS стили и JavaScript для фронтенда сайта.
 ## Модуль 10: Конфигурация и настройки
 
 ### Цель модуля
+
 Централизованное управление конфигурацией приложения.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/appsettings.json` - Основная конфигурация
 - `TestUmbraco/appsettings.Development.json` - Конфигурация для разработки
 - `TestUmbraco/Program.cs` - Точка входа приложения
@@ -496,36 +566,44 @@ CSS стили и JavaScript для фронтенда сайта.
 ### Основные секции конфигурации
 
 **Logging**
+
 - Настройки Serilog
 - Уровни логирования
 - Sinks (Console, File, EventLog)
 
 **ImageOptimization**
+
 - DefaultWidths, WebpQuality, JpegQuality
 - EnableWebp, EnableLazyLoading
 
 **Email**
+
 - SMTP настройки (SmtpServer, SmtpPort)
 - EmailSenderAddress, EmailSenderName, EmailSenderPassword
 
 **RecaptchaSettings**
+
 - SecretKey, SiteKey
 
 **Umbraco.CMS**
+
 - ModelsBuilder, Imaging, DeliveryApi
 - Runtime, Security, WebRouting
 
 **ConnectionStrings**
+
 - `TestUmbracoData` - подключение к SQL Server для AppDbContext
 - `umbracoDbDSN` - подключение к SQL Server для Umbraco
 
 **BlockPreview**
+
 - Настройки предпросмотра
 - Подключаемые стили и скрипты
 
 ### Program.cs - структура регистрации
 
 **Регистрация сервисов:**
+
 - `AddHttpContextAccessor()` - HttpContext для сервисов
 - `Configure<ImageOptimizationSettings>()` - Настройки оптимизации изображений
 - `AddMemoryCache()` - Кэш в памяти
@@ -538,12 +616,14 @@ CSS стили и JavaScript для фронтенда сайта.
 - `AddNotyf()` - Уведомления (Toast notifications)
 
 **Middleware pipeline:**
+
 - Настройка кэширования статических файлов
 - Отключение кэша для `backgrounds.css`
 - Umbraco middleware
 - Notyf middleware
 
 ### Зависимости от других модулей
+
 - Используется всеми модулями для получения настроек
 
 ---
@@ -551,22 +631,27 @@ CSS стили и JavaScript для фронтенда сайта.
 ## Модуль 11: Dependency Injection и Composers
 
 ### Цель модуля
+
 Регистрация сервисов в DI контейнере через Umbraco Composers и extension методы.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/Composers/MediaCacheComposer.cs` - Регистрация сервисов кэширования и фонов
 
 **Application Layer:**
+
 - `TestUmbraco.Application/Application.cs` - Extension методы для регистрации сервисов Application слоя
 
 **Domain Layer:**
+
 - `TestUmbraco.Domain/Domain.cs` - Extension методы для регистрации сервисов Domain слоя
 
 ### Основные классы и их роль
 
 **MediaCacheComposer**
+
 - Реализует `IComposer`
 - Метод `Compose(IUmbracoBuilder builder)`
 - Регистрирует сервисы Presentation слоя:
@@ -582,12 +667,14 @@ CSS стили и JavaScript для фронтенда сайта.
   - `StaticCssInitializer` - инициализация CSS файла при старте приложения
 
 **Application.AddServices()**
+
 - Extension метод для регистрации сервисов Application слоя
 - Регистрирует:
   - `IEmailService` → `EmailService` (Scoped)
   - `IFormSubmissionService` → `FormSubmissionService` (Scoped)
 
 **Domain.AddDomain()**
+
 - Extension метод для регистрации сервисов Domain слоя
 - Регистрирует:
   - `AppDbContext` с подключением к SQL Server
@@ -595,17 +682,20 @@ CSS стили и JavaScript для фронтенда сайта.
   - `IFormSubmissionRepository` → `FormSubmissionRepository` (Scoped)
 
 **MediaCacheNotificationHandler**
+
 - Обрабатывает уведомления Umbraco о событиях с медиа
 - `MediaSavedNotification` - очистка кэша и обновление CSS при сохранении
 - `MediaDeletedNotification` - очистка кэша и удаление из CSS при удалении
 - `MediaMovedNotification` - очистка кэша и обновление CSS при перемещении
 
 **StaticCssInitializer**
+
 - BackgroundService для инициализации CSS файла при старте
 - Проверяет существование `backgrounds.css`
 - Создает файл при отсутствии
 
 ### Зависимости от других модулей
+
 - Регистрирует сервисы из всех модулей
 - Используется в `Program.cs` через extension методы
 
@@ -614,21 +704,53 @@ CSS стили и JavaScript для фронтенда сайта.
 ## Модуль 12: Middleware
 
 ### Цель модуля
-Обработка HTTP запросов на уровне middleware для управления кэшированием и другими аспектами запросов.
+
+Обработка HTTP запросов на уровне middleware для управления кэшированием, политикой безопасности и другими аспектами запросов.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
 - `TestUmbraco/Middleware/NoCacheMiddleware.cs` - Middleware для отключения кэша
+- `TestUmbraco/Middleware/ContentSecurityPolicyMiddleware.cs` - Middleware для установки CSP заголовков
 
 ### Основные классы и их роль
 
 **NoCacheMiddleware**
+
+- Middleware для отключения кэша для динамически генерируемых файлов
+- Устанавливает заголовки `Cache-Control: no-cache, no-store, must-revalidate` для `backgrounds.css`
+- Обеспечивает актуальность CSS файла, который часто обновляется
+
+**ContentSecurityPolicyMiddleware**
+
+- Middleware для установки заголовка Content-Security-Policy
+- Определяет политику безопасности для разрешенных источников скриптов, стилей, изображений и других ресурсов
+- Включает разрешения для Google reCAPTCHA, Vimeo, Yandex.Metrika, Bootstrap, jQuery и других необходимых ресурсов
+
+### Зависимости от других модулей
+- **Модуль фонов**: Используется для `backgrounds.css`
+- **Модуль конфигурации**: Настройка через `Program.cs`
+
+### Цель модуля
+
+Обработка HTTP запросов на уровне middleware для управления кэшированием и другими аспектами запросов.
+
+### Ключевые файлы и папки
+
+**Presentation Layer:**
+
+- `TestUmbraco/Middleware/NoCacheMiddleware.cs` - Middleware для отключения кэша
+
+### Основные классы и их роль
+
+**NoCacheMiddleware**
+
 - Middleware для отключения кэша для динамически генерируемых файлов
 - Устанавливает заголовки `Cache-Control: no-cache, no-store, must-revalidate` для `backgrounds.css`
 - Обеспечивает актуальность CSS файла, который часто обновляется
 
 ### Зависимости от других модулей
+
 - **Модуль фонов**: Используется для `backgrounds.css`
 - **Модуль конфигурации**: Настройка через `Program.cs`
 
@@ -637,11 +759,13 @@ CSS стили и JavaScript для фронтенда сайта.
 ## Модуль 13: uSync - Синхронизация контента
 
 ### Цель модуля
+
 Синхронизация структуры контента Umbraco через файловую систему для версионирования и командной работы.
 
 ### Ключевые файлы и папки
 
 **Presentation Layer:**
+
 - `TestUmbraco/uSync/v17/` - Директория синхронизации
   - `Content/` - Контент страниц
   - `ContentTypes/` - Document Types
@@ -657,22 +781,27 @@ CSS стили и JavaScript для фронтенда сайта.
 ### Основные компоненты и их роль
 
 **ContentTypes**
+
 - Определения Document Types
 - Структура полей и свойств
 
 **DataTypes**
+
 - Настройки property editors
 - Конфигурация типов данных
 
 **Templates**
+
 - Экспорт Razor шаблонов
 - Связь с Document Types
 
 **Content**
+
 - Экспорт контента страниц
 - Для переноса между окружениями
 
 ### Зависимости от других модулей
+
 - **Umbraco CMS**: Интеграция с ядром
 - **Git**: Версионирование файлов
 
@@ -736,27 +865,38 @@ CSS стили и JavaScript для фронтенда сайта.
 ## Межмодульные зависимости
 
 ### Модуль оптимизации изображений
+
 - **Использует**: Логирование, Конфигурация, Umbraco Core
 - **Используется**: Модуль фонов, Views
 
 ### Модуль фонов
+
 - **Использует**: Оптимизация изображений, Логирование, Конфигурация
 - **Используется**: Views, Frontend Assets
 
 ### Модуль форм (Form Builder)
+
 - **Использует**: Модуль данных (IFormSubmissionRepository), Конфигурация, Логирование, Email Service
 - **Используется**: FormBuilderController, Views
 
 ### Модуль данных
+
 - **Использует**: Entity Framework Core, SQL Server
 - **Используется**: Модуль форм, Application Layer сервисы
 
 ### Модуль логирования
+
 - **Использует**: Serilog, Конфигурация
 - **Используется**: Все модули
 
 ### Модуль конфигурации
+
 - **Используется**: Все модули
+
+### Модуль Middleware
+
+- **Использует**: Конфигурацию
+- **Используется**: Модуль фонов (для backgrounds.css)
 
 ---
 
@@ -804,3 +944,118 @@ CSS стили и JavaScript для фронтенда сайта.
 - **Поддерживаемость**: Понятная структура для новых разработчиков
 
 Следуя этой карте, новый разработчик может быстро ориентироваться в проекте и понимать, где находится нужный функционал.
+
+Структура папок:
+
+TestUmbraco (Presentation Layer)
+├── Модуль 1: Оптимизация и кэширование изображений
+│ ├── Helpers/ImageHelper.cs
+│ ├── Services/IMediaCacheService.cs
+│ ├── Services/MediaCacheService.cs
+│ ├── Models/ImageModel.cs
+│ ├── Models/Configuration/ImageOptimizationSettings.cs
+│ ├── Controllers/MediaCacheController.cs
+│ ├── Composers/MediaCacheComposer.cs
+│ ├── Views/Shared/\_Image.cshtml
+│ └── wwwroot/css/
+│ ├── images.css
+│ └── lazy-load.css
+├── Модуль 2: Управление фоновыми изображениями
+│ ├── Services/IUmbracoBackgroundService.cs
+│ ├── Services/UmbracoBackgroundService.cs
+│ ├── Services/IStaticCssGeneratorService.cs
+│ ├── Services/StaticCssGeneratorService.cs
+│ ├── Services/BackgroundClassesService.cs
+│ ├── Services/BackgroundResult.cs
+│ ├── Services/BackgroundInfo.cs
+│ ├── Models/BackgroundClassesModel.cs
+│ ├── Controllers/UniversalBackgroundController.cs
+│ ├── Helpers/HtmlHelper.cs
+│ ├── Views/Shared/\_BackgroundClasses.cshtml
+│ ├── Views/Partials/\_BackgroundConfig.cshtml
+│ ├── wwwroot/css/backgrounds.css
+│ └── App_Plugins/UniversalBackground/
+├── Модуль 3: Обработка форм конструктора форм
+│ ├── Controllers/FormBuilderController.cs
+│ ├── Models/FormSubmissionModel.cs
+│ ├── Application/Contracts/IEmailService.cs
+│ ├── Application/Services/EmailService.cs
+│ ├── Application/Contracts/IFormSubmissionService.cs
+│ ├── Application/Services/FormSubmissionService.cs
+│ ├── Application/DTO/FormSubmissionDto.cs
+│ ├── Application/DTO/FormFieldDto.cs
+│ ├── Domain/Models/FormSubmission.cs
+│ ├── Domain/Contracts/IFormSubmissionRepository.cs
+│ └── Domain/Repositories/FormSubmissionRepository.cs
+├── Модуль 4: Работа с данными (Data Access)
+│ ├── Domain/AppDbContext.cs
+│ ├── Domain/Contracts/IRepository.cs
+│ ├── Domain/Repositories/Repository.cs
+│ ├── Domain/Contracts/IFormSubmissionRepository.cs
+│ ├── Domain/Repositories/FormSubmissionRepository.cs
+│ ├── Domain/Models/EntityBase.cs
+│ ├── Domain/Models/FormSubmission.cs
+│ ├── Domain/Migrations/
+│ └── Domain/Domain.cs
+├── Модуль 5: Логирование
+│ ├── Services/ILoggingService.cs
+│ ├── Services/LoggingService.cs
+│ └── Logs/
+├── Модуль 6: Кастомные плагины бэк-офиса
+│ ├── App_Plugins/MenuIdPicker/
+│ │ ├── menu-id-picker.js
+│ │ ├── menu-id-picker.css
+│ │ └── umbraco-package.json
+│ ├── App_Plugins/Vokseverk.ColorSelector/
+│ │ ├── color-selector.js
+│ │ └── umbraco-package.json
+│ └── App_Plugins/UniversalBackground/
+├── Модуль 7: Umbraco Content Models
+│ └── umbraco/models/\*.generated.cs
+├── Модуль 8: Views и Razor Templates
+│ ├── Views/
+│ │ ├── Layout.cshtml
+│ │ ├── BlockGrid.cshtml
+│ │ └── \_ViewImports.cshtml
+│ ├── Views/Partials/
+│ │ ├── blockgrid/Components/
+│ │ ├── blocklist/Components/
+│ │ ├── blockpreview/
+│ │ └── layout/
+│ └── Views/Shared/
+├── Модуль 9: Статические ресурсы (Frontend Assets)
+│ └── wwwroot/
+│ ├── css/
+│ │ ├── style.css
+│ │ ├── backgrounds.css
+│ │ ├── images.css
+│ │ ├── lazy-load.css
+│ │ ├── backoffice-preview.css
+│ │ └── bootstrap-form-isolated.css
+│ └── js/
+│ ├── site.js
+│ └── form-builder.js
+├── Модуль 10: Конфигурация и настройки
+│ ├── appsettings.json
+│ ├── appsettings.Development.json
+│ ├── Program.cs
+│ ├── robots.txt
+│ └── sitemap.xml
+├── Модуль 11: Dependency Injection и Composers
+│ ├── Composers/MediaCacheComposer.cs
+│ ├── Application/Application.cs
+│ └── Domain/Domain.cs
+├── Модуль 12: Middleware
+│ └── Middleware/NoCacheMiddleware.cs
+└── Модуль 13: uSync - Синхронизация контента
+└── uSync/v17/
+├── Content/
+├── ContentTypes/
+├── DataTypes/
+├── Templates/
+├── MediaTypes/
+├── Languages/
+├── Media/
+├── MemberTypes/
+├── RelationTypes/
+└── usync.config
